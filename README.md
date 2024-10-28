@@ -1,7 +1,7 @@
 ***REMOVED***
 
 ***REMOVED***
-- Jakub Antas 
+***REMOVED***
 ***REMOVED***
 - Mateusz Lewko
 ***REMOVED***
