@@ -4,4 +4,4 @@
 - Jakub Antas 
 ***REMOVED***
 - Mateusz Lewko
-- Albert Skutnik
+***REMOVED***
