@@ -20,6 +20,13 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public Product getProduct(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "product with id " + productId + " does not exist"
+                ));
+    }
+
     public void addNewProduct(Product product) {
         Optional<Product> productOptional = productRepository.findProductByName(product.getName());
         if (productOptional.isPresent()) {
