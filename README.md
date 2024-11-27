@@ -15,7 +15,7 @@ Głównym celem tego projektu jest stworzenie aplikacji w stylu sklepu-online, k
 
 ---
 
-1. Graficzny interfejs użytkownika =\> **Swing/Java FX (TBD)**
+1. Graficzny interfejs użytkownika =\> **Java FX**
 2. Główna logika działania sklepu +Api =\> **Java Spring Boot**
 3. Baza danych =\> **PostgreSQL**
 
