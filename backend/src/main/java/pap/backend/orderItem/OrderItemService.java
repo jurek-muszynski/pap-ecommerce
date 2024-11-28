@@ -80,6 +80,19 @@ public class OrderItemService {
     }
 
     public List<OrderItem> getOrderItemsByOrderId(Long orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalStateException("Order with id " + orderId + " does not exist"));
+
         return orderItemRepository.findOrderItemsByOrderId(orderId);
+    }
+
+
+    public List<OrderItem> getOrderItemsByProductId(Long productId) {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalStateException("Product with id " + productId + " does not exist"));
+
+        return orderItemRepository.findOrderItemsByProductId(productId);
     }
 }
