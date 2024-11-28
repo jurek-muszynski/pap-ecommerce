@@ -2,6 +2,8 @@ package pap.backend.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pap.backend.order.Order;
+import pap.backend.order.OrderService;
 
 
 import java.util.List;
@@ -11,10 +13,13 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final OrderService orderService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, OrderService orderService) {
+
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/all")
@@ -46,5 +51,10 @@ public class UserController {
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName) {
         userService.updateUser(userId, email, password, role, firstName, lastName);
+    }
+
+    @GetMapping("/{userId}/orders")
+    public List<Order> getUserOrders(@PathVariable Long userId) {
+        return orderService.getOrdersForUser(userId);
     }
 }

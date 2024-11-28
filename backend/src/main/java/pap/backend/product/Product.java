@@ -1,6 +1,7 @@
 package pap.backend.product;
 
 import jakarta.persistence.*;
+import pap.backend.category.Category;
 
 @Entity
 @Table
@@ -24,15 +25,20 @@ public class Product {
     private double price;
     private int quantity;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     public Product() {
     }
 
-    public Product(String name, String description, String image, double price, int quantity) {
+    public Product(String name, String description, String image, double price, int quantity, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.imageUrl = image;
+        this.category = category;
     }
 
     public Long getId() {
@@ -79,6 +85,18 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -88,6 +106,7 @@ public class Product {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity +
+                ", category=" + category +
                 '}';
     }
 }

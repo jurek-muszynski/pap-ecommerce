@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import pap.backend.category.Category;
 
 @Service
 public class ProductService {
@@ -61,5 +62,9 @@ public class ProductService {
         if (product.getPrice() != price) {
             product.setPrice(price);
         }
+    }
+
+    public List<Product> getProductsByCategoryId(Long categoryId) {
+        return productRepository.findProductsByCategoryId(categoryId);
     }
 }
