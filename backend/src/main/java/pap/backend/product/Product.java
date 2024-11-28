@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table
 public class Product {
+
     @Id
     @SequenceGenerator(
             name = "product_sequence",
@@ -16,6 +17,7 @@ public class Product {
             generator = "product_sequence"
     )
     private Long id;
+
     private String name;
     private String description;
     private String imageUrl;
@@ -75,5 +77,17 @@ public class Product {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                '}';
     }
 }
