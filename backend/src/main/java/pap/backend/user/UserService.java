@@ -61,7 +61,7 @@ public class UserService {
             user.setPassword(password);
         }
 
-        if ((role.equals("ADMIN") || role.equals("CUSTOMER")) && !user.getRole().equals(role)) {
+        if (role != null && (role.equals("ADMIN") || role.equals("CUSTOMER")) && !user.getRole().equals(role)) {
             user.setRole(role);
         }
 
