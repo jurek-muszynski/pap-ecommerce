@@ -45,7 +45,8 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(Long productId, String name, String description, double price) {
+    public void updateProduct(Long productId, String name, String description,
+                              String imageUrl, Double price, Integer quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalStateException(
                         "product with id " + productId + " does not exist"
@@ -59,8 +60,16 @@ public class ProductService {
             product.setDescription(description);
         }
 
-        if (product.getPrice() != price) {
+        if (imageUrl != null && !imageUrl.isEmpty() && !product.getImageUrl().equals(imageUrl)) {
+            product.setImageUrl(imageUrl);
+        }
+
+        if (price != null && price > 0 && !product.getPrice().equals(price)) {
             product.setPrice(price);
+        }
+
+        if (quantity != null && quantity > 0 && !product.getQuantity().equals(quantity)) {
+            product.setQuantity(quantity);
         }
     }
 
