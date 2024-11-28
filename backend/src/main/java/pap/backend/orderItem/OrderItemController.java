@@ -62,4 +62,14 @@ public class OrderItemController {
             @RequestParam(required = false) Long orderId) {
         orderItemService.updateOrderItem(orderItemId, productId, orderId);
     }
+
+    @GetMapping("/product/{productId}")
+    public List<OrderItem> getOrderItemsByProductId(@PathVariable("productId") Long productId) {
+        return orderItemService.getOrderItemsByProductId(productId);
+    }
+
+    @GetMapping("/order/{orderId}")
+    public List<OrderItem> getOrderItemsByOrderId(@PathVariable("orderId") Long orderId) {
+        return orderItemService.getOrderItemsByOrderId(orderId);
+    }
 }
