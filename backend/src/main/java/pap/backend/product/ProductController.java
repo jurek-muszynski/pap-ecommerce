@@ -2,6 +2,9 @@ package pap.backend.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pap.backend.category.Category;
+import pap.backend.category.CategoryRepository;
+
 
 import java.util.List;
 
@@ -10,10 +13,13 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CategoryRepository categoryRepository) {
+
         this.productService = productService;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping("/all")
@@ -27,7 +33,13 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public void addNewProduct(@RequestBody Product product) {
+    public void addNewProduct(@RequestBody Product product) { // w ciele kategorii podajemy tylko id, reszta pobierana z encji Category
+
+        Category category = categoryRepository.findById(product.getCategory().getId())
+                .orElseThrow(() -> new IllegalStateException("Category not found"));
+
+        product.setCategory(category);
+
         productService.addNewProduct(product);
     }
 
