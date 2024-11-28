@@ -31,6 +31,9 @@ public class UserService {
         if (userOptional.isPresent()) {
             throw new IllegalStateException("email taken");
         }
+        if(!user.getRole().equals("ADMIN") && !user.getRole().equals("CUSTOMER")){
+            throw new IllegalStateException("role must be either ADMIN or CUSTOMER");
+        }
         userRepository.save(user);
     }
 
