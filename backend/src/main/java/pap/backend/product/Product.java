@@ -22,8 +22,8 @@ public class Product {
     private String name;
     private String description;
     private String imageUrl;
-    private double price;
-    private int quantity;
+    private Double price;
+    private Integer quantity;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
@@ -32,7 +32,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String description, String image, double price, int quantity, Category category) {
+    public Product(String name, String description, String image, Double price, Integer quantity, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -53,7 +53,7 @@ public class Product {
         return description;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -65,7 +65,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -77,11 +77,11 @@ public class Product {
         this.description = description;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
