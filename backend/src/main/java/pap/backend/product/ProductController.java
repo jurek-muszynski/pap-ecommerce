@@ -53,8 +53,10 @@ public class ProductController {
             @PathVariable("productId") Long productId,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String description,
-            @RequestParam(required = false) double price) {
-        productService.updateProduct(productId, name, description, price);
+            @RequestParam(required = false) String imageUrl,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) Integer quantity) {
+        productService.updateProduct(productId, name, description, imageUrl, price, quantity);
     }
 
 
