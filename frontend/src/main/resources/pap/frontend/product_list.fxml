@@ -2,27 +2,36 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.geometry.Insets?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="pap.frontend.controllers.ProductController"
-            fx:id="rootLayout">
-
+            fx:id="rootLayout" stylesheets="@style_product_list.css">
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
-            <TextField fx:id="searchField" promptText="Search by Name" />
+            <TextField fx:id="searchField" promptText="Search by Name" onAction="#searchByName">
+                <HBox.margin>
+                    <Insets left="5" />
+                </HBox.margin>
+            </TextField>
             <Button text="Search" onAction="#searchByName" />
             <ComboBox fx:id="categoryComboBox" promptText="Select Category" />
             <Button text="Filter by Category" onAction="#filterByCategory" />
-            <Button text="Refresh" onAction="#updateTable" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Refresh" onAction="#updateTable">
+                <HBox.margin>
+                    <Insets right="5" />
+                </HBox.margin>
+            </Button>
         </HBox>
     </top>
 
     <center>
         <TableView fx:id="productTable">
             <columns>
-                <TableColumn fx:id="nameColumn" text="Name" />
-                <TableColumn fx:id="descriptionColumn" text="Description" />
-                <TableColumn fx:id="priceColumn" text="Price" />
-                <TableColumn fx:id="categoryColumn" text="Category" />
+                <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
+                <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="150"/>
+                <TableColumn fx:id="priceColumn" text="Price" prefWidth="150"/>
+                <TableColumn fx:id="categoryColumn" text="Category" prefWidth="150" />
             </columns>
         </TableView>
     </center>
