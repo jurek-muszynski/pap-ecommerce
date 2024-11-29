@@ -9,8 +9,8 @@
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
             <TextField fx:id="searchField" promptText="Search by Name" />
-            <ComboBox fx:id="categoryComboBox" promptText="Select Category" />
             <Button text="Search" onAction="#searchByName" />
+            <ComboBox fx:id="categoryComboBox" promptText="Select Category" />
             <Button text="Filter by Category" onAction="#filterByCategory" />
             <Button text="Refresh" onAction="#updateTable" />
         </HBox>
