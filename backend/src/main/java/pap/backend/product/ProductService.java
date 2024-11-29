@@ -76,4 +76,11 @@ public class ProductService {
     public List<Product> getProductsByCategoryId(Long categoryId) {
         return productRepository.findProductsByCategoryId(categoryId);
     }
+
+    public Product getProductByName(String productName) {
+        return productRepository.findProductByName(productName)
+                .orElseThrow(() -> new IllegalStateException(
+                        "product with name " + productName + " does not exist"
+                ));
+    }
 }
