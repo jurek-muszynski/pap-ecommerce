@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-This FXML file defines the layout for the Product Catalog application using a BorderPane as the root layout.
-
-- The `fx:controller` attribute specifies the controller class `pap.frontend.controllers.ProductController`, which manages this layout.
-- The root `BorderPane` organizes the UI into distinct regions: `top`, `center`, `right`, `left`, and `bottom`.
-- The `center` region contains a `TableView` (`productTable`) with three columns (`nameColumn`, `descriptionColumn`, and `priceColumn`) for displaying product data.
-- The `top` and `right` sections are empty placeholders, designed to be dynamically populated by the controller at runtime.
-- The `fx:id="rootLayout"` allows the controller to reference and manipulate the entire layout programmatically.
--->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -15,17 +6,24 @@ This FXML file defines the layout for the Product Catalog application using a Bo
             fx:controller="pap.frontend.controllers.ProductController"
             fx:id="rootLayout">
 
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+            <TextField fx:id="searchField" promptText="Search by Name" />
+            <ComboBox fx:id="categoryComboBox" promptText="Select Category" />
+            <Button text="Search" onAction="#searchByName" />
+            <Button text="Filter by Category" onAction="#filterByCategory" />
+            <Button text="Refresh" onAction="#updateTable" />
+        </HBox>
+    </top>
+
     <center>
         <TableView fx:id="productTable">
             <columns>
                 <TableColumn fx:id="nameColumn" text="Name" />
                 <TableColumn fx:id="descriptionColumn" text="Description" />
                 <TableColumn fx:id="priceColumn" text="Price" />
+                <TableColumn fx:id="categoryColumn" text="Category" />
             </columns>
         </TableView>
     </center>
-    <top>
-    </top>
-    <right>
-    </right>
 </BorderPane>
