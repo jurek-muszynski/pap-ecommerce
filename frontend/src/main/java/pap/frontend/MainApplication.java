@@ -6,9 +6,8 @@ import pap.frontend.controllers.ProductController;
 
 
 // TODO:
-// 1. Fix the Category column to display proper category names instead of "Unknown".
-// 2. Align buttons and inputs neatly for a cleaner UI.
-// 3. Add a note in the app explaining that Search and Filter work independently.
+// 1. Align buttons and inputs neatly for a cleaner UI.
+// 2. Add a note in the app explaining that Search and Filter work independently.
 public class MainApplication extends Application {
 
     @Override

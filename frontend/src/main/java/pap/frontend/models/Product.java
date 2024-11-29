@@ -5,8 +5,10 @@ public class Product {
     private Long id;
     private String name;
     private String description;
-    private double price;
-    private int categoryId;
+    private String imageUrl;
+    private Double price;
+    private Integer quantity;
+    private Category category;
 
     public Long getId() {
         return id;
@@ -32,19 +34,35 @@ public class Product {
         this.description = description;
     }
 
-    public double getPrice() {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
