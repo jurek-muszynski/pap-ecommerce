@@ -1,0 +1,79 @@
+/* style.css */
+
+/* Og처lny styl t�***REMOVED***a aplikacji */
+.root {
+    -fx-background-color: #f5f5f5;
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+}
+
+/* Styl HBox w top (nag�***REMOVED***처wek z przyciskami) */
+.hbox {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10px;
+    -fx-spacing: 15px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Styl dla p처l tekstowych */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.text-field:focused {
+    -fx-border-color: #ADD8E6;
+}
+
+/* Styl przycisk처w */
+.button {
+    -fx-background-color: #87CEEB;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 20px;
+}
+
+.button:hover {
+    -fx-background-color: #00BFFF; /* Zmiana koloru przycisku na ciemniejszy przy najechaniu */
+}
+
+/* Styl ComboBox */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-padding: 5px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Tabela */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+}
+
+.table-column {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+}
+
+.table-cell {
+    -fx-alignment: CENTER;
+}
+
+/* Styl dla kom처rek w tabeli */
+.table-view .column-header {
+    -fx-background-color: #cccccc;
+    -fx-text-fill: white;
+}
+
+.table-view .row-cell:filled:hover {
+    -fx-background-color: #e0e0e0;
+}
