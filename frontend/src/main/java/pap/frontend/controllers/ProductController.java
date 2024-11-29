@@ -92,6 +92,7 @@ public class ProductController {
     @FXML
     private void searchByName() {
         String searchQuery = searchField.getText().trim();
+        System.out.println("Searching for: " + searchQuery);
         if (!searchQuery.isEmpty()) {
             Product product = productService.getProductByName(searchQuery);
             if (product != null) {

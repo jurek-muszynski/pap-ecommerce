@@ -6,8 +6,8 @@ import pap.frontend.controllers.ProductController;
 
 
 // TODO:
-// 1. Align buttons and inputs neatly for a cleaner UI.
-// 2. Add a note in the app explaining that Search and Filter work independently.
+// 1. Add a note in the app explaining that Search and Filter work independently.
+// 2. Fix searching two-part words in search by name
 public class MainApplication extends Application {
 
     @Override
