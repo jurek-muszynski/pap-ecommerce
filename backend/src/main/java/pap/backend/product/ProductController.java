@@ -32,6 +32,16 @@ public class ProductController {
         return productService.getProduct(productId);
     }
 
+    @GetMapping("/allWithCategoryId/{categoryId}")
+    public List<Product> getProductsByCategoryId(@PathVariable Long categoryId) {
+        return productService.getProductsByCategoryId(categoryId);
+    }
+
+    @GetMapping("/withName/{productName}")
+    public Product getProductByName(@PathVariable("productName") String productName){
+        return productService.getProductByName(productName);
+    }
+
     @PostMapping("/add")
     public void addNewProduct(@RequestBody Product product) { // w ciele kategorii podajemy tylko id, reszta pobierana z encji Category
 
@@ -58,6 +68,4 @@ public class ProductController {
             @RequestParam(required = false) Integer quantity) {
         productService.updateProduct(productId, name, description, imageUrl, price, quantity);
     }
-
-
 }

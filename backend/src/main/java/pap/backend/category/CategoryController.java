@@ -47,8 +47,5 @@ public class CategoryController {
         categoryService.updateCategory(categoryId, name);
     }
 
-    @GetMapping("/{categoryId}/products")
-    public List<Product> getProductsByCategoryId(@PathVariable Long categoryId) {
-        return productService.getProductsByCategoryId(categoryId);
-    }
+
 }
