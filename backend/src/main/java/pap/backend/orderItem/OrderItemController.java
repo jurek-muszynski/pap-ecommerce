@@ -35,6 +35,16 @@ public class OrderItemController {
         return orderItemService.getOrderItem(orderItemId);
     }
 
+    @GetMapping("/allWithOrderId/{orderId}")
+    public List<OrderItem> getOrderItemsByOrderId(@PathVariable("orderId") Long orderId) {
+        return orderItemService.getOrderItemsByOrderId(orderId);
+    }
+
+    @GetMapping("/allWithProductId/{productId}")
+    public List<OrderItem> getOrderItemsByProductId(@PathVariable("productId") Long productId) {
+        return orderItemService.getOrderItemsByProductId(productId);
+    }
+
     @PostMapping("/add") // W ciele żądania podajemy tylko id produktu i zamówienia, reszta zostanie pobrana z encji Product i Order
     public void addNewOrderItem(@RequestBody OrderItem orderItem) {
 
@@ -61,15 +71,5 @@ public class OrderItemController {
             @RequestParam(required = false) Long productId,
             @RequestParam(required = false) Long orderId) {
         orderItemService.updateOrderItem(orderItemId, productId, orderId);
-    }
-
-    @GetMapping("/product/{productId}")
-    public List<OrderItem> getOrderItemsByProductId(@PathVariable("productId") Long productId) {
-        return orderItemService.getOrderItemsByProductId(productId);
-    }
-
-    @GetMapping("/order/{orderId}")
-    public List<OrderItem> getOrderItemsByOrderId(@PathVariable("orderId") Long orderId) {
-        return orderItemService.getOrderItemsByOrderId(orderId);
     }
 }
