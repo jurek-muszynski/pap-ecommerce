@@ -15,6 +15,7 @@ import pap.frontend.services.ProductService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductController {
 
@@ -61,6 +62,7 @@ public class ProductController {
 
     @FXML
     public void initialize() {
+        // Ustawiamy kolumny w tabeli
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -69,38 +71,57 @@ public class ProductController {
             String categoryName = category != null ? category.getName() : "Unknown";
             return new javafx.beans.property.SimpleStringProperty(categoryName);
         });
+
         loadCategories();
         loadProducts();
+
+        // Dodanie listenera do searchField, aby zrealizować filtrowanie na bieżąco
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterSuggestions(newValue);
+        });
+    }
+
+    private void filterSuggestions(String query) {
+        if (!query.isEmpty()) {
+            List<String> filteredNames = productService.getProducts().stream()
+                    .map(Product::getName)
+                    .filter(name -> name.toLowerCase().contains(query.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private List<String> getProductNames() {
+        return productService.getProducts().stream()
+                .map(Product::getName)
+                .collect(Collectors.toList());
     }
 
     private void loadProducts() {
         List<Product> products = productService.getProducts();
-        products.forEach(product -> {
-            System.out.println("Product: " + product.getName() + ", Category ID: " + product.getCategory().getName());
-        });
         updateTable(products);
     }
 
     private void loadCategories() {
         categoryList = productService.getCategories();
-        categoryList.forEach(category -> {
-            System.out.println("Category: " + category.getName() + ", ID: " + category.getId());
-        });
         categoryComboBox.setItems(FXCollections.observableArrayList(categoryList));
     }
 
     @FXML
     private void searchByName() {
         String searchQuery = searchField.getText().trim();
-        System.out.println("Searching for: " + searchQuery);
         if (!searchQuery.isEmpty()) {
-            Product product = productService.getProductByName(searchQuery);
-            if (product != null) {
-                updateTable(List.of(product));
+            List<Product> filteredProducts = productService.getProducts().stream()
+                    .filter(product -> product.getName().toLowerCase().contains(searchQuery.toLowerCase()))
+                    .collect(Collectors.toList());
+
+            if (!filteredProducts.isEmpty()) {
+                updateTable(filteredProducts);
             } else {
-                updateTable(List.of());
-                System.out.println("No product found with the name: " + searchQuery);
+                updateTable(List.of());  // Jeśli nie ma wyników
             }
+        } else {
+            // Jeśli nie wpisano żadnego tekstu, pokazujemy wszystkie produkty
+            updateTable(productService.getProducts());
         }
     }
 
