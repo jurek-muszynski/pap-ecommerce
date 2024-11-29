@@ -44,6 +44,8 @@ public class ProductController {
 
     private final ProductService productService = new ProductService();
 
+    private List<Category> categoryList;
+
     public void startApplication(Stage primaryStage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pap/frontend/product_list.fxml"));
@@ -63,27 +65,28 @@ public class ProductController {
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         categoryColumn.setCellValueFactory(cellData -> {
-            int categoryId = cellData.getValue().getCategoryId();
-            String categoryName = categoryComboBox.getItems().***REMOVED***()
-                    .filter(category -> category.getId() == categoryId)
-                    .map(Category::getName)
-                    .findFirst()
-                    .orElse("Unknown");
+            Category category = cellData.getValue().getCategory();
+            String categoryName = category != null ? category.getName() : "Unknown";
             return new javafx.beans.property.SimpleStringProperty(categoryName);
         });
-        loadProducts();
         loadCategories();
+        loadProducts();
     }
 
     private void loadProducts() {
         List<Product> products = productService.getProducts();
+        products.forEach(product -> {
+            System.out.println("Product: " + product.getName() + ", Category ID: " + product.getCategory().getName());
+        });
         updateTable(products);
     }
 
     private void loadCategories() {
-        List<Category> categories = productService.getCategories();
-        ObservableList<Category> categoryList = FXCollections.observableArrayList(categories);
-        categoryComboBox.setItems(categoryList);
+        categoryList = productService.getCategories();
+        categoryList.forEach(category -> {
+            System.out.println("Category: " + category.getName() + ", ID: " + category.getId());
+        });
+        categoryComboBox.setItems(FXCollections.observableArrayList(categoryList));
     }
 
     @FXML
