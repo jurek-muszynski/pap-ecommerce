@@ -65,7 +65,8 @@ public class ProductController {
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String imageUrl,
             @RequestParam(required = false) Double price,
-            @RequestParam(required = false) Integer quantity) {
-        productService.updateProduct(productId, name, description, imageUrl, price, quantity);
+            @RequestParam(required = false) Integer quantity,
+            @RequestParam(required = false) Long categoryId) {
+        productService.updateProduct(productId, name, description, imageUrl, price, quantity, categoryId);
     }
 }

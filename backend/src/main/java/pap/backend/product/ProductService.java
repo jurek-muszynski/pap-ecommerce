@@ -7,14 +7,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import pap.backend.category.Category;
+import pap.backend.category.CategoryRepository;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<Product> getProducts() {
@@ -46,7 +50,7 @@ public class ProductService {
 
     @Transactional
     public void updateProduct(Long productId, String name, String description,
-                              String imageUrl, Double price, Integer quantity) {
+                              String imageUrl, Double price, Integer quantity, Long categoryId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalStateException(
                         "product with id " + productId + " does not exist"
@@ -70,6 +74,16 @@ public class ProductService {
 
         if (quantity != null && quantity > 0 && !product.getQuantity().equals(quantity)) {
             product.setQuantity(quantity);
+        }
+
+        if (categoryId != null) {
+            Category existingCategory = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalStateException(
+                            "category with id " + categoryId + " does not exist"
+                    ));
+            if (!product.getCategory().equals(existingCategory)) {
+                product.setCategory(existingCategory);
+            }
         }
     }
 
