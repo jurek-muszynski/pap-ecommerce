@@ -32,6 +32,11 @@ public class OrderController {
         return orderService.getOrder(orderId);
     }
 
+    @GetMapping("/allWithUserId/{userId}")
+    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
+        return orderService.getOrdersByUserId(userId);
+    }
+
     @PostMapping("/add") //w ciele Usera podajemy tylko jego ID, reszta zostanie zignorowana, a dane zostana pobrane z tabeli users
     public void addNewOrder(@RequestBody Order order) {
 

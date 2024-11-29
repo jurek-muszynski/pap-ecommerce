@@ -63,7 +63,7 @@ public class OrderService {
         }
     }
 
-    public List<Order> getOrdersForUser(Long userId) {
+    public List<Order> getOrdersByUserId(Long userId) {
         return orderRepository.findOrdersByUserId(userId);
     }
 }
