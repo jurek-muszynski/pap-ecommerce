@@ -52,9 +52,4 @@ public class UserController {
             @RequestParam(required = false) String lastName) {
         userService.updateUser(userId, email, password, role, firstName, lastName);
     }
-
-    @GetMapping("/{userId}/orders")
-    public List<Order> getUserOrders(@PathVariable Long userId) {
-        return orderService.getOrdersForUser(userId);
-    }
 }
