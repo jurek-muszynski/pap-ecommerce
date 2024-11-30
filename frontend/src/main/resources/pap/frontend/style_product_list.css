@@ -1,45 +1,59 @@
-/* style.css */
-
-/* Ogólny styl t�***REMOVED***a aplikacji */
+/* Ogólne style aplikacji */
 .root {
-    -fx-background-color: #f5f5f5;
-    -fx-font-family: "Arial";
-    -fx-font-size: 14px;
+    -fx-background-color: #f5f5f5; /* Neutralne t�***REMOVED***o */
+    -fx-font-family: "Arial, sans-serif"; /* Uniwersalna czcionka */
+    -fx-font-size: 14px; /* Domyślny rozmiar tekstu */
 }
 
-/* Styl HBox w top (nag�***REMOVED***ówek z przyciskami) */
+/* Nag�***REMOVED***ówek (HBox z przyciskami i filtrami) */
+/* Styl dla górnego paska (HBox) */
+/* Styl dla HBox (nag�***REMOVED***ówka) */
 .hbox {
-    -fx-background-color: #ffffff;
-    -fx-padding: 10px;
-    -fx-spacing: 15px;
+    -fx-background-color: #ffffff; /* Bia�***REMOVED***e t�***REMOVED***o */
+    -fx-padding: 15px; /* Większy odstęp wewnętrzny */
+    -fx-spacing: 20px; /* Większy odstęp między elementami */
+    -fx-border-color: #ddd; /* Ramka */
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0, 0, 0);
 }
 
 /* Styl dla pól tekstowych */
 .text-field {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 5px;
-    -fx-padding: 5px;
+    -fx-background-color: #ffffff; /* Bia�***REMOVED***e t�***REMOVED***o */
+    -fx-border-color: #cccccc; /* Szara ramka */
+    -fx-border-radius: 25px; /* Zaokrąglone rogi */
+    -fx-background-radius: 25px;
+    -fx-padding: 10px 15px; /* Większe odstępy wewnętrzne */
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 1, 1); /* Subtelny cień */
+    -fx-transition: 0.3s ease-in-out; /* P�***REMOVED***ynne przejścia */
 }
 
 .text-field:focused {
-    -fx-border-color: #ADD8E6;
+    -fx-border-color: #87CEEB; /* Kolor ramki przy fokusowaniu */
+    -fx-effect: dropshadow(gaussian, rgba(135, 206, 235, 0.3), 5, 0, 1, 1); /* Podświetlenie cienia */
 }
 
 /* Styl przycisków */
 .button {
-    -fx-background-color: #87CEEB;
-    -fx-text-fill: white;
+    -fx-background-color: #87CEEB; /* Niebieskie t�***REMOVED***o */
+    -fx-text-fill: white; /* Bia�***REMOVED***y tekst */
     -fx-font-weight: bold;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
-    -fx-padding: 10px 20px;
+    -fx-padding: 10px 30px; /* Większe wewnętrzne odstępy */
+    -fx-cursor: hand; /* Wskaźnik ręki */
+    -fx-margin: 5px; /* Odstęp zewnętrzny */
 }
 
 .button:hover {
-    -fx-background-color: #00BFFF; /* Zmiana koloru przycisku na ciemniejszy przy najechaniu */
+    -fx-background-color: #00BFFF; /* Intensywniejszy niebieski przy najechaniu */
+}
+
+.button:pressed {
+    -fx-background-color: #1E90FF; /* Jeszcze ciemniejszy kolor przy wciśnięciu */
 }
 
 /* Styl ComboBox */
@@ -51,29 +65,121 @@
     -fx-background-radius: 5px;
 }
 
-/* Tabela */
-.table-view {
-    -fx-background-color: white;
-    -fx-border-color: #cccccc;
-    -fx-border-width: 1px;
+.combo-box:focused {
+    -fx-border-color: #ADD8E6;
 }
 
-.table-column {
-    -fx-text-fill: #333333;
+/* Styl dla TilePane */
+.tile-pane {
+    -fx-padding: 20;
+    -fx-background-color: #f9f9f9;
+    -fx-hgap: 15; /* Odstępy poziome między elementami */
+    -fx-vgap: 15; /* Odstępy pionowe między elementami */
+}
+
+/* Styl dla kart produktów */
+.product-card {
+    -fx-border-color: #ddd; /* Subtelna szara ramka */
+    -fx-border-radius: 8px;
+    -fx-background-color: #fff; /* Bia�***REMOVED***e t�***REMOVED***o dla kart */
+    -fx-background-radius: 8px;
+    -fx-padding: 15px; /* Wewnętrzne odstępy */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0); /* Cień dla efektu 3D */
+    -fx-spacing: 10; /* Odstępy między elementami w kartach */
+    -fx-min-width: 200px; /* Minimalna szerokość kart */
+    -fx-max-width: 250px; /* Maksymalna szerokość kart */
+    -fx-alignment: center; /* Wyrównanie zawartości */
+}
+
+.product-card:hover {
+    -fx-border-color: #0078d7; /* Intensywniejszy kolor ramki przy najechaniu */
+    -fx-effect: dropshadow(gaussian, rgba(0, 120, 215, 0.2), 5, 0, 0, 0); /* Podświetlenie cienia */
+}
+
+/* Styl obrazów w kartach */
+.product-card .image-view {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 0);
+    -fx-background-radius: 8px;
+}
+
+/* Tekst nazwy produktu */
+.product-card .name-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333; /* Ciemnoszary kolor */
+}
+
+/* Tekst opisu produktu */
+.product-card .description-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666; /* Jaśniejszy szary */
+    -fx-wrap-text: true; /* Zawijanie tekstu */
+}
+
+/* Tekst ceny produktu */
+.price-text {
     -fx-font-size: 14px;
-    -fx-padding: 5px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #008000; /* Zielony kolor */
 }
 
-.table-cell {
-    -fx-alignment: CENTER;
+/* Styl dla ScrollPane */
+.scroll-pane {
+    -fx-background-color: #f9f9f9; /* T�***REMOVED***o */
+    -fx-padding: 10; /* Odstępy wokó�***REMOVED*** zawartości */
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
 }
 
-/* Styl dla komórek w tabeli */
-.table-view .column-header {
-    -fx-background-color: #cccccc;
+/* Styl dla przycisku "Delete" */
+.delete-button {
+    -fx-background-color: #ff4d4f; /* Czerwony przycisk */
+    -fx-text-fill: white; /* Bia�***REMOVED***y tekst */
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+.delete-button:hover {
+    -fx-background-color: #ff7875; /* Jaśniejszy czerwony przy najechaniu */
+}
+
+.delete-button:pressed {
+    -fx-background-color: #d9363e; /* Ciemniejszy czerwony po kliknięciu */
+}
+
+.details-button {
+    -fx-background-color: #87CEFA; /* Jasnoniebieski */
+    -fx-text-fill: white; /* Bia�***REMOVED***y tekst */
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+.details-button:hover {
+    -fx-background-color: #00BFFF; /* Intensywniejszy niebieski przy najechaniu */
+}
+
+.details-button:pressed {
+    -fx-background-color: #1E90FF; /* Ciemniejszy niebieski po kliknięciu */
+}
+
+.add-product-button {
+    -fx-background-color: #28a745; /* Zielony kolor */
     -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 15px;
+    -fx-cursor: hand;
 }
 
-.table-view .row-cell:filled:hover {
-    -fx-background-color: #e0e0e0;
+.add-product-button:hover {
+    -fx-background-color: #218838; /* Ciemniejszy zielony przy najechaniu */
 }
+
