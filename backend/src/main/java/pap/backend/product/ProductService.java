@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import pap.backend.category.Category;
 import pap.backend.category.CategoryRepository;
@@ -27,32 +28,34 @@ public class ProductService {
 
     public Product getProduct(Long productId) {
         return productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "product with id " + productId + " does not exist"
                 ));
     }
 
-    public void addNewProduct(Product product) {
+    public Product addNewProduct(Product product) {
         Optional<Product> productOptional = productRepository.findProductByName(product.getName());
         if (productOptional.isPresent()) {
             throw new IllegalStateException("product name taken");
         }
         productRepository.save(product);
+
+        return product;
     }
 
     public void deleteProduct(Long productId) {
         boolean exists = productRepository.existsById(productId);
         if (!exists) {
-            throw new IllegalStateException("product with id " + productId + " does not exist");
+            throw new NoSuchElementException("product with id " + productId + " does not exist");
         }
         productRepository.deleteById(productId);
     }
 
     @Transactional
-    public void updateProduct(Long productId, String name, String description,
+    public Product updateProduct(Long productId, String name, String description,
                               String imageUrl, Double price, Integer quantity, Long categoryId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "product with id " + productId + " does not exist"
                 ));
 
@@ -85,6 +88,8 @@ public class ProductService {
                 product.setCategory(existingCategory);
             }
         }
+
+        return product;
     }
 
     public List<Product> getProductsByCategoryId(Long categoryId) {
@@ -93,7 +98,7 @@ public class ProductService {
 
     public Product getProductByName(String productName) {
         return productRepository.findProductByName(productName)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "product with name " + productName + " does not exist"
                 ));
     }
