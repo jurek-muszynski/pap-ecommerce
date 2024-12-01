@@ -1,24 +1,31 @@
-# Use a base image with OpenJDK 17
 FROM openjdk:17-jdk-slim
 
-# Defining variables for the JAR file and the application name
-ARG JAR_FILE=target/*.jar
-
-# Create a user to run the Spring Boot application
-RUN addgroup --system spring && adduser --system spring --ingroup spring
-
-# Change to the spring user
-USER spring
-
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the built JAR file into the container
-COPY ${JAR_FILE} app.jar
+# Add a spring user to run our application so that it doesn't run as root
+RUN addgroup --system spring && adduser --system spring --ingroup spring 
 
-# Expose port 8080 for the Spring Boot application
+# Copy the source code to the working directory
+COPY . .
+
+# Build the application
+RUN ./mvnw clean package -DskipTests
+
+# Change the ownership of the application to the spring user
+RUN chown -R spring:spring /app
+
+# Set the jar file path
+ARG JAR_FILE=target/*.jar
+
+# Change the user to spring
+USER spring
+
+# Move the jar file to the app.jar
+RUN mv ${JAR_FILE} app.jar
+
+# Expose the port
 EXPOSE 8080
 
-# Run the Spring Boot application
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
