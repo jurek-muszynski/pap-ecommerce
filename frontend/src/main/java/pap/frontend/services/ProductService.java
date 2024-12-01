@@ -74,7 +74,7 @@ public class ProductService {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpURLConnection.HTTP_OK) {
-                System.out.println("Product deleted successfully");
+                System.out.println(response.body());
             } else {
                 System.err.println("Failed to delete product. Status code: " + response.statusCode());
             }
@@ -93,9 +93,10 @@ public class ProductService {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() != 200) {
-                throw new RuntimeException("Error: " + response.body());
+            if (response.statusCode() != HttpURLConnection.HTTP_OK && response.statusCode() != HttpURLConnection.HTTP_CREATED) {
+                throw new RuntimeException(response.body());
             }
+
         } catch (Exception e) {
             throw new RuntimeException("Failed to add product: " + e.getMessage());
         }
