@@ -368,9 +368,10 @@ public class ProductController {
                 loadProducts();
             } catch (NumberFormatException e) {
                 showAlert("Error", "Invalid number format in price or quantity fields.", Alert.AlertType.ERROR);
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
                 showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
             } catch (Exception e) {
+                System.out.println(e.getMessage());
                 showAlert("Error", "Failed to add product. Please check your input and try again.", Alert.AlertType.ERROR);
             }
         });
