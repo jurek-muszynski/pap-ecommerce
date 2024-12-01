@@ -132,11 +132,14 @@ public class ProductService {
 
             if (response.statusCode() == HttpURLConnection.HTTP_OK) {
                 System.out.println("Category deleted successfully");
-            } else {
-                System.err.println("Failed to delete category. Status code: " + response.statusCode());
             }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+
+            if (response.statusCode() != 200) {
+                throw new RuntimeException("Failed to delete category: " + response.body());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error while deleting category: " + e.getMessage());
         }
     }
 
