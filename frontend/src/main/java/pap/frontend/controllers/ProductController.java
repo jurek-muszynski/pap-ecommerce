@@ -482,7 +482,7 @@ public class ProductController {
 
         // Dodaj tekst z potwierdzeniem
         Label confirmationLabel = new Label("Are you sure you want to delete the category: " + category.getName() + "?");
-        Label productsLabel = new Label("The following products will also be deleted:");
+        Label productsLabel = new Label("The following products have to be deleted first:");
 
         // Lista produktów, które zostaną usunięte
         VBox productListLayout = new VBox(5);
@@ -496,16 +496,12 @@ public class ProductController {
         yesButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
         yesButton.setOnAction(event -> {
             try {
-                // Najpierw usuń produkty z tej kategorii
-                for (Product product : productsInCategory) {
-                    productService.deleteProduct(product.getId());
-                }
 
                 // Teraz usuń kategorię
                 productService.deleteCategory(category.getId());
 
                 // Informacja o sukcesie
-                showAlert("Success", "Category and products deleted successfully.", Alert.AlertType.INFORMATION);
+                showAlert("Success", "Category deleted successfully.", Alert.AlertType.INFORMATION);
 
                 // Zamknij okno
                 dialogStage.close();
@@ -515,7 +511,7 @@ public class ProductController {
                 loadCategories(); // Odświeżenie listy kategorii w Product Catalog
                 loadProducts();
             } catch (Exception e) {
-                showAlert("Error", "Failed to delete category and products: " + e.getMessage(), Alert.AlertType.ERROR);
+                showAlert("Error", "Failed to delete category", Alert.AlertType.ERROR);
             }
         });
 
