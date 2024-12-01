@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="pap.frontend.controllers.ProductController"
-            fx:id="rootLayout">
-
+            fx:id="rootLayout" stylesheets="@style_product_list.css">
     <top>
-        <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
-            <TextField fx:id="searchField" promptText="Search by Name" />
-            <ComboBox fx:id="categoryComboBox" promptText="Select Category" />
+        <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER" styleClass="hbox">
+            <TextField fx:id="searchField" promptText="Search by Name" onAction="#searchByName" styleClass="text-field">
+                <HBox.margin>
+                    <Insets left="5" />
+                </HBox.margin>
+            </TextField>
             <Button text="Search" onAction="#searchByName" />
+            <ComboBox fx:id="categoryComboBox" promptText="Select Category" />
             <Button text="Filter by Category" onAction="#filterByCategory" />
-            <Button text="Refresh" onAction="#updateTable" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Add Product" onAction="#openAddProductForm" styleClass="add-product-button" />
+            <Button text="Refresh" onAction="#updateTable">
+                <HBox.margin>
+                    <Insets right="5" />
+                </HBox.margin>
+            </Button>
         </HBox>
     </top>
 
     <center>
-        <TableView fx:id="productTable">
-            <columns>
-                <TableColumn fx:id="nameColumn" text="Name" />
-                <TableColumn fx:id="descriptionColumn" text="Description" />
-                <TableColumn fx:id="priceColumn" text="Price" />
-                <TableColumn fx:id="categoryColumn" text="Category" />
-            </columns>
-        </TableView>
+        <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
+            <TilePane fx:id="productTilePane">
+            </TilePane>
+        </ScrollPane>
     </center>
 </BorderPane>

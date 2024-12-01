@@ -59,4 +59,46 @@ public class ProductService {
             return null;
         }
     }
+
+    public void deleteProduct(Long productId) {
+        String url = BASE_API_URL + "/product/delete/" + productId;
+
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .DELETE()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == HttpURLConnection.HTTP_OK) {
+                System.out.println("Product deleted successfully");
+            } else {
+                System.err.println("Failed to delete product. Status code: " + response.statusCode());
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addProduct(Product product) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_API_URL + "/product/add"))
+                    .POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(product)))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new RuntimeException("Error: " + response.body());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to add product: " + e.getMessage());
+        }
+    }
+
+
+
 }
