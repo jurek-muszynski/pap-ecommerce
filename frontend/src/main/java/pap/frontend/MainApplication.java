@@ -1,20 +1,25 @@
 package pap.frontend;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
-import pap.frontend.controllers.ProductController;
 
 
 // TODO:
-// 1. Fix the Category column to display proper category names instead of "Unknown".
-// 2. Align buttons and inputs neatly for a cleaner UI.
-// 3. Add a note in the app explaining that Search and Filter work independently.
+// 1. Add a note in the app explaining that Search and Filter work independently.
+// 2. Fix searching two-part words in search by name
 public class MainApplication extends Application {
-
     @Override
     public void start(Stage primaryStage) {
-        ProductController productController = new ProductController();
-        productController.startApplication(primaryStage);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pap/frontend/product_list.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
