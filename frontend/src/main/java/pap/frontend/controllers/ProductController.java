@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -12,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pap.frontend.models.Category;
 import pap.frontend.models.Product;
@@ -124,8 +126,7 @@ public class ProductController {
         Button deleteButton = new Button("Delete");
         deleteButton.setStyle("-fx-background-color: #FF4D4F; -fx-text-fill: white;");
         deleteButton.setOnAction(event -> {
-            productService.deleteProduct(product.getId());
-            loadProducts();
+            showDeleteProductConfirmationDialog(product);
         });
 
         // Product Card
@@ -134,6 +135,56 @@ public class ProductController {
         productCard.setPrefWidth(200);
 
         return productCard;
+    }
+
+    private void showDeleteProductConfirmationDialog(Product product) {
+        // Tworzymy okno dialogowe
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Confirm Deletion");
+
+        // Układ okna
+        VBox dialogVBox = new VBox(10);
+        dialogVBox.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
+
+        // Dodaj tekst z potwierdzeniem
+        Label confirmationLabel = new Label("Are you sure you want to delete the product: " + product.getName() + "?");
+
+        // Przyciski potwierdzenia
+        Button yesButton = new Button("Yes");
+        yesButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+        yesButton.setOnAction(event -> {
+            try {
+                // Usuń produkt
+                productService.deleteProduct(product.getId());
+
+                // Odśwież listę produktów
+                loadProducts();
+
+                // Wyświetl komunikat o sukcesie
+                showAlert("Success", "Product deleted successfully.", Alert.AlertType.INFORMATION);
+
+                // Zamknij okno dialogowe
+                dialogStage.close();
+            } catch (Exception e) {
+                showAlert("Error", "Failed to delete product: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
+
+        Button noButton = new Button("No");
+        noButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
+        noButton.setOnAction(event -> dialogStage.close());
+
+        // Układ przycisków
+        HBox buttonLayout = new HBox(10, yesButton, noButton);
+        buttonLayout.setAlignment(Pos.CENTER);
+
+        dialogVBox.getChildren().addAll(confirmationLabel, buttonLayout);
+
+        // Ustawienie sceny i pokazanie okna
+        Scene scene = new Scene(dialogVBox, 400, 150);
+        dialogStage.setScene(scene);
+        dialogStage.show();
     }
 
 
@@ -346,6 +397,244 @@ public class ProductController {
         stage.show();
     }
 
+    @FXML
+    private void openManageCategoriesForm() {
+        // Tworzenie nowego okna
+        Stage stage = new Stage();
+        VBox mainLayout = new VBox(10); // Główny układ
+        mainLayout.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
+
+        // Przyciski: dodawanie kategorii
+        Button addCategoryButton = new Button("Add Category");
+        addCategoryButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+
+        // Lista kategorii
+        VBox categoriesListLayout = new VBox(10); // Układ dla listy kategorii
+        categoriesListLayout.setStyle("-fx-padding: 10; -fx-border-color: #ddd; -fx-border-width: 1;");
+
+        // Obsługa przycisku "Add Category"
+        addCategoryButton.setOnAction(event -> {
+            openAddCategoryForm(() -> loadCategoriesList(categoriesListLayout)); // Wywołanie formularza dodawania z callbackiem
+        });
+
+        // Załadowanie listy kategorii do układu
+        loadCategoriesList(categoriesListLayout);
+
+        // Dodanie elementów do głównego układu
+        mainLayout.getChildren().addAll(
+                new Label("Manage Categories"),
+                addCategoryButton,
+                categoriesListLayout
+        );
+
+        // Konfiguracja sceny i okna
+        Scene scene = new Scene(mainLayout, 500, 600);
+        stage.setScene(scene);
+        stage.setTitle("Manage Categories");
+        stage.show();
+    }
+
+    private void loadCategoriesList(VBox categoriesListLayout) {
+        categoriesListLayout.getChildren().clear(); // Czyść istniejące elementy
+
+        try {
+            // Pobierz listę kategorii z backendu
+            List<Category> categories = productService.getCategories();
+
+            for (Category category : categories) {
+                HBox categoryItem = new HBox(10);
+                categoryItem.setStyle("-fx-padding: 5; -fx-border-color: #ddd; -fx-border-width: 1; -fx-background-color: #f6f6f6;");
+
+                Label categoryName = new Label(category.getName());
+                categoryName.setStyle("-fx-font-size: 14px;");
+
+                Button editButton = new Button("Edit");
+                editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
+                editButton.setOnAction(event -> editCategory(category, categoriesListLayout));
+
+
+                Button deleteButton = new Button("Delete");
+                deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
+                deleteButton.setOnAction(event -> {
+                    showDeleteConfirmationDialog(category, categoriesListLayout);
+                });
+
+                categoryItem.getChildren().addAll(categoryName, editButton, deleteButton);
+                categoriesListLayout.getChildren().add(categoryItem);
+            }
+        } catch (Exception e) {
+            showAlert("Error", "Failed to load categories: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    private void showDeleteConfirmationDialog(Category category, VBox categoriesListLayout) {
+        // Pobierz produkty przypisane do tej kategorii
+        List<Product> productsInCategory = productService.getProductsByCategoryId(category.getId());
+
+        // Tworzenie okna dialogowego
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Confirm Deletion");
+
+        // Układ okna
+        VBox dialogVBox = new VBox(10);
+        dialogVBox.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
+
+        // Dodaj tekst z potwierdzeniem
+        Label confirmationLabel = new Label("Are you sure you want to delete the category: " + category.getName() + "?");
+        Label productsLabel = new Label("The following products have to be deleted first:");
+
+        // Lista produktów, które zostaną usunięte
+        VBox productListLayout = new VBox(5);
+        for (Product product : productsInCategory) {
+            Label productLabel = new Label(product.getName());
+            productListLayout.getChildren().add(productLabel);
+        }
+
+        // Przyciski potwierdzenia
+        Button yesButton = new Button("Yes");
+        yesButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+        yesButton.setOnAction(event -> {
+            try {
+
+                // Teraz usuń kategorię
+                productService.deleteCategory(category.getId());
+
+                // Informacja o sukcesie
+                showAlert("Success", "Category deleted successfully.", Alert.AlertType.INFORMATION);
+
+                // Zamknij okno
+                dialogStage.close();
+
+                // Odśwież listę kategorii
+                loadCategoriesList(categoriesListLayout);
+                loadCategories(); // Odświeżenie listy kategorii w Product Catalog
+                loadProducts();
+            } catch (Exception e) {
+                showAlert("Error", "Failed to delete category", Alert.AlertType.ERROR);
+            }
+        });
+
+        Button noButton = new Button("No");
+        noButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
+        noButton.setOnAction(event -> dialogStage.close());
+
+        // Układ przycisków
+        HBox buttonLayout = new HBox(10, yesButton, noButton);
+
+        dialogVBox.getChildren().addAll(confirmationLabel, productsLabel, productListLayout, buttonLayout);
+
+        // Ustawienie sceny i pokazanie okna
+        Scene scene = new Scene(dialogVBox, 400, 300);
+        dialogStage.setScene(scene);
+        dialogStage.show();
+    }
+
+    private void openAddCategoryForm(Runnable onCategoryAdded) {
+        // Tworzenie nowego okna
+        Stage stage = new Stage();
+        VBox formLayout = new VBox(10);
+        formLayout.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
+
+        // Pola formularza
+        TextField nameField = new TextField();
+        nameField.setPromptText("Name");
+
+        // Przyciski
+        Button submitButton = new Button("Submit");
+        submitButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
+
+        // Obsługa przycisku "Submit"
+        submitButton.setOnAction(event -> {
+            try {
+                // Pobieranie danych z formularza
+                String name = nameField.getText();
+
+                // Tworzenie nowej kategorii
+                Category newCategory = new Category();
+                newCategory.setName(name);
+
+                // Wysyłanie produktu do backendu
+                productService.addCategory(newCategory);
+                loadCategories(); // Odświeżenie listy kategorii w Product Catalog
+
+                // Informacja o sukcesie
+                showAlert("Success", "Category added successfully.", Alert.AlertType.INFORMATION);
+
+                // Zamknięcie okna
+                stage.close();
+
+                // Wywołanie callbacka
+                if (onCategoryAdded != null) {
+                    onCategoryAdded.run();
+                }
+            } catch (IllegalArgumentException e) {
+                showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+            } catch (Exception e) {
+                showAlert("Error", "Failed to add category. Please check your input and try again.", Alert.AlertType.ERROR);
+            }
+        });
+
+        // Obsługa przycisku "Cancel"
+        cancelButton.setOnAction(event -> stage.close());
+
+        // Układ formularza
+        formLayout.getChildren().addAll(
+                new Label("Add New Category"),
+                nameField,
+                new HBox(10, submitButton, cancelButton)
+        );
+
+        // Konfiguracja okna
+        Scene scene = new Scene(formLayout, 400, 400);
+        stage.setScene(scene);
+        stage.setTitle("Add Category");
+        stage.show();
+    }
+
+    private void editCategory(Category category, VBox categoriesListLayout) {
+        // Tworzenie okna do edycji
+        Stage editStage = new Stage();
+        VBox editLayout = new VBox(10);
+        editLayout.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
+
+        TextField nameField = new TextField(category.getName());
+        nameField.setPromptText("Category Name");
+
+        Button saveButton = new Button("Save");
+        saveButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+        saveButton.setOnAction(event -> {
+            try {
+                String updatedName = nameField.getText().trim();
+                if (updatedName.isEmpty()) {
+                    throw new IllegalArgumentException("Category name cannot be empty.");
+                }
+
+                productService.updateCategory(category.getId(), updatedName);
+
+                showAlert("Success", "Category updated successfully.", Alert.AlertType.INFORMATION);
+                loadCategoriesList(categoriesListLayout); // Odświeżenie listy
+                loadCategories(); // Odświeżenie listy kategorii w Product Catalog
+                editStage.close();
+            } catch (Exception e) {
+                showAlert("Error", "Failed to update category: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
+        cancelButton.setOnAction(event -> editStage.close());
+
+        editLayout.getChildren().addAll(new Label("Edit Category"), nameField, new HBox(10, saveButton, cancelButton));
+
+        Scene editScene = new Scene(editLayout, 300, 200);
+        editStage.setScene(editScene);
+        editStage.setTitle("Edit Category");
+        editStage.show();
+    }
 
     public void updateTable(ActionEvent actionEvent) {
         loadProducts();

@@ -18,6 +18,7 @@
             <Button text="Filter by Category" onAction="#filterByCategory" />
             <Region HBox.hgrow="ALWAYS" />
             <Button text="Add Product" onAction="#openAddProductForm" styleClass="add-product-button" />
+            <Button text="Manage Categories" onAction="#openManageCategoriesForm" styleClass="add-product-button"/>
             <Button text="Refresh" onAction="#updateTable">
                 <HBox.margin>
                     <Insets right="5" />
