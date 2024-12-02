@@ -9,19 +9,25 @@ RUN addgroup --system spring && adduser --system spring --ingroup spring
 # Copy the source code to the working directory
 COPY . .
 
-# Build the application
-RUN ./mvnw clean package -DskipTests
+# Change the mvn wrapper file into an executable
+RUN chmod +655 ./mvnw
 
 # Change the ownership of the application to the spring user
 RUN chown -R spring:spring /app
 
+# Build the application
+RUN ./mvnw clean package -DskipTests
+
 # Set the jar file path
 ARG JAR_FILE=target/*.jar
+
+# Change the ownership of the created jar executables directory
+RUN chown -R spring:spring /app/target
 
 # Change the user to spring
 USER spring
 
-# Move the jar file to the app.jar
+# Change the jar file name to the app.jar
 RUN mv ${JAR_FILE} app.jar
 
 # Expose the port
