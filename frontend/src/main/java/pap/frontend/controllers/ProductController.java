@@ -482,54 +482,75 @@ public class ProductController {
         VBox dialogVBox = new VBox(10);
         dialogVBox.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
 
-        // Dodaj tekst z potwierdzeniem
-        Label confirmationLabel = new Label("Are you sure you want to delete the category: " + category.getName() + "?");
-        Label productsLabel = new Label("The following products have to be deleted first:");
+        // Dostosowanie komunikatu w zależności czy do kategorii są przypisane produkty czy nie
+        if (productsInCategory.isEmpty()){
+            Label confirmationLabel = new Label("Are you sure you want to delete the category: " + category.getName() + "?");
 
-        // Lista produktów, które zostaną usunięte
-        VBox productListLayout = new VBox(5);
-        for (Product product : productsInCategory) {
-            Label productLabel = new Label(product.getName());
-            productListLayout.getChildren().add(productLabel);
-        }
+            // Przyciski potwierdzenia
+            Button yesButton = new Button("Yes");
+            yesButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+            yesButton.setOnAction(event -> {
+                try {
 
-        // Przyciski potwierdzenia
-        Button yesButton = new Button("Yes");
-        yesButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
-        yesButton.setOnAction(event -> {
-            try {
+                    // Teraz usuń kategorię
+                    categoryService.deleteCategory(category.getId());
 
-                // Teraz usuń kategorię
-                categoryService.deleteCategory(category.getId());
+                    // Informacja o sukcesie
+                    showAlert("Success", "Category deleted successfully.", Alert.AlertType.INFORMATION);
 
-                // Informacja o sukcesie
-                showAlert("Success", "Category deleted successfully.", Alert.AlertType.INFORMATION);
+                    // Zamknij okno
+                    dialogStage.close();
 
-                // Zamknij okno
-                dialogStage.close();
+                    // Odśwież listę kategorii
+                    loadCategoriesList(categoriesListLayout);
+                    loadCategories(); // Odświeżenie listy kategorii w Product Catalog
+                    loadProducts();
+                } catch (Exception e) {
+                    showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+                }
+            });
 
-                // Odśwież listę kategorii
-                loadCategoriesList(categoriesListLayout);
-                loadCategories(); // Odświeżenie listy kategorii w Product Catalog
-                loadProducts();
-            } catch (Exception e) {
-                showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+            Button noButton = new Button("No");
+            noButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
+            noButton.setOnAction(event -> dialogStage.close());
+
+            // Uk�***REMOVED***ad przycisków
+            HBox buttonLayout = new HBox(10, yesButton, noButton);
+
+            dialogVBox.getChildren().addAll(confirmationLabel, buttonLayout);
+
+            // Ustawienie sceny i pokazanie okna
+            Scene scene = new Scene(dialogVBox);
+            dialogStage.setScene(scene);
+            dialogStage.sizeToScene();
+            dialogStage.show();
+
+        } else {
+            Label confirmationLabel = new Label("If you want to delete the category " + category.getName() + " the following products have to be deleted first: ");
+
+            // Lista produktów, które zostaną usunięte
+            VBox productListLayout = new VBox(5);
+            for (Product product : productsInCategory) {
+                Label productLabel = new Label(product.getName());
+                productListLayout.getChildren().add(productLabel);
             }
-        });
 
-        Button noButton = new Button("No");
-        noButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
-        noButton.setOnAction(event -> dialogStage.close());
+            // Przycisk zamknięcia okna
+            Button closeButton = new Button("Close");
+            closeButton.setStyle("-fx-background-color: #808080; -fx-text-fill: white;");
+            closeButton.setOnAction(event -> dialogStage.close());
 
-        // Uk�***REMOVED***ad przycisków
-        HBox buttonLayout = new HBox(10, yesButton, noButton);
+            // Uk�***REMOVED***ad przycisku
+            HBox buttonLayout = new HBox(10, closeButton);
 
-        dialogVBox.getChildren().addAll(confirmationLabel, productsLabel, productListLayout, buttonLayout);
+            dialogVBox.getChildren().addAll(confirmationLabel, productListLayout, buttonLayout);
 
-        // Ustawienie sceny i pokazanie okna
-        Scene scene = new Scene(dialogVBox, 400, 300);
-        dialogStage.setScene(scene);
-        dialogStage.show();
+            // Ustawienie sceny i pokazanie okna
+            Scene scene = new Scene(dialogVBox);
+            dialogStage.setScene(scene);
+            dialogStage.sizeToScene();
+            dialogStage.show();
+        }
     }
 
     private void openAddCategoryForm(Runnable onCategoryAdded) {
