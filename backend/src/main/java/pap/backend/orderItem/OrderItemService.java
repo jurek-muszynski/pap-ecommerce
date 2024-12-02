@@ -10,6 +10,7 @@ import pap.backend.product.Product;
 import pap.backend.product.ProductRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -32,7 +33,7 @@ public class OrderItemService {
 
     public OrderItem getOrderItem(Long orderItemId) {
         return orderItemRepository.findById(orderItemId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "OrderItem with id " + orderItemId + " does not exist"
                 ));
     }
@@ -48,13 +49,16 @@ public class OrderItemService {
             throw new IllegalStateException("Product with id " + orderItem.getProduct().getId() + " does not exist");
         }
 
+        orderItem.setOrder(orderOptional.get());
+        orderItem.setProduct(productOptional.get());
+
         orderItemRepository.save(orderItem);
     }
 
     public void deleteOrderItem(Long orderItemId) {
         boolean exists = orderItemRepository.existsById(orderItemId);
         if (!exists) {
-            throw new IllegalStateException("OrderItem with id " + orderItemId + " does not exist");
+            throw new NoSuchElementException("OrderItem with id " + orderItemId + " does not exist");
         }
         orderItemRepository.deleteById(orderItemId);
     }
@@ -62,7 +66,7 @@ public class OrderItemService {
     @Transactional
     public void updateOrderItem(Long orderItemId, Long productId, Long orderId) {
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "OrderItem with id " + orderItemId + " does not exist"
                 ));
 

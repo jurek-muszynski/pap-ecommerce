@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pap.backend.product.Product;
-import pap.backend.product.ProductService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -15,12 +13,10 @@ import java.util.NoSuchElementException;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final ProductService productService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService, ProductService productService) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
-        this.productService = productService;
     }
 
     @GetMapping("/all")
