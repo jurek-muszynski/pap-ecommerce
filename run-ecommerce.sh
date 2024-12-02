@@ -60,8 +60,11 @@ if [ $(dpkg -l | grep openjfx | wc -l) -eq 0 ]; then
     install_javafx
 fi 
 
+# set the environment variable for the docker-compose secret
+export SECRET_FILE_PATH=$(pwd)/secrets/db_password.txt
+
 # run docker-compose
-docker-compose up --build -d
+docker-compose up --build -d --always-recreate-deps
 
 # build the frontend application
 cd ./frontend
