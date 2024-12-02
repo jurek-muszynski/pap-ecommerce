@@ -35,7 +35,7 @@ services:
 
 secrets:
   db_password:
-    file: db_password.txt
+    file: $SECRET_FILE_PATH
 
 volumes:
   postgres_data:
