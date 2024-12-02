@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -21,7 +22,7 @@ public class UserService {
 
     public User getUser(Long userId){
         return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "user with id " + userId + " does not exist"
                 ));
     }
@@ -40,7 +41,7 @@ public class UserService {
     public void deleteUser(Long userId) {
         boolean exists = userRepository.existsById(userId);
         if (!exists) {
-            throw new IllegalStateException("user with id " + userId + " does not exist");
+            throw new NoSuchElementException("user with id " + userId + " does not exist");
         }
         userRepository.deleteById(userId);
     }
@@ -49,7 +50,7 @@ public class UserService {
     public void updateUser(Long userId, String email, String password, String role,
                            String firstName, String lastName) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "user with id " + userId + " does not exist"
                 ));
 

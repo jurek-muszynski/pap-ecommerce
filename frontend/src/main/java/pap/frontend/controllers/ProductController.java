@@ -17,7 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pap.frontend.models.Category;
 import pap.frontend.models.Product;
-import pap.frontend.services.ProductService;
+import pap.frontend.services.*;
 
 import java.util.List;
 import java.util.***REMOVED***.Collectors;
@@ -34,6 +34,7 @@ public class ProductController {
     private ComboBox<Category> categoryComboBox;
 
     private final ProductService productService = new ProductService();
+    private final CategoryService categoryService = new CategoryService();
 
     @FXML
     public void initialize() {
@@ -57,7 +58,7 @@ public class ProductController {
     }
 
     private void loadCategories() {
-        List<Category> categories = productService.getCategories();
+        List<Category> categories = categoryService.getCategories();
         categoryComboBox.setItems(FXCollections.observableArrayList(categories));
     }
 
@@ -100,7 +101,7 @@ public class ProductController {
             Image image = new Image(imageUrl);
             imageView.setImage(image);
         } catch (Exception e) {
-            System.out.println("Failed to load image for product: " + product.getName());
+
         }
         imageView.setFitWidth(150);
         imageView.setFitHeight(150);
@@ -368,9 +369,10 @@ public class ProductController {
                 loadProducts();
             } catch (NumberFormatException e) {
                 showAlert("Error", "Invalid number format in price or quantity fields.", Alert.AlertType.ERROR);
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
                 showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
             } catch (Exception e) {
+                System.out.println(e.getMessage());
                 showAlert("Error", "Failed to add product. Please check your input and try again.", Alert.AlertType.ERROR);
             }
         });
@@ -498,7 +500,7 @@ public class ProductController {
             try {
 
                 // Teraz usuń kategorię
-                productService.deleteCategory(category.getId());
+                categoryService.deleteCategory(category.getId());
 
                 // Informacja o sukcesie
                 showAlert("Success", "Category deleted successfully.", Alert.AlertType.INFORMATION);
@@ -511,7 +513,7 @@ public class ProductController {
                 loadCategories(); // Odświeżenie listy kategorii w Product Catalog
                 loadProducts();
             } catch (Exception e) {
-                showAlert("Error", "Failed to delete category", Alert.AlertType.ERROR);
+                showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
             }
         });
 
@@ -558,7 +560,7 @@ public class ProductController {
                 newCategory.setName(name);
 
                 // Wysy�***REMOVED***anie produktu do backendu
-                productService.addCategory(newCategory);
+                categoryService.addCategory(newCategory);
                 loadCategories(); // Odświeżenie listy kategorii w Product Catalog
 
                 // Informacja o sukcesie
@@ -613,7 +615,7 @@ public class ProductController {
                     throw new IllegalArgumentException("Category name cannot be empty.");
                 }
 
-                productService.updateCategory(category.getId(), updatedName);
+                categoryService.updateCategory(category.getId(), updatedName);
 
                 showAlert("Success", "Category updated successfully.", Alert.AlertType.INFORMATION);
                 loadCategoriesList(categoriesListLayout); // Odświeżenie listy
