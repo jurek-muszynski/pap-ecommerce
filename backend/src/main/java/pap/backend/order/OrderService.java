@@ -9,6 +9,7 @@ import pap.backend.user.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -28,19 +29,24 @@ public class OrderService {
 
     public Order getOrder(Long orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "order with id " + orderId + " does not exist"
                 ));
     }
 
     public void addNewOrder(Order order) {
+        User user = userRepository.findById(order.getUser().getId())
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+        order.setUser(user);
+
         orderRepository.save(order);
     }
 
     public void deleteOrder(Long orderId) {
         boolean exists = orderRepository.existsById(orderId);
         if (!exists) {
-            throw new IllegalStateException("order with id " + orderId + " does not exist");
+            throw new NoSuchElementException("order with id " + orderId + " does not exist");
         }
         orderRepository.deleteById(orderId);
     }
@@ -48,7 +54,7 @@ public class OrderService {
     @Transactional
     public void updateOrder(Long orderId, Long userId, LocalDate date) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "order with id " + orderId + " does not exist"
                 ));
 
