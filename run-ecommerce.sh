@@ -3,6 +3,7 @@
 
 # Install docker
 install_docker() {
+    echo "Installing Docker..."
     sudo apt-get update -y
     sudo apt-get install ca-certificates curl -y
     sudo install -m 0755 -d /etc/apt/keyrings
@@ -19,8 +20,8 @@ install_docker() {
     sudo groupadd docker
     sudo usermod -aG docker $USER
 
-    curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
+    sudo curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
 }
 
 # Install openjdk-17
@@ -49,8 +50,10 @@ cleanup() {
 trap cleanup EXIT
 
 # Check if docker is installed
-if [ $(docker --version | wc -l) -eq 0 ]; then
-    install_docker
+if [ !$(docker --version) ]; then
+  echo "Docker already installed"
+else
+  install_docker
 fi
 
 # install openjdk-17
@@ -71,7 +74,7 @@ docker-compose up --build -d --always-recreate-deps
 
 # build the frontend application
 cd ./frontend
-chmod +x ./mvnw
+sudo chmod +x ./mvnw
 ./mvnw clean install
 
 # run the frontend application
