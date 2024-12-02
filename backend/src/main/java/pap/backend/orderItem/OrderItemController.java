@@ -2,74 +2,86 @@ package pap.backend.orderItem;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pap.backend.order.Order;
-import pap.backend.order.OrderRepository;
-import pap.backend.product.Product;
-import pap.backend.product.ProductRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/v1/orderItem")
 public class OrderItemController {
 
     private final OrderItemService orderItemService;
-    private final ProductRepository productRepository;
-    private final OrderRepository orderRepository;
 
     @Autowired
-    public OrderItemController(OrderItemService orderItemService, ProductRepository productRepository, OrderRepository orderRepository) {
+    public OrderItemController(OrderItemService orderItemService) {
         this.orderItemService = orderItemService;
-        this.productRepository = productRepository;
-        this.orderRepository = orderRepository;
     }
 
     @GetMapping("/all")
-    public List<OrderItem> getOrderItems() {
-        return orderItemService.getOrderItems();
+    public ResponseEntity<List<OrderItem>> getOrderItems() {
+        return new ResponseEntity<List<OrderItem>>(orderItemService.getOrderItems(), HttpStatus.OK);
     }
 
     @GetMapping("/get/{orderItemId}")
-    public OrderItem getOrderItem(@PathVariable("orderItemId") Long orderItemId) {
-        return orderItemService.getOrderItem(orderItemId);
+    public ResponseEntity<OrderItem> getOrderItem(@PathVariable("orderItemId") Long orderItemId) {
+        return new ResponseEntity<OrderItem>(orderItemService.getOrderItem(orderItemId), HttpStatus.OK);
     }
 
     @GetMapping("/allWithOrderId/{orderId}")
-    public List<OrderItem> getOrderItemsByOrderId(@PathVariable("orderId") Long orderId) {
-        return orderItemService.getOrderItemsByOrderId(orderId);
+    public ResponseEntity<List<OrderItem>> getOrderItemsByOrderId(@PathVariable("orderId") Long orderId) {
+        return new ResponseEntity<List<OrderItem>>(orderItemService.getOrderItemsByOrderId(orderId), HttpStatus.OK);
     }
 
     @GetMapping("/allWithProductId/{productId}")
-    public List<OrderItem> getOrderItemsByProductId(@PathVariable("productId") Long productId) {
-        return orderItemService.getOrderItemsByProductId(productId);
+    public ResponseEntity<List<OrderItem>> getOrderItemsByProductId(@PathVariable("productId") Long productId) {
+        return new ResponseEntity<List<OrderItem>>(orderItemService.getOrderItemsByProductId(productId), HttpStatus.OK);
     }
 
     @PostMapping("/add") // W ciele żądania podajemy tylko id produktu i zamówienia, reszta zostanie pobrana z encji Product i Order
-    public void addNewOrderItem(@RequestBody OrderItem orderItem) {
-
-        Product product = productRepository.findById(orderItem.getProduct().getId())
-                .orElseThrow(() -> new IllegalStateException("Product not found"));
-
-        Order order = orderRepository.findById(orderItem.getOrder().getId())
-                .orElseThrow(() -> new IllegalStateException("Order not found"));
-
-        orderItem.setProduct(product);
-        orderItem.setOrder(order);
-
-        orderItemService.addNewOrderItem(orderItem);
+    public ResponseEntity<String> addNewOrderItem(@RequestBody OrderItem orderItem) {
+        try {
+            orderItemService.addNewOrderItem(orderItem);
+            return new ResponseEntity<String>("OrderItem added successfully", HttpStatus.CREATED);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Error adding orderItem", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/delete/{orderItemId}")
-    public void deleteOrderItem(@PathVariable("orderItemId") Long orderItemId) {
-        orderItemService.deleteOrderItem(orderItemId);
+    public ResponseEntity<String> deleteOrderItem(@PathVariable("orderItemId") Long orderItemId) {
+        try {
+            orderItemService.deleteOrderItem(orderItemId);
+            return new ResponseEntity<String>("OrderItem deleted successfully", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<String>("Error deleting orderItem", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/update/{orderItemId}")
-    public void updateOrderItem(
+    public ResponseEntity<String> updateOrderItem(
             @PathVariable("orderItemId") Long orderItemId,
             @RequestParam(required = false) Long productId,
             @RequestParam(required = false) Long orderId) {
-        orderItemService.updateOrderItem(orderItemId, productId, orderId);
+
+        try {
+            orderItemService.updateOrderItem(orderItemId, productId, orderId);
+            return new ResponseEntity<String>("OrderItem updated successfully", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Error updating orderItem", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
