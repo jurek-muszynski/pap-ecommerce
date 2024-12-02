@@ -72,7 +72,7 @@ chmod +x ./mvnw
 ./mvnw clean install
 
 # run the frontend application
-APP_NAME=$(ls ./target/*.jar)
+APP_NAME=$(ls ./target/frontend-0.0.1.jar)
 
 # dummy timeout to wait for the backend to start
 sleep 10
