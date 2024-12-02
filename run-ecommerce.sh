@@ -1,9 +1,11 @@
 #!/bin/bash
 # This bash script is used to install all necessary dependencies and run the application
 
+# VARIABLES
+export SECRET_FILE_PATH=$(pwd)/secrets/db_password.txt
+
 # Install docker
 install_docker() {
-    echo "Installing Docker..."
     sudo apt-get update -y
     sudo apt-get install ca-certificates curl -y
     sudo install -m 0755 -d /etc/apt/keyrings
@@ -19,6 +21,8 @@ install_docker() {
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
     sudo groupadd docker
     sudo usermod -aG docker $USER
+
+    sudo chmod 666 /var/run/docker.sock
 
     sudo curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
@@ -49,11 +53,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Check if docker is installed
-if [ !$(docker --version) ]; then
-  echo "Docker already installed"
-else
-  install_docker
+if [ $(dpkg -l | grep docker | wc -l) -eq 0 ]; then
+    install_docker
 fi
 
 # install openjdk-17
@@ -67,10 +68,16 @@ if [ $(dpkg -l | grep openjfx | wc -l) -eq 0 ]; then
 fi 
 
 # set the environment variable for the docker-compose secret
-export SECRET_FILE_PATH=$(pwd)/secrets/db_password.txt
+
 
 # run docker-compose
 docker-compose up --build -d --always-recreate-deps
+
+# dummy timeout to wait for the database to start
+sleep 5
+
+# feed the database 
+docker exec -i database bash -c "psql -U postgres -d ecommerce" < ./db/init/insert-data.sql
 
 # build the frontend application
 cd ./frontend
@@ -79,6 +86,8 @@ sudo chmod +x ./mvnw
 
 # run the frontend application
 APP_NAME=$(ls ./target/frontend-0.0.1.jar)
+
+unset GTK_PATH
 
 # dummy timeout to wait for the backend to start
 sleep 10
