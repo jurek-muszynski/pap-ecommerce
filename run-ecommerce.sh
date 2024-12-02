@@ -77,7 +77,7 @@ docker-compose up --build -d --always-recreate-deps
 sleep 5
 
 # feed the database 
-docker exec -i database bash -c "psql -U postgres -d ecommerce" < ./db/init/insert-data.sql
+# docker exec -i database bash -c "psql -U postgres -d ecommerce" < ./db/init/insert-data.sql
 
 # build the frontend application
 cd ./frontend
