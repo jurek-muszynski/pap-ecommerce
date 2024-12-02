@@ -19,7 +19,7 @@ RUN chown -R spring:spring /app
 RUN ./mvnw clean package -DskipTests
 
 # Set the jar file path
-ARG JAR_FILE=target/*.jar
+ARG JAR_FILE=target/backend-0.0.1.jar
 
 # Change the ownership of the created jar executables directory
 RUN chown -R spring:spring /app/target
