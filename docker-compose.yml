@@ -9,10 +9,12 @@ services:
       - "5433:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
       POSTGRES_DB: ecommerce
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    secrets:
+      - db_password
 
   backend:
     build:
@@ -24,10 +26,16 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/ecommerce
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=12345
+      - SPRING_DATASOURCE_PASSWORD_FILE=/run/secrets/db_password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       - database
+    secrets:
+      - db_password
+
+secrets:
+  db_password:
+    file: db_password.txt
 
 volumes:
   postgres_data:
