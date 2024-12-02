@@ -18,6 +18,9 @@ install_docker() {
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
     sudo groupadd docker
     sudo usermod -aG docker $USER
+
+    curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
 }
 
 # Install openjdk-17
