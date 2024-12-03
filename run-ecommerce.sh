@@ -21,8 +21,12 @@ install_docker() {
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
     sudo groupadd docker
     sudo usermod -aG docker $USER
+    
+    newgrp docker
+    
+    su -s $USER
 
-    sudo chmod 666 /var/run/docker.sock
+    sudo chmod 777 /var/run/docker.sock
 
     sudo curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
