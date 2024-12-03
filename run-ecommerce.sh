@@ -90,8 +90,7 @@ APP_NAME=$(ls ./target/frontend-0.0.1.jar)
 unset GTK_PATH
 
 # dummy timeout to wait for the backend to start
-sleep 10
+sleep 5
 
 # run the frontend application
 java --module-path /usr/share/openjfx/lib/ --add-modules javafx.controls,javafx.fxml -jar $APP_NAME
-
