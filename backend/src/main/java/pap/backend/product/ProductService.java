@@ -34,6 +34,11 @@ public class ProductService {
     }
 
     public Product addNewProduct(Product product) {
+        Category category = categoryRepository.findById(product.getCategory().getId())
+                .orElseThrow(() -> new IllegalStateException("Category not found"));
+
+        product.setCategory(category);
+
         Optional<Product> productOptional = productRepository.findProductByName(product.getName());
         if (productOptional.isPresent()) {
             throw new IllegalStateException("product name taken");
