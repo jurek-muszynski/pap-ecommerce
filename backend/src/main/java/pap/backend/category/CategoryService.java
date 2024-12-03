@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,7 +24,7 @@ public class CategoryService {
 
     public Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "category with id " + categoryId + " does not exist"
                 ));
     }
