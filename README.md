@@ -19,6 +19,24 @@ Głównym celem tego projektu jest stworzenie aplikacji w stylu sklepu-online, k
 2. Główna logika działania sklepu +Api =\> **Java Spring Boot**
 3. Baza danych =\> **PostgreSQL**
 
+### Instrukcja instalacji
+
+---
+
+Instalacje oraz uruchomienie programu obsługuje skrypt `run-ecommerce.sh`, który jest odpowiedzialny za pobranie oraz skonfigurowanie wszystkich koniecznych zależności do uruchomienia aplikacji na kontenerze dockerowym (część backendowa) oraz maszynie lokalnej (frontend). Poszczególne etapy są krótko opisane w samym skrypcie. Aplikacje należy uruchomić w następujący sposób
+
+```
+git clone https://gitlab-stud.elka.pw.edu.pl/pap2024z-z22/pap2024z-z22.git
+cd pap2024z-z22
+sh run-ecommerce.sh
+```
+
+W przypadku błędów uzyskanych po uruchomieniu skryptu należy przede wszystkim upewnić się że: 
+1. nasz system nie konwertuje automatycznie LF -> CRLF przy każdorazowym pobraniu kodu ze zdalnego repozytorium, potencjalnym rozwiązaniem może być zastosowanie komendy  `git config core.autocrlf false`
+2. doszło do poprawnej instalacji dockera oraz docker-compose: `docker --version` i `docker-compose --version`
+
+Alternatywą do uruchomienia aplikacji w kontenerze jest posłużenie się którymś z IDE obsługujących projekty mavenowe, np. Intelij IDEA. Z poziomu takiego środowiska należy oddzielnie uruchomić projekt backendowy znajdujący się w `backend/` oraz frontendowy `frontend/`
+
 ### Główne funkcjonalności: :rocket:
 
 ---
