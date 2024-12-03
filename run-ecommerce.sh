@@ -27,7 +27,10 @@ install_docker() {
     su -s $USER
 
     sudo chmod 777 /var/run/docker.sock
+}
 
+# Install docker-compose
+install_docker_compose() {
     sudo curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
 }
@@ -59,6 +62,10 @@ trap cleanup EXIT
 
 if [ $(dpkg -l | grep docker | wc -l) -eq 0 ]; then
     install_docker
+fi
+
+if [ $(dpkg -l | grep docker-compose | wc -l) -eq 0 ]; then
+    install_docker_compose
 fi
 
 # install openjdk-17
