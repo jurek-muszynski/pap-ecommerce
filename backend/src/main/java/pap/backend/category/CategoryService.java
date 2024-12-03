@@ -4,6 +4,8 @@ package pap.backend.category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pap.backend.product.Product;
+import pap.backend.product.ProductRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -12,10 +14,12 @@ import java.util.Optional;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     public List<Category> getCategories() {
@@ -40,15 +44,27 @@ public class CategoryService {
     public void deleteCategory(Long categoryId) {
         boolean exists = categoryRepository.existsById(categoryId);
         if (!exists) {
-            throw new IllegalStateException("category with id " + categoryId + " does not exist");
+            throw new NoSuchElementException("category with id " + categoryId + " does not exist");
         }
+
+        List<Product> products = productRepository.findProductsByCategoryId(categoryId);
+
+        if (!products.isEmpty()) {
+            String productsString = "";
+            for (Product product: products){
+                productsString += "- " + product.getName() + "\n";
+            }
+            String categoryHasProducts = "category with id " + categoryId + " has products: \n" + productsString;
+            throw new IllegalStateException(categoryHasProducts);
+        }
+
         categoryRepository.deleteById(categoryId);
     }
 
     @Transactional
     public void updateCategory(Long categoryId, String name) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "category with id " + categoryId + " does not exist"
                 ));
 
