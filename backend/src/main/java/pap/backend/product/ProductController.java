@@ -45,13 +45,7 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addNewProduct(@RequestBody Product product) { // w ciele kategorii podajemy tylko id, reszta pobierana z encji Category
-
-        Category category = categoryRepository.findById(product.getCategory().getId())
-                .orElseThrow(() -> new IllegalStateException("Category not found"));
-
-        product.setCategory(category);
-
+    public ResponseEntity<String> addNewProduct(@RequestBody Product product) {
         try {
             productService.addNewProduct(product);
             return new ResponseEntity<String>("Product added successfully", HttpStatus.CREATED);

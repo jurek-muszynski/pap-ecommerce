@@ -28,7 +28,7 @@ public class CategoryService {
 
     public Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalStateException(
+                .orElseThrow(() -> new NoSuchElementException(
                         "category with id " + categoryId + " does not exist"
                 ));
     }
