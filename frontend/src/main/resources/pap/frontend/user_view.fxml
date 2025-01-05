@@ -23,6 +23,7 @@
                     <Insets right="5" />
                 </HBox.margin>
             </Button>
+            <Button text="Manage Account" onAction="#openAccountManagement" />
         </HBox>
 
     </top>
