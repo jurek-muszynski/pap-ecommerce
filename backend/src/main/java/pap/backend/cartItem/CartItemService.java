@@ -48,6 +48,13 @@ public class CartItemService {
             throw new IllegalStateException("Product with id " + cartItem.getProduct().getId() + " does not exist");
         }
 
+        List<CartItem> cartItems = cartItemRepository.findCartItemsByCartId(cartItem.getCart().getId());
+        for (CartItem item : cartItems) {
+            if (item.getProduct().getId().equals(cartItem.getProduct().getId())) {
+                throw new IllegalStateException("Product with id " + cartItem.getProduct().getId() + " is already in the cart");
+            }
+        }
+
         cartItem.setCart(cartOptional.get());
         cartItem.setProduct(productOptional.get());
 

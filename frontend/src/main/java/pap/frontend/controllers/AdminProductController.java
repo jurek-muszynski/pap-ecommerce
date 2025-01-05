@@ -18,13 +18,11 @@ import javafx.stage.Stage;
 import pap.frontend.models.Category;
 import pap.frontend.models.Product;
 import pap.frontend.services.*;
-import pap.frontend.controllers.ScreenController;
-import pap.frontend.controllers.ControlledScreen;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductController implements ControlledScreen{
+public class AdminProductController implements ControlledScreen{
 
     @FXML
     private TilePane productTilePane;
