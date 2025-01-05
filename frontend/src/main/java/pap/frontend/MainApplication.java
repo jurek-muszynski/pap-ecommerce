@@ -16,7 +16,7 @@ public class MainApplication extends Application {
 
         // Add screens
         screenController.addScreen("roleSelection", "/pap/frontend/role_selection.fxml");
-        screenController.addScreen("adminView", "/pap/frontend/product_list.fxml");
+        screenController.addScreen("adminView", "/pap/frontend/admin_view.fxml");
         screenController.addScreen("userView", "/pap/frontend/user_view.fxml");
         screenController.addScreen("accountManagement", "/pap/frontend/account_management.fxml");
 
