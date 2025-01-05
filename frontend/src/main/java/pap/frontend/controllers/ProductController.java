@@ -18,11 +18,13 @@ import javafx.stage.Stage;
 import pap.frontend.models.Category;
 import pap.frontend.models.Product;
 import pap.frontend.services.*;
+import pap.frontend.controllers.ScreenController;
+import pap.frontend.controllers.ControlledScreen;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductController {
+public class ProductController implements ControlledScreen{
 
     @FXML
     private TilePane productTilePane;
@@ -35,6 +37,8 @@ public class ProductController {
 
     private final ProductService productService = new ProductService();
     private final CategoryService categoryService = new CategoryService();
+
+    private ScreenController screenController;
 
     @FXML
     public void initialize() {
@@ -52,6 +56,18 @@ public class ProductController {
         });
     }
 
+    @Override
+    public void setScreenController(ScreenController screenController) {
+        this.screenController = screenController;
+    }
+
+    @FXML
+    private void openAccountManagement() {
+        if (screenController != null) {
+            screenController.activate("accountManagement");
+        }
+    }
+
     private void loadProducts() {
         List<Product> products = productService.getProducts();
         updateProductTiles(products);
@@ -60,6 +76,13 @@ public class ProductController {
     private void loadCategories() {
         List<Category> categories = categoryService.getCategories();
         categoryComboBox.setItems(FXCollections.observableArrayList(categories));
+    }
+
+    @FXML
+    private void goBackToRoleSelection() {
+        if (screenController != null) {
+            screenController.activate("roleSelection");
+        }
     }
 
     @FXML
