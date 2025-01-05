@@ -9,17 +9,18 @@ import pap.frontend.controllers.ScreenController;
 public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
-        Scene mainScene = new Scene(new Pane(), 800, 600); // Placeholder
+        Scene mainScene = new Scene(new Pane(), 800, 600);
 
-        // Inicjalizacja ScreenController
+        // Initialize ScreenController
         ScreenController screenController = new ScreenController(mainScene);
 
-        // Dodawanie widoków
+        // Add screens
         screenController.addScreen("roleSelection", "/pap/frontend/role_selection.fxml");
         screenController.addScreen("adminView", "/pap/frontend/product_list.fxml");
         screenController.addScreen("userView", "/pap/frontend/user_view.fxml");
+        screenController.addScreen("accountManagement", "/pap/frontend/account_management.fxml");
 
-        // Aktywuj widok wyboru ról
+        // Activate initial screen
         screenController.activate("roleSelection");
 
         primaryStage.setScene(mainScene);

@@ -60,6 +60,13 @@ public class UserProductController implements ControlledScreen {
         this.screenController = screenController;
     }
 
+    @FXML
+    private void openAccountManagement() {
+        if (screenController != null) {
+            screenController.activate("accountManagement");
+        }
+    }
+
     private void loadProducts() {
         List<Product> products = productService.getProducts();
         updateProductTiles(products);
@@ -116,25 +123,34 @@ public class UserProductController implements ControlledScreen {
             Image image = new Image(imageUrl);
             imageView.setImage(image);
         } catch (Exception e) {
-            System.out.println("Failed to load product image: " + product.getName());
+
         }
         imageView.setFitWidth(150);
         imageView.setFitHeight(150);
         imageView.setPreserveRatio(true);
+        imageView.getStyleClass().add("image-view");
 
         // Text elements
         Text nameText = new Text(product.getName());
+        nameText.getStyleClass().add("name-text");
+
         Text descriptionText = new Text(product.getDescription());
         descriptionText.setWrappingWidth(150);
-        Text priceText = new Text(String.format("$%.2f", product.getPrice()));
+        descriptionText.getStyleClass().add("description-text");
 
-        // "Show Details" button
+        Text priceText = new Text(String.format("$%.2f", product.getPrice()));
+        priceText.getStyleClass().add("price-text");
+
+        // Buttons
         Button showDetailsButton = new Button("Show Details");
+        showDetailsButton.setStyle("-fx-background-color: #87CEEB; -fx-text-fill: white;");
         showDetailsButton.setOnAction(event -> showProductDetails(product));
 
+        // Product Card
         VBox productCard = new VBox(10, imageView, nameText, descriptionText, priceText, showDetailsButton);
         productCard.getStyleClass().add("product-card");
         productCard.setPrefWidth(200);
+
         return productCard;
     }
 
@@ -187,11 +203,61 @@ public class UserProductController implements ControlledScreen {
 
         // Okrągły przycisk zamykania
         Button closeButton = new Button("X");
-        closeButton.setStyle("-fx-background-color: transparent; -fx-border-color: #ff4d4f; -fx-text-fill: #ff4d4f;");
+        closeButton.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-border-color: #ff4d4f; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 25px; " +
+                        "-fx-background-radius: 25px; " +
+                        "-fx-text-fill: #ff4d4f; " +
+                        "-fx-font-size: 16px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-cursor: hand; " +
+                        "-fx-padding: 10;"
+        );
+
+        closeButton.setOnMouseEntered(event -> {
+            closeButton.setStyle(
+                    "-fx-background-color: #ff4d4f; " +
+                            "-fx-border-color: #ff4d4f; " +
+                            "-fx-border-width: 2px; " +
+                            "-fx-border-radius: 25px; " +
+                            "-fx-background-radius: 25px; " +
+                            "-fx-text-fill: white; " +
+                            "-fx-font-size: 16px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-cursor: hand; " +
+                            "-fx-padding: 10;"
+            );
+        });
+
+        closeButton.setOnMouseExited(event -> {
+            closeButton.setStyle(
+                    "-fx-background-color: transparent; " +
+                            "-fx-border-color: #ff4d4f; " +
+                            "-fx-border-width: 2px; " +
+                            "-fx-border-radius: 25px; " +
+                            "-fx-background-radius: 25px; " +
+                            "-fx-text-fill: #ff4d4f; " +
+                            "-fx-font-size: 16px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-cursor: hand; " +
+                            "-fx-padding: 10;"
+            );
+        });
+
         closeButton.setOnAction(event -> detailsStage.close());
 
-        VBox detailsLayout = new VBox(20, titleLabel, imageView, descriptionLabel, priceLabel, categoryLabel, quantityLabel, closeButton);
-        detailsLayout.setPadding(new Insets(20));
+        // Główny układ
+        VBox detailsLayout = new VBox(20);
+        detailsLayout.setStyle("-fx-padding: 30; -fx-alignment: center; -fx-spacing: 20; -fx-background-color: #f9f9f9;");
+
+        // Dodanie elementów do głównego układu
+        detailsLayout.getChildren().addAll(titleLabel, imageView, descriptionLabel, priceLabel, categoryLabel, quantityLabel, closeButton);
+
+        // Ustawienie marginesu przycisku
+        VBox.setMargin(closeButton, new Insets(20, 0, 30, 0));
+
         Scene scene = new Scene(detailsLayout, 450, 650);
         detailsStage.setScene(scene);
         detailsStage.show();
