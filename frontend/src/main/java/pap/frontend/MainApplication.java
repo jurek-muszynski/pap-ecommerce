@@ -1,57 +1,30 @@
 package pap.frontend;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import pap.frontend.controllers.ScreenController;
 
 public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
-        // Główne okno wyboru ról
-        VBox root = new VBox(20);
-        root.setStyle("-fx-alignment: center; -fx-padding: 20;");
+        Scene mainScene = new Scene(new Pane(), 800, 600); // Placeholder
 
-        // Przycisk dla Admina
-        Button adminButton = new Button("Admin");
-        adminButton.setOnAction(event -> loadAdminView(primaryStage));
+        // Inicjalizacja ScreenController
+        ScreenController screenController = new ScreenController(mainScene);
 
-        // Przycisk dla Użytkownika
-        Button userButton = new Button("Użytkownik");
-        userButton.setOnAction(event -> loadUserView(primaryStage));
+        // Dodawanie widoków
+        screenController.addScreen("roleSelection", "/pap/frontend/role_selection.fxml");
+        screenController.addScreen("adminView", "/pap/frontend/product_list.fxml");
+        screenController.addScreen("userView", "/pap/frontend/user_view.fxml");
 
-        root.getChildren().addAll(adminButton, userButton);
+        // Aktywuj widok wyboru ról
+        screenController.activate("roleSelection");
 
-        Scene scene = new Scene(root, 300, 200);
-        primaryStage.setTitle("Wybór roli");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(mainScene);
+        primaryStage.setTitle("Product Catalog");
         primaryStage.show();
-    }
-
-    public void loadAdminView(Stage stage) {
-        try {
-            // Ładowanie widoku admina (np. product_list.fxml)
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pap/frontend/product_list.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadUserView(Stage stage) {
-        try {
-            // Ładowanie widoku użytkownika (nowy plik FXML, np. user_view.fxml)
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pap/frontend/user_view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void main(String[] args) {
