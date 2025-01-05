@@ -5,7 +5,7 @@ import pap.backend.order.Order;
 import pap.backend.product.Product;
 
 @Entity
-@Table
+@Table(name = "orderItems")
 public class OrderItem {
 
     @Id
