@@ -4,21 +4,20 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.layout.Pane;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import pap.frontend.controllers.ControlledScreen;
 import pap.frontend.controllers.ScreenController;
+import pap.frontend.models.CartItem;
 import pap.frontend.models.Category;
 import pap.frontend.models.Product;
+import pap.frontend.services.CartService;
 import pap.frontend.services.CategoryService;
 import pap.frontend.services.ProductService;
 
@@ -146,8 +145,12 @@ public class UserProductController implements ControlledScreen {
         showDetailsButton.setStyle("-fx-background-color: #87CEEB; -fx-text-fill: white;");
         showDetailsButton.setOnAction(event -> showProductDetails(product));
 
+        Button addToCartButton = new Button("Add to Cart");
+        addToCartButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+        addToCartButton.setOnAction(event -> addToCart(product));
+
         // Product Card
-        VBox productCard = new VBox(10, imageView, nameText, descriptionText, priceText, showDetailsButton);
+        VBox productCard = new VBox(10, imageView, nameText, descriptionText, priceText, showDetailsButton, addToCartButton);
         productCard.getStyleClass().add("product-card");
         productCard.setPrefWidth(200);
 
@@ -263,8 +266,36 @@ public class UserProductController implements ControlledScreen {
         detailsStage.show();
     }
 
+    private void addToCart(Product product) {
+        try {
+            // Create a CartItem object
+            CartItem cartItem = new CartItem();
+            cartItem.setProductId(product.getId());
+            cartItem.setCartId(1L); // Replace with logic to fetch the current user's cart ID
+
+            // Call the backend to add the item to the cart
+            CartService cartService = new CartService();
+            cartService.addCartItem(cartItem);
+
+            // Show success alert
+            showAlert("Success", "Product added to cart successfully.", Alert.AlertType.INFORMATION);
+        } catch (Exception e) {
+            // Show error alert
+            showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+
     @FXML
     private void updateTable() {
         loadProducts();
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
