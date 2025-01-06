@@ -1,8 +1,13 @@
 package pap.frontend.models;
 
 public class CartItem {
+    private Long id;
     private Long productId;
     private Long cartId;
+
+    public Long getId() {
+        return id;
+    }
 
     // Getters and setters
     public Long getProductId() {

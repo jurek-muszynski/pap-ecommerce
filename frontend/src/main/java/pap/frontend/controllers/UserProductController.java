@@ -10,10 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import pap.frontend.controllers.ControlledScreen;
-import pap.frontend.controllers.ScreenController;
 import pap.frontend.models.CartItem;
 import pap.frontend.models.Category;
 import pap.frontend.models.Product;
@@ -51,7 +48,7 @@ public class UserProductController implements ControlledScreen {
 
         loadCategories();
         loadProducts();
-        loadUserCart();
+//        loadUserCart();
 
         // Enable live search
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -68,6 +65,13 @@ public class UserProductController implements ControlledScreen {
     private void openAccountManagement() {
         if (screenController != null) {
             screenController.activate("accountManagement");
+        }
+    }
+
+    @FXML
+    private void openCart() {
+        if (screenController != null) {
+            screenController.activate("cartView");
         }
     }
 
@@ -281,62 +285,65 @@ public class UserProductController implements ControlledScreen {
             // Call the backend to add the item to the cart
             cartService.addCartItem(cartItem);
 
+
             // Show success alert
             showAlert("Success", "Product added to cart successfully.", Alert.AlertType.INFORMATION);
+
+
         } catch (Exception e) {
             // Show error alert
             showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-    @FXML
-    private void loadUserCart() {
-        try {
-            // Fetch cart items for the logged-in user
-            List<CartItem> cartItems = cartService.getCartItemsByUserId(1L); // Replace with logic to fetch the current user's ID
-            System.out.println(cartItems);
-            // Update the cartPane with the fetched cart items
-            updateCartView(cartItems);
-
-            for (CartItem cartItem : cartItems) {
-                Product product = productService.getProductById(cartItem.getProductId());
-                System.out.println(product);;
-            }
-
-        } catch (Exception e) {
-            showAlert("Error", "Failed to load cart items: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
-
-    /**
-     * Updates the cart view with the given cart items.
-     */
-    @FXML
-    private void updateCartView(List<CartItem> cartItems) {
-        cartPane.getChildren().clear(); // Clear the current cart view
-
-        for (CartItem cartItem : cartItems) {
-            // Create a VBox for each cart item
-            VBox cartItemBox = new VBox(10);
-
-            System.out.println(cartItem.getProductId());
-
-            Product product = productService.getProductById(cartItem.getProductId());
-
-            System.out.println(product);
-
-            // Display product information
-            Label productName = new Label("Product: " +  product.getName());
-            Label productPrice = new Label("Price: $" + product.getPrice());
-
-            // Add a remove button for each cart item
-            Button removeButton = new Button("Remove");
-//            removeButton.setOnAction(event -> removeCartItem(cartItem.getId()));
-
-            cartItemBox.getChildren().addAll(productName, productPrice, removeButton);
-            cartPane.getChildren().add(cartItemBox);
-        }
-    }
+//    @FXML
+//    private void loadUserCart() {
+//        try {
+//            // Fetch cart items for the logged-in user
+//            List<CartItem> cartItems = cartService.getCartItemsByUserId(1L); // Replace with logic to fetch the current user's ID
+//            System.out.println(cartItems);
+//            // Update the cartPane with the fetched cart items
+//            updateCartView(cartItems);
+//
+//            for (CartItem cartItem : cartItems) {
+//                Product product = productService.getProductById(cartItem.getProductId());
+//                System.out.println(product);;
+//            }
+//
+//        } catch (Exception e) {
+//            showAlert("Error", "Failed to load cart items: " + e.getMessage(), Alert.AlertType.ERROR);
+//        }
+//    }
+//
+//    /**
+//     * Updates the cart view with the given cart items.
+//     */
+//    @FXML
+//    private void updateCartView(List<CartItem> cartItems) {
+//        cartPane.getChildren().clear(); // Clear the current cart view
+//
+//        for (CartItem cartItem : cartItems) {
+//            // Create a VBox for each cart item
+//            VBox cartItemBox = new VBox(10);
+//
+//            System.out.println(cartItem.getProductId());
+//
+//            Product product = productService.getProductById(cartItem.getProductId());
+//
+//            System.out.println(product);
+//
+//            // Display product information
+//            Label productName = new Label("Product: " +  product.getName());
+//            Label productPrice = new Label("Price: $" + product.getPrice());
+//
+//            // Add a remove button for each cart item
+//            Button removeButton = new Button("Remove");
+////            removeButton.setOnAction(event -> removeCartItem(cartItem.getId()));
+//
+//            cartItemBox.getChildren().addAll(productName, productPrice, removeButton);
+//            cartPane.getChildren().add(cartItemBox);
+//        }
+//    }
 
     /**
      * Removes a cart item and refreshes the cart view.
@@ -355,7 +362,7 @@ public class UserProductController implements ControlledScreen {
     @FXML
     private void updateTable() {
         loadProducts();
-        loadUserCart();
+//        loadUserCart();
     }
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {
