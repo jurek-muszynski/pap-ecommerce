@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import pap.frontend.controllers.ScreenController;
 
 public class MainApplication extends Application {
+
     @Override
     public void start(Stage primaryStage) {
         Scene mainScene = new Scene(new Pane(), 800, 600);
@@ -19,6 +20,7 @@ public class MainApplication extends Application {
         screenController.addScreen("adminView", "/pap/frontend/admin_view.fxml");
         screenController.addScreen("userView", "/pap/frontend/user_view.fxml");
         screenController.addScreen("accountManagement", "/pap/frontend/account_management.fxml");
+        screenController.addScreen("cartView", "/pap/frontend/cart.fxml");
 
         // Activate initial screen
         screenController.activate("roleSelection");
