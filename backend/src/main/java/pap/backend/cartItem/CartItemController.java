@@ -64,6 +64,13 @@ public class CartItemController {
         return new ResponseEntity<List<CartItem>>(cartItemService.getCartItemsByProductId(productId), HttpStatus.OK);
     }
 
+    @GetMapping("/productsWithCartId/{cartId}")
+    public ResponseEntity<List<Product>> getProductsByCartId(@PathVariable("cartId") Long cartId) {
+        List<Product> products = cartItemService.getProductsByCartId(cartId);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+
     @PostMapping("/add")
     public ResponseEntity<String> addNewCartItem(@RequestBody CartItemDTO cartItemDTO) {
         try {

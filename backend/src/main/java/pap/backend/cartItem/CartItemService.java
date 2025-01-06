@@ -125,6 +125,19 @@ public class CartItemService {
         return cartItemRepository.findCartItemsByProductId(productId);
     }
 
+    public List<Product> getProductsByCartId(Long cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new IllegalStateException("Cart with id " + cartId + " does not exist"));
+
+        List<CartItem> cartItems = cartItemRepository.findCartItemsByCartId(cartId);
+
+        // Mapujemy listę CartItem na listę produktów
+        return cartItems.***REMOVED***()
+                .map(CartItem::getProduct)
+                .toList();
+    }
+
+
     public List<CartItem> getCartItemsByUserId(Long userId) {
         return cartItemRepository.findCartItemsByUserId(userId);
     }
