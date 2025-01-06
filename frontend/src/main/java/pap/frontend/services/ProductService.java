@@ -36,6 +36,10 @@ public class ProductService {
         return fetchFromApi(BASE_API_URL + "/product/withName/" + productName, Product.class);
     }
 
+    public Product getProductById(Long productId) {
+        return fetchFromApi(BASE_API_URL + "/product/get/" + productId, Product.class);
+    }
+
     public List<Category> getCategories() {
         return fetchFromApi(BASE_API_URL + "/category/all", new TypeToken<List<Category>>() {}.getType());
     }

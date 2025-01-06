@@ -30,6 +30,9 @@ public class UserProductController implements ControlledScreen {
     private TilePane productTilePane;
 
     @FXML
+    private VBox cartPane;
+
+    @FXML
     private TextField searchField;
 
     @FXML
@@ -37,6 +40,7 @@ public class UserProductController implements ControlledScreen {
 
     private final ProductService productService = new ProductService();
     private final CategoryService categoryService = new CategoryService();
+    private final CartService cartService = new CartService();
 
     private ScreenController screenController;
 
@@ -47,6 +51,7 @@ public class UserProductController implements ControlledScreen {
 
         loadCategories();
         loadProducts();
+        loadUserCart();
 
         // Enable live search
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -274,7 +279,6 @@ public class UserProductController implements ControlledScreen {
             cartItem.setCartId(1L); // Replace with logic to fetch the current user's cart ID
 
             // Call the backend to add the item to the cart
-            CartService cartService = new CartService();
             cartService.addCartItem(cartItem);
 
             // Show success alert
@@ -285,10 +289,73 @@ public class UserProductController implements ControlledScreen {
         }
     }
 
+    @FXML
+    private void loadUserCart() {
+        try {
+            // Fetch cart items for the logged-in user
+            List<CartItem> cartItems = cartService.getCartItemsByUserId(1L); // Replace with logic to fetch the current user's ID
+            System.out.println(cartItems);
+            // Update the cartPane with the fetched cart items
+            updateCartView(cartItems);
+
+            for (CartItem cartItem : cartItems) {
+                Product product = productService.getProductById(cartItem.getProductId());
+                System.out.println(product);;
+            }
+
+        } catch (Exception e) {
+            showAlert("Error", "Failed to load cart items: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    /**
+     * Updates the cart view with the given cart items.
+     */
+    @FXML
+    private void updateCartView(List<CartItem> cartItems) {
+        cartPane.getChildren().clear(); // Clear the current cart view
+
+        for (CartItem cartItem : cartItems) {
+            // Create a VBox for each cart item
+            VBox cartItemBox = new VBox(10);
+
+            System.out.println(cartItem.getProductId());
+
+            Product product = productService.getProductById(cartItem.getProductId());
+
+            System.out.println(product);
+
+            // Display product information
+            Label productName = new Label("Product: " +  product.getName());
+            Label productPrice = new Label("Price: $" + product.getPrice());
+
+            // Add a remove button for each cart item
+            Button removeButton = new Button("Remove");
+//            removeButton.setOnAction(event -> removeCartItem(cartItem.getId()));
+
+            cartItemBox.getChildren().addAll(productName, productPrice, removeButton);
+            cartPane.getChildren().add(cartItemBox);
+        }
+    }
+
+    /**
+     * Removes a cart item and refreshes the cart view.
+     */
+//    private void removeCartItem(Long cartItemId) {
+//        try {
+//            cartService.removeCartItem(cartItemId); // Call backend to remove the cart item
+//            showAlert("Success", "Item removed from cart.", Alert.AlertType.INFORMATION);
+//            loadUserCart(); // Refresh the cart view
+//        } catch (Exception e) {
+//            showAlert("Error", "Failed to remove cart item: " + e.getMessage(), Alert.AlertType.ERROR);
+//        }
+//    }
+
 
     @FXML
     private void updateTable() {
         loadProducts();
+        loadUserCart();
     }
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {
