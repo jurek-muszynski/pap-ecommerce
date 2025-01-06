@@ -78,4 +78,22 @@ public class CartService {
             throw new RuntimeException("ERROR ADDING CART ITEM: " + e.getMessage());
         }
     }
+
+    public void removeCartItem(Long cartItemId) {
+        String url = BASE_API_URL + "/cartItem/delete/" + cartItemId;
+
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .DELETE()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException(response.body());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("ERROR REMOVING CART ITEM: " + e.getMessage());
+        }
+    }
 }
