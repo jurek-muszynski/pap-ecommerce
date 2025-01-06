@@ -1,10 +1,26 @@
-package pap.frontend.models;
+package pap.backend.cartItem;
 
-public class CartItem {
+public class CartItemDTO {
+    private Long id;
     private Long productId;
     private Long cartId;
 
+    // Constructor
+    public CartItemDTO(Long id, Long productId, Long cartId) {
+        this.id = id;
+        this.productId = productId;
+        this.cartId = cartId;
+    }
+
     // Getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getProductId() {
         return productId;
     }
@@ -19,14 +35,5 @@ public class CartItem {
 
     public void setCartId(Long cartId) {
         this.cartId = cartId;
-    }
-
-    // toString
-    @Override
-    public String toString() {
-        return "CartItem{" +
-                "productId=" + productId +
-                ", cartId=" + cartId +
-                '}';
     }
 }
