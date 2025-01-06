@@ -8,6 +8,7 @@ import pap.backend.cart.CartRepository;
 import pap.backend.product.Product;
 import pap.backend.product.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -122,5 +123,9 @@ public class CartItemService {
                 .orElseThrow(() -> new IllegalStateException("Product with id " + productId + " does not exist"));
 
         return cartItemRepository.findCartItemsByProductId(productId);
+    }
+
+    public List<CartItem> getCartItemsByUserId(Long userId) {
+        return cartItemRepository.findCartItemsByUserId(userId);
     }
 }
