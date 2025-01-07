@@ -26,7 +26,7 @@ public class Cart {
     private User user;
 
     @Column(name = "last_update", nullable = false)
-    private LocalDate lastUpdate;
+    LocalDate lastUpdate;
 
     public Cart() {}
 
