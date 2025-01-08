@@ -1,6 +1,8 @@
 package pap.backend.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +44,16 @@ public class UserService {
             throw new NoSuchElementException("user with id " + userId + " does not exist");
         }
         userRepository.deleteById(userId);
+    }
+
+    public User getMe() {
+        // Get the authenticated user from the security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // The principal (email/username)
+
+        // Fetch the user from the database
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
 //    @Transactional

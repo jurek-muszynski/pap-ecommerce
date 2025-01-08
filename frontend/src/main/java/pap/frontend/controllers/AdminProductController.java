@@ -22,7 +22,7 @@ import pap.frontend.services.*;
 import java.util.List;
 import java.util.***REMOVED***.Collectors;
 
-public class AdminProductController implements ControlledScreen{
+public class AdminProductController extends AuthenticatedController{
 
     @FXML
     private TilePane productTilePane;
@@ -36,6 +36,12 @@ public class AdminProductController implements ControlledScreen{
     private final ProductService productService = new ProductService();
     private final CategoryService categoryService = new CategoryService();
 
+
+
+    public AdminProductController() {
+        super(AuthService.getInstance());
+    }
+
     private ScreenController screenController;
 
     @FXML
@@ -45,13 +51,21 @@ public class AdminProductController implements ControlledScreen{
         searchField.getStyleClass().add("text-field");
         categoryComboBox.getStyleClass().add("combo-box");
 
-        loadCategories();
-        loadProducts();
+        refreshData();
 
         // Enable live search
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterSuggestions(newValue);
         });
+    }
+
+    public void refreshData() {
+        checkAuthentication();
+
+        if (authService.isAuthenticated()) {
+            loadCategories();
+            loadProducts();
+        }
     }
 
     @Override
