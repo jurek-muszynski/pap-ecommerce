@@ -18,10 +18,12 @@ public class ProductService {
     private static final String BASE_API_URL = "http://localhost:8080/api/v1";
     private final HttpClient httpClient;
     private final Gson gson;
+    private final AuthService authService;
 
     public ProductService() {
         this.httpClient = HttpClient.newHttpClient();
         this.gson = new Gson();
+        this.authService = AuthService.getInstance();
     }
 
     public List<Product> getProducts() {
@@ -46,8 +48,14 @@ public class ProductService {
 
     private <T> T fetchFromApi(String url, java.lang.reflect.Type type) {
         try {
+            String token = authService.getToken();
+            if (token == null) {
+                throw new RuntimeException("No token found. User might not be authenticated.");
+            }
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + token) // Add Authorization header
                     .GET()
                     .build();
 
@@ -63,6 +71,7 @@ public class ProductService {
             return null;
         }
     }
+
 
     public void deleteProduct(Long productId) {
         String url = BASE_API_URL + "/product/delete/" + productId;

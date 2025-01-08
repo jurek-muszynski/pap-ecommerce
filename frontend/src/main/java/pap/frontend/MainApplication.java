@@ -16,14 +16,15 @@ public class MainApplication extends Application {
         ScreenController screenController = new ScreenController(mainScene);
 
         // Add screens
-        screenController.addScreen("roleSelection", "/pap/frontend/role_selection.fxml");
+        screenController.addScreen("registration", "/pap/frontend/registration.fxml");
+        screenController.addScreen("login", "/pap/frontend/login.fxml");
         screenController.addScreen("adminView", "/pap/frontend/admin_view.fxml");
         screenController.addScreen("userView", "/pap/frontend/user_view.fxml");
         screenController.addScreen("accountManagement", "/pap/frontend/account_management.fxml");
         screenController.addScreen("cartView", "/pap/frontend/cart.fxml");
         screenController.addScreen("summaryView", "/pap/frontend/summary.fxml");
         // Activate initial screen
-        screenController.activate("roleSelection");
+        screenController.activate("registration");
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle("Product Catalog");

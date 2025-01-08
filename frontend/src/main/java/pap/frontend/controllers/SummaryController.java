@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import pap.frontend.models.CartItem;
 import pap.frontend.models.Product;
+import pap.frontend.services.AuthService;
 import pap.frontend.services.CartService;
 import pap.frontend.services.ProductService;
 
@@ -16,7 +17,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
-public class SummaryController implements ControlledScreen {
+public class SummaryController extends AuthenticatedController {
     @FXML
     private VBox summaryPane;
 
@@ -35,6 +36,10 @@ public class SummaryController implements ControlledScreen {
     private final CartService cartService = new CartService();
     private final ProductService productService = new ProductService();
 
+    public SummaryController() {
+        super(AuthService.getInstance());
+    }
+
     private ScreenController screenController;
 
     @Override
@@ -44,18 +49,30 @@ public class SummaryController implements ControlledScreen {
 
     @FXML
     public void initialize() {
+
+        refreshData();
+
+        // Disable Place Order button by default
         placeOrderButton.setDisable(true);
+
+        // Add listeners to enable the button only when fields are filled
         deliveryAddressField.textProperty().addListener((observable, oldValue, newValue) -> checkForm());
         emailField.textProperty().addListener((observable, oldValue, newValue) -> checkForm());
     }
 
-    public void onActivate() {
-        loadSummary();
+    public void refreshData() {
+        checkAuthentication();
+
+        if (authService.isAuthenticated()){
+            loadSummary();
+        }
+
     }
 
     private void loadSummary() {
         try {
-            List<CartItem> cartItems = cartService.getCartItemsByUserId(1L);
+            Long userId = authService.getCurrentUserId();
+            List<CartItem> cartItems = cartService.getCartItemsByUserId(userId);
             updateSummaryView(cartItems);
         } catch (Exception e) {
             showAlert("Error", "Failed to load order summary: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -118,7 +135,8 @@ public class SummaryController implements ControlledScreen {
         messageBody.append("Delivery Address: ").append(deliveryAddress).append("\n\n");
         messageBody.append("Order Details:\n");
 
-        List<CartItem> cartItems = cartService.getCartItemsByUserId(1L);
+        Long userId = authService.getCurrentUserId();
+        List<CartItem> cartItems = cartService.getCartItemsByUserId(userId);
         double totalPrice = 0.0;
 
         for (CartItem cartItem : cartItems) {
