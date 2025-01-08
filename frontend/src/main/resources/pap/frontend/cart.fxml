@@ -4,14 +4,14 @@
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="pap.frontend.controllers.CartController"
-      spacing="10" alignment="TOP_CENTER" style="-fx-padding: 20;">
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="Back to Products" onAction="#goBackToProducts"/>
-        <Button text="Refresh Cart" onAction="#loadCartItems"/>
-        <Button text="Summarize" onAction="#goToSummary"/>
-        <Label text="Your Cart" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+      spacing="10" alignment="TOP_CENTER" fx:id="cartRoot">
+    <HBox spacing="10" alignment="CENTER_LEFT" fx:id="cartHeader">
+        <Button text="Back to Products" onAction="#goBackToProducts" styleClass="button"/>
+        <Button text="Refresh Cart" onAction="#loadCartItems" styleClass="button"/>
+        <Button text="Summarize" onAction="#goToSummary" styleClass="button"/>
+        <Label text="Your Cart" />
     </HBox>
     <ScrollPane fitToWidth="true">
-        <VBox fx:id="cartPane" spacing="10" style="-fx-padding: 10;"></VBox>
+        <VBox fx:id="cartPane" spacing="10"></VBox>
     </ScrollPane>
 </VBox>
