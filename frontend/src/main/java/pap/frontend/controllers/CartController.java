@@ -109,7 +109,13 @@ public class CartController extends AuthenticatedController {
     @FXML
     private void goToSummary() {
         if (screenController != null) {
-            screenController.activate("summaryView"); // Przekierowanie do widoku podsumowania
+            screenController.activate("summaryView");
+
+            // Uzyskanie kontrolera widoku podsumowania i wywołanie metody onActivate
+            Object controller = screenController.getController("summaryView");
+            if (controller instanceof SummaryController) {
+                ((SummaryController) controller).onActivate();
+            }
         }
     }
 

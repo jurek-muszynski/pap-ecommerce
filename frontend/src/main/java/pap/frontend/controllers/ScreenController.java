@@ -64,4 +64,8 @@ public class ScreenController {
             System.err.println("Screen not found: " + name);
         }
     }
+
+    public Object getController(String name) {
+        return controllerMap.get(name);
+    }
 }
