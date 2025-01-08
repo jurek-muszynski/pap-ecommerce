@@ -31,7 +31,12 @@ public class CartController implements ControlledScreen {
         // Load cart items initially
         loadCartItems();
 
-        // Register a listener to refresh the cart view when the cart is updated
+        // Apply CSS style once the scene is set
+        cartPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.getStylesheets().add(getClass().getResource("/pap/frontend/cartStyles.css").toExternalForm());
+            }
+        });
     }
 
     public void loadCartItems() {
@@ -49,16 +54,21 @@ public class CartController implements ControlledScreen {
 
         for (CartItem cartItem : cartItems) {
             VBox cartItemBox = new VBox(10);
+            cartItemBox.getStyleClass().add("cart-item");
 
             // Fetch product details
             Product product = productService.getProductById(cartItem.getProductId());
 
             // Display product information
             Label productName = new Label("Product: " + product.getName());
+            productName.getStyleClass().add("product-name");
+
             Label productPrice = new Label("Price: $" + product.getPrice());
+            productPrice.getStyleClass().add("product-price");
 
             // Add a remove button for each cart item
             Button removeButton = new Button("Remove");
+            removeButton.getStyleClass().add("remove-button");
             removeButton.setOnAction(event -> removeCartItem(cartItem.getId()));
 
             cartItemBox.getChildren().addAll(productName, productPrice, removeButton);
@@ -97,5 +107,4 @@ public class CartController implements ControlledScreen {
             screenController.activate("summaryView"); // Przekierowanie do widoku podsumowania
         }
     }
-
 }
