@@ -22,7 +22,7 @@ public class ScreenController {
             Pane pane = loader.load();
             screenMap.put(name, pane);
 
-            // Register the controller if it implements ControlledScreen
+            // Ustaw kontroler widoku, jeśli istnieje metoda `setScreenController`
             Object controller = loader.getController();
             if (controller instanceof ControlledScreen) {
                 ControlledScreen controlledScreen = (ControlledScreen) controller;
@@ -62,6 +62,12 @@ public class ScreenController {
             }
         } else {
             System.err.println("Screen not found: " + name);
+            return;
         }
+        mainScene.setRoot(screenMap.get(name));
+    }
+
+    public Object getController(String name) {
+        return controllerMap.get(name);
     }
 }
