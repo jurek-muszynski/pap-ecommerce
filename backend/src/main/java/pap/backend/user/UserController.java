@@ -56,24 +56,24 @@ public class UserController {
         }
     }
 
-    @PutMapping("/update/{userId}")
-    public ResponseEntity<String> updateUser(
-            @PathVariable("userId") Long userId,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String password,
-            @RequestParam(required = false) String role,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName) {
-
-        try {
-            userService.updateUser(userId, email, password, role, firstName, lastName);
-            return new ResponseEntity<String>("User updated successfully", HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<String>("Error updating user", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @PutMapping("/update/{userId}")
+//    public ResponseEntity<String> updateUser(
+//            @PathVariable("userId") Long userId,
+//            @RequestParam(required = false) String email,
+//            @RequestParam(required = false) String password,
+//            @RequestParam(required = false) String role,
+//            @RequestParam(required = false) String firstName,
+//            @RequestParam(required = false) String lastName) {
+//
+//        try {
+//            userService.updateUser(userId, email, password, role, firstName, lastName);
+//            return new ResponseEntity<String>("User updated successfully", HttpStatus.OK);
+//        } catch (NoSuchElementException e) {
+//            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        } catch (IllegalStateException e) {
+//            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        } catch (Exception e) {
+//            return new ResponseEntity<String>("Error updating user", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }
