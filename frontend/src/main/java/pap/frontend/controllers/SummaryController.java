@@ -5,12 +5,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import pap.frontend.models.CartItem;
 import pap.frontend.models.Product;
+import pap.frontend.services.AuthService;
 import pap.frontend.services.CartService;
 import pap.frontend.services.ProductService;
 
 import java.util.List;
 
-public class SummaryController implements ControlledScreen {
+public class SummaryController extends AuthenticatedController {
     @FXML
     private VBox summaryPane;
 
@@ -29,6 +30,10 @@ public class SummaryController implements ControlledScreen {
     private final CartService cartService = new CartService();
     private final ProductService productService = new ProductService();
 
+    public SummaryController() {
+        super(AuthService.getInstance());
+    }
+
     private ScreenController screenController;
 
     @Override
@@ -38,7 +43,12 @@ public class SummaryController implements ControlledScreen {
 
     @FXML
     public void initialize() {
-        loadSummary();
+
+        checkAuthentication();
+
+        if (authService.isAuthenticated()){
+            loadSummary();
+        }
 
         // Disable Place Order button by default
         placeOrderButton.setDisable(true);

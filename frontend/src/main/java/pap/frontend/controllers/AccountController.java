@@ -31,7 +31,7 @@ public class AccountController implements ControlledScreen {
     @FXML
     private void logout() {
         if (screenController != null) {
-            screenController.activate("roleSelection");
+            screenController.activate("login");
         }
     }
 }

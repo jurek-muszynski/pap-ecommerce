@@ -7,12 +7,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import pap.frontend.models.CartItem;
 import pap.frontend.models.Product;
+import pap.frontend.services.AuthService;
 import pap.frontend.services.CartService;
 import pap.frontend.services.ProductService;
 
 import java.util.List;
 
-public class CartController implements ControlledScreen {
+public class CartController extends AuthenticatedController {
     @FXML
     private VBox cartPane;
 
@@ -20,6 +21,10 @@ public class CartController implements ControlledScreen {
     private final ProductService productService = new ProductService();
 
     private ScreenController screenController;
+
+    public CartController() {
+        super(AuthService.getInstance());
+    }
 
     @Override
     public void setScreenController(ScreenController screenController) {
@@ -29,7 +34,7 @@ public class CartController implements ControlledScreen {
     @FXML
     public void initialize() {
         // Load cart items initially
-        loadCartItems();
+        refreshData();
 
         // Apply CSS style once the scene is set
         cartPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
@@ -41,8 +46,8 @@ public class CartController implements ControlledScreen {
 
     public void loadCartItems() {
         try {
-            // Fetch cart items for the logged-in user (Replace with actual user ID logic)
-            List<CartItem> cartItems = cartService.getCartItemsByUserId(1L);
+            Long userId = authService.getCurrentUserId();
+            List<CartItem> cartItems = cartService.getCartItemsByUserId(userId);
             updateCartView(cartItems);
         } catch (Exception e) {
             showAlert("Error", "Failed to load cart items: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -105,6 +110,14 @@ public class CartController implements ControlledScreen {
     private void goToSummary() {
         if (screenController != null) {
             screenController.activate("summaryView"); // Przekierowanie do widoku podsumowania
+        }
+    }
+
+    public void refreshData() {
+        checkAuthentication();
+
+        if (authService.isAuthenticated()) {
+            loadCartItems();
         }
     }
 }
