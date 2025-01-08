@@ -1,0 +1,70 @@
+/* Og√≥lne ustawienia */
+#cartRoot {
+    -fx-padding: 20;
+    -fx-background-color: #f5f5f5;
+}
+
+#cartHeader {
+    -fx-padding: 10;
+    -fx-spacing: 20;
+    -fx-background-color: #e0e0e0;
+    -fx-border-color: #c0c0c0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.cart-item {
+    -fx-padding: 10;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.product-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.product-price {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+}
+
+/* Styl przycisk√≥w "Remove" */
+.remove-button {
+    -fx-background-color: #ff6666 !important; /* Czerwone t≈***REMOVED***o */
+    -fx-text-fill: white !important; /* Bia≈***REMOVED***y tekst */
+    -fx-font-weight: bold !important;
+    -fx-border-color: #cc0000 !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 3px !important;
+    -fx-background-radius: 3px !important;
+}
+
+.remove-button:hover {
+    -fx-background-color: #cc0000 !important; /* Ciemniejsze czerwone t≈***REMOVED***o */
+}
+
+/* Styl dla pozosta≈***REMOVED***ych przycisk√≥w */
+.button {
+    -fx-background-color: #87CEEB; /* Niebieskie t≈***REMOVED***o */
+    -fx-text-fill: white; /* Bia≈***REMOVED***y tekst */
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 30px; /* Wiƒôksze wewnƒôtrzne odstƒôpy */
+    -fx-font-size: 16px; /* Wiƒôksza czcionka */
+    -fx-cursor: hand; /* Wska≈∫nik rƒôki */
+}
+
+.button:hover {
+    -fx-background-color: #00BFFF; /* Intensywniejszy niebieski przy najechaniu */
+}
+
+.button:pressed {
+    -fx-background-color: #1E90FF; /* Jeszcze ciemniejszy kolor przy wci≈õniƒôciu */
+}
