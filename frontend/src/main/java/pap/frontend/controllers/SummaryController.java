@@ -50,11 +50,7 @@ public class SummaryController extends AuthenticatedController {
     @FXML
     public void initialize() {
 
-        checkAuthentication();
-
-        if (authService.isAuthenticated()){
-            loadSummary();
-        }
+        refreshData();
 
         // Disable Place Order button by default
         placeOrderButton.setDisable(true);
@@ -64,13 +60,19 @@ public class SummaryController extends AuthenticatedController {
         emailField.textProperty().addListener((observable, oldValue, newValue) -> checkForm());
     }
 
-    public void onActivate() {
-        loadSummary();
+    public void refreshData() {
+        checkAuthentication();
+
+        if (authService.isAuthenticated()){
+            loadSummary();
+        }
+
     }
 
     private void loadSummary() {
         try {
-            List<CartItem> cartItems = cartService.getCartItemsByUserId(1L);
+            Long userId = authService.getCurrentUserId();
+            List<CartItem> cartItems = cartService.getCartItemsByUserId(userId);
             updateSummaryView(cartItems);
         } catch (Exception e) {
             showAlert("Error", "Failed to load order summary: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -133,7 +135,8 @@ public class SummaryController extends AuthenticatedController {
         messageBody.append("Delivery Address: ").append(deliveryAddress).append("\n\n");
         messageBody.append("Order Details:\n");
 
-        List<CartItem> cartItems = cartService.getCartItemsByUserId(1L);
+        Long userId = authService.getCurrentUserId();
+        List<CartItem> cartItems = cartService.getCartItemsByUserId(userId);
         double totalPrice = 0.0;
 
         for (CartItem cartItem : cartItems) {
