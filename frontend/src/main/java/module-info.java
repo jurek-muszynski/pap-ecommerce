@@ -18,6 +18,7 @@ module pap.frontend {
     requires java.net.http;
     requires com.google.gson;
     requires java.desktop;
+    requires java.mail;
 
     opens pap.frontend.controllers to javafx.fxml;
     opens pap.frontend.models to javafx.base, com.google.gson;

@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 public class ScreenController {
     private final HashMap<String, Pane> screenMap = new HashMap<>();
+    private final HashMap<String, Object> controllerMap = new HashMap<>();
     private final Scene main;
 
     public ScreenController(Scene main) {
@@ -21,10 +22,15 @@ public class ScreenController {
             Pane pane = loader.load();
             screenMap.put(name, pane);
 
-            // Ustaw kontroler widoku, jeśli istnieje metoda `setScreenController`
+            // Pobierz i zapisz kontroler widoku
             Object controller = loader.getController();
-            if (controller instanceof ControlledScreen) {
-                ((ControlledScreen) controller).setScreenController(this);
+            if (controller != null) {
+                controllerMap.put(name, controller);
+
+                // Jeśli kontroler implementuje ControlledScreen, ustaw ScreenController
+                if (controller instanceof ControlledScreen) {
+                    ((ControlledScreen) controller).setScreenController(this);
+                }
             }
         } catch (IOException e) {
             System.err.println("Failed to load FXML: " + resourcePath);
@@ -34,6 +40,7 @@ public class ScreenController {
 
     public void removeScreen(String name) {
         screenMap.remove(name);
+        controllerMap.remove(name);
     }
 
     public void activate(String name) {
@@ -42,5 +49,9 @@ public class ScreenController {
             return;
         }
         main.setRoot(screenMap.get(name));
+    }
+
+    public Object getController(String name) {
+        return controllerMap.get(name);
     }
 }
