@@ -90,4 +90,12 @@ public class CartController implements ControlledScreen {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    private void goToSummary() {
+        if (screenController != null) {
+            screenController.activate("summaryView"); // Przekierowanie do widoku podsumowania
+        }
+    }
+
 }
