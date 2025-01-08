@@ -296,22 +296,14 @@ public class UserProductController extends AuthenticatedController {
                 throw new RuntimeException("User not authenticated. Cannot add items to the cart.");
             }
 
-            // Fetch the user's cart ID from the CartService
 
-            System.out.println("User ID: " + userId);
-            System.out.println("Product ID: " + product.getId());
-            System.out.println(Optional.ofNullable(cartService.getCartByUserId(userId)));
-//
             CartItem cartItem = new CartItem();
             cartItem.setProductId(product.getId());
             cartItem.setCartId(cartService.getCartByUserId(userId));
-//
-//            // Call the backend to add the item to the cart
+
             cartService.addCartItem(cartItem);
 
-            // Show success alert
             showAlert("Success", "Product added to cart successfully.", Alert.AlertType.INFORMATION);
-
 
         } catch (Exception e) {
             // Show error alert

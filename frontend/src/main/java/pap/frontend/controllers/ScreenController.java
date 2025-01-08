@@ -55,6 +55,8 @@ public class ScreenController {
                     ((CartController) controller).refreshData();
                 } else if (controller instanceof AdminProductController) {
                     ((AdminProductController) controller).refreshData();
+                } else if (controller instanceof AccountController) {
+                    ((AccountController) controller).refreshData();
                 }
                 // Add similar checks for other controllers that need refreshing
             }

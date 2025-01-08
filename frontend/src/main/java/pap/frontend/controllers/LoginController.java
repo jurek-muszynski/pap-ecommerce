@@ -1,5 +1,6 @@
 package pap.frontend.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import pap.frontend.models.UserRole;
@@ -46,5 +47,9 @@ public class LoginController implements ControlledScreen {
         } catch (Exception e) {
             errorLabel.setText("Login failed: " + e.getMessage());
         }
+    }
+
+    public void redirectToRegistration(ActionEvent actionEvent) {
+        screenController.activate("registration"); // Redirect to registration screen
     }
 }
