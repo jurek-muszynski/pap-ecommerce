@@ -5,7 +5,7 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
-    private String role; // Role can be "CUSTOMER" or "ADMIN"
+    private UserRole role; // Role can be "CUSTOMER" or "ADMIN"
 
     // Getters and setters
     public Long getId() {
@@ -40,11 +40,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 

@@ -22,6 +22,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<User> getMe() {
+        return new ResponseEntity<User>(userService.getMe(), HttpStatus.OK);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<List<User>>(userService.getUsers(), HttpStatus.OK);
