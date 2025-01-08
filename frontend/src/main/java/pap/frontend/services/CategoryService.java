@@ -19,10 +19,12 @@ public class CategoryService {
     private static final String BASE_API_URL = "http://localhost:8080/api/v1";
     private final HttpClient httpClient;
     private final Gson gson;
+    private final AuthService authService;
 
     public CategoryService() {
         this.httpClient = HttpClient.newHttpClient();
         this.gson = new Gson();
+        this.authService = AuthService.getInstance();
     }
 
     public List<Category> getCategories() {
@@ -97,8 +99,14 @@ public class CategoryService {
 
     private <T> T fetchFromApi(String url, java.lang.reflect.Type type) {
         try {
+            String token = authService.getToken();
+            if (token == null) {
+                throw new RuntimeException("No token found. User might not be authenticated.");
+            }
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + token)
                     .GET()
                     .build();
 
@@ -109,7 +117,7 @@ public class CategoryService {
                 System.err.println("Failed to fetch data. Status code: " + response.statusCode());
                 return null;
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

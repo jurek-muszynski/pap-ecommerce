@@ -9,11 +9,11 @@ import java.util.HashMap;
 
 public class ScreenController {
     private final HashMap<String, Pane> screenMap = new HashMap<>();
-    private final HashMap<String, Object> controllerMap = new HashMap<>();
-    private final Scene main;
+    private final HashMap<String, ControlledScreen> controllerMap = new HashMap<>();
+    private final Scene mainScene;
 
-    public ScreenController(Scene main) {
-        this.main = main;
+    public ScreenController(Scene mainScene) {
+        this.mainScene = mainScene;
     }
 
     public void addScreen(String name, String resourcePath) {
@@ -22,15 +22,12 @@ public class ScreenController {
             Pane pane = loader.load();
             screenMap.put(name, pane);
 
-            // Pobierz i zapisz kontroler widoku
+            // Ustaw kontroler widoku, jeśli istnieje metoda `setScreenController`
             Object controller = loader.getController();
-            if (controller != null) {
-                controllerMap.put(name, controller);
-
-                // Jeśli kontroler implementuje ControlledScreen, ustaw ScreenController
-                if (controller instanceof ControlledScreen) {
-                    ((ControlledScreen) controller).setScreenController(this);
-                }
+            if (controller instanceof ControlledScreen) {
+                ControlledScreen controlledScreen = (ControlledScreen) controller;
+                controlledScreen.setScreenController(this);
+                controllerMap.put(name, controlledScreen); // Map the controller to the screen name
             }
         } catch (IOException e) {
             System.err.println("Failed to load FXML: " + resourcePath);
@@ -44,11 +41,33 @@ public class ScreenController {
     }
 
     public void activate(String name) {
-        if (!screenMap.containsKey(name)) {
+        Pane screen = screenMap.get(name);
+        if (screen != null) {
+            // Set the screen in the root scene
+            mainScene.setRoot(screen);
+
+            // Notify the controller to refresh data if it implements ControlledScreen
+            ControlledScreen controller = controllerMap.get(name);
+            if (controller != null) {
+                if (controller instanceof UserProductController) {
+                    ((UserProductController) controller).refreshData();
+                } else if (controller instanceof CartController) {
+                    ((CartController) controller).refreshData();
+                } else if (controller instanceof AdminProductController) {
+                    ((AdminProductController) controller).refreshData();
+                } else if (controller instanceof AccountController) {
+                    ((AccountController) controller).refreshData();
+                } else if (controller instanceof SummaryController) {
+                    System.out.println("Refreshing SummaryController");
+                    ((SummaryController) controller).refreshData();
+                }
+                // Add similar checks for other controllers that need refreshing
+            }
+        } else {
             System.err.println("Screen not found: " + name);
             return;
         }
-        main.setRoot(screenMap.get(name));
+        mainScene.setRoot(screenMap.get(name));
     }
 
     public Object getController(String name) {

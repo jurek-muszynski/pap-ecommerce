@@ -33,8 +33,8 @@ public class CartService {
                 ));
     }
 
-    public Cart getCartByUserId(Long userId) {
-        return cartRepository.findByUserId(userId)
+    public Long getCartIdByUserId(Long userId) {
+        return cartRepository.findCartIdByUserId(userId)
                 .orElseThrow(() -> new NoSuchElementException(
                         "Cart for user with id " + userId + " does not exist"
                 ));
