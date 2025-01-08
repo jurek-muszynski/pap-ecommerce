@@ -21,7 +21,7 @@ public class MainApplication extends Application {
         screenController.addScreen("userView", "/pap/frontend/user_view.fxml");
         screenController.addScreen("accountManagement", "/pap/frontend/account_management.fxml");
         screenController.addScreen("cartView", "/pap/frontend/cart.fxml");
-
+        screenController.addScreen("summaryView", "/pap/frontend/summary.fxml");
         // Activate initial screen
         screenController.activate("roleSelection");
 
