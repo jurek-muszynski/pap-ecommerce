@@ -2,6 +2,7 @@ package pap.frontend.services;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import pap.frontend.models.RegisterRequest;
 import pap.frontend.models.User;
 import pap.frontend.models.UserRole;
 
@@ -33,6 +34,24 @@ public class AuthService {
         return instance;
     }
 
+    public void register(RegisterRequest request) {
+        try {
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_API_URL + "/register"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(request)))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("Registration failed: " + response.body());
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("Registration failed: " + e.getMessage(), e);
+        }
+    }
+
     public String login(String email, String password) throws Exception {
         String url = BASE_API_URL + "/login";
 
@@ -52,6 +71,8 @@ public class AuthService {
             JsonObject jsonResponse = gson.fromJson(response.body(), JsonObject.class);
             this.token = jsonResponse.get("token").getAsString();
             return this.token;
+        } else if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN || response.statusCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            throw new Exception("Invalid credentials");
         } else {
             throw new RuntimeException("Login failed: " + response.statusCode() + " - " + response.body());
         }
@@ -114,9 +135,11 @@ public class AuthService {
         }
     }
 
-
-
     public Long getCurrentUserId() {
         return getCurrentUser().getId();
+    }
+
+    public String getCurrentUserEmail() {
+        return getCurrentUser().getEmail();
     }
 }

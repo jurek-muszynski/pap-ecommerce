@@ -47,11 +47,9 @@ public class UserService {
     }
 
     public User getMe() {
-        // Get the authenticated user from the security context
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName(); // The principal (email/username)
 
-        // Fetch the user from the database
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
