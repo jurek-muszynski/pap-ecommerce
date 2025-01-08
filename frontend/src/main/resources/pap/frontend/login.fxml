@@ -8,5 +8,6 @@
     <TextField fx:id="emailField" promptText="Email" />
     <PasswordField fx:id="passwordField" promptText="Password" />
     <Button text="Login" onAction="#handleLogin"/>
+    <Button text="Don't have an account? Register" onAction="#redirectToRegistration" />
     <Label fx:id="errorLabel" style="-fx-text-fill: red;" />
 </VBox>

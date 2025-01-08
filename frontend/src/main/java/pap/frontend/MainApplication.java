@@ -16,6 +16,7 @@ public class MainApplication extends Application {
         ScreenController screenController = new ScreenController(mainScene);
 
         // Add screens
+        screenController.addScreen("registration", "/pap/frontend/registration.fxml");
         screenController.addScreen("login", "/pap/frontend/login.fxml");
         screenController.addScreen("adminView", "/pap/frontend/admin_view.fxml");
         screenController.addScreen("userView", "/pap/frontend/user_view.fxml");
@@ -23,7 +24,7 @@ public class MainApplication extends Application {
         screenController.addScreen("cartView", "/pap/frontend/cart.fxml");
         screenController.addScreen("summaryView", "/pap/frontend/summary.fxml");
         // Activate initial screen
-        screenController.activate("login");
+        screenController.activate("registration");
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle("Product Catalog");

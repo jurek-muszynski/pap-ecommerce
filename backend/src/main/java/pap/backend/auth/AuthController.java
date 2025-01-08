@@ -24,10 +24,4 @@ public class AuthController {
     public ResponseEntity<?> authenticate(@RequestBody AuthRequest request) {
         return authenticationService.authenticate(request);
     }
-
-//    @ResponseBody
-//    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
-//    public String handleHttpMediaTypeNotAcceptableException() {
-//        return "acceptable MIME type:" + MediaType.APPLICATION_JSON_VALUE;
-//    }
 }
