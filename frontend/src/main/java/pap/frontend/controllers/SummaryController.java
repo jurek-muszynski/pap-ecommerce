@@ -88,11 +88,14 @@ public class SummaryController extends AuthenticatedController {
 
             Product product = productService.getProductById(cartItem.getProductId());
 
+            // Price for each product including quantity
+
             Label productName = new Label("Product: " + product.getName());
             Label productPrice = new Label("Price: $" + product.getPrice());
-            totalPrice += product.getPrice();
+            Label productQuantity = new Label("Quantity: " + cartItem.getQuantity());
+            totalPrice += (product.getPrice() * cartItem.getQuantity());
 
-            itemBox.getChildren().addAll(productName, productPrice);
+            itemBox.getChildren().addAll(productName, productPrice, productQuantity);
             summaryPane.getChildren().add(itemBox);
         }
 
