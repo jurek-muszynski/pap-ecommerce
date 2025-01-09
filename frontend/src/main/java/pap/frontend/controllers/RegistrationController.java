@@ -49,4 +49,10 @@ public class RegistrationController implements ControlledScreen {
     private void redirectToLogin() {
         screenController.activate("login"); // Redirect to login screen
     }
+
+    @FXML
+    private void redirectToAbout() {
+        screenController.activate("about");
+    }
+
 }
