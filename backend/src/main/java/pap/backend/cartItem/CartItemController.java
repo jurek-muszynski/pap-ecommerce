@@ -11,6 +11,7 @@ import pap.backend.product.ProductService;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -52,8 +53,9 @@ public class CartItemController {
                 .map(cartItem -> new CartItemDTO(
                         cartItem.getId(),
                         cartItem.getProduct().getId(),
-                        cartItem.getCart().getId()))
-                .toList();
+                        cartItem.getCart().getId(),
+                        cartItem.getQuantity()))
+                        .toList();
 
         return new ResponseEntity<>(cartItemDTOs, HttpStatus.OK);
     }
@@ -78,8 +80,8 @@ public class CartItemController {
             Product product = productService.getProduct(cartItemDTO.getProductId());
             Cart cart = cartService.getCart(cartItemDTO.getCartId());
 
-            // Create and save a new CartItem entity
-            CartItem cartItem = new CartItem(product, cart);
+            // Create and save a new CartItem entity, default quantity=1
+            CartItem cartItem = new CartItem(product, cart, 1);
             cartItemService.addNewCartItem(cartItem);
 
             return new ResponseEntity<>("Product added to cart successfully", HttpStatus.CREATED);
@@ -133,18 +135,20 @@ public class CartItemController {
     @PutMapping("/update/{cartItemId}")
     public ResponseEntity<String> updateCartItem(
             @PathVariable("cartItemId") Long cartItemId,
-            @RequestParam(required = false) Long productId,
-            @RequestParam(required = false) Long cartId) {
+            @RequestBody Map<String, Object> updates) {
 
         try {
-            cartItemService.updateCartItem(cartItemId, productId, cartId);
-            return new ResponseEntity<String>("CartItem updated successfully", HttpStatus.OK);
+            Integer quantity = updates.containsKey("quantity") ? (Integer) updates.get("quantity") : null;
+
+            cartItemService.updateCartItem(cartItemId, null, quantity, null);
+            return new ResponseEntity<>("CartItem updated successfully", HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<String>("Error updating cartItem", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error updating cartItem", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
