@@ -99,4 +99,8 @@ public class OrderItemService {
 
         return orderItemRepository.findOrderItemsByProductId(productId);
     }
+
+    public List<OrderItem> getOrderItemsByUserId(Long userId) {
+            return orderItemRepository.findOrderItemsByUserId(userId);
+    }
 }

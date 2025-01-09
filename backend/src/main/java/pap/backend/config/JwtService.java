@@ -1,6 +1,7 @@
 package pap.backend.config;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import pap.backend.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,8 +20,8 @@ import java.util.function.Function;
 @Service
 
 public class JwtService {
-//    @Value("${security.jwt.secret-key}")
-    private static final String SECRET_KEY = "854B876B7A9B1126EF17EA85BCBDD1AAB99BFFFFF4824EA3A19B1126EF17EA85";
+    @Value("${security.jwt.secret-key}")
+    private String SECRET_KEY;
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
