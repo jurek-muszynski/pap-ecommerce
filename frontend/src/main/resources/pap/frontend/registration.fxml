@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -17,5 +14,6 @@
         <HBox spacing="10">
             <Button text="Register" onAction="#handleRegister" styleClass="button" />
             <Button text="Already have an account? Login" onAction="#redirectToLogin" styleClass="button" />
+            <Button text="O NAS" onAction="#redirectToAbout" styleClass="button" />
         </HBox>
     </VBox>
