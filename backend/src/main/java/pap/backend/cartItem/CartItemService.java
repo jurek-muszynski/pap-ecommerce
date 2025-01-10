@@ -92,7 +92,7 @@ public class CartItemService {
 
 
     @Transactional
-    public void updateCartItem(Long cartItemId, Long productId, Long cartId) {
+    public void updateCartItem(Long cartItemId, Long productId, Integer quantity, Long cartId) {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new NoSuchElementException(
                         "CartItem with id " + cartItemId + " does not exist"
@@ -108,6 +108,10 @@ public class CartItemService {
             Cart cart = cartRepository.findById(cartId)
                     .orElseThrow(() -> new IllegalStateException("Cart with id " + cartId + " does not exist"));
             cartItem.setCart(cart);
+        }
+
+        if (quantity != null) {
+            cartItem.setQuantity(quantity);
         }
     }
 
