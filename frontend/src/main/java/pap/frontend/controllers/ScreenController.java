@@ -70,4 +70,34 @@ public class ScreenController {
     public Object getController(String name) {
         return controllerMap.get(name);
     }
+
+
+    public void activateWithParam(String name, Object param) {
+        Pane screen = screenMap.get(name);
+        if (screen != null) {
+            mainScene.setRoot(screen);
+
+            // Notify the controller to refresh data if it implements ControlledScreen
+            ControlledScreen controller = controllerMap.get(name);
+            if (controller != null) {
+                if (controller instanceof ReviewController) {
+                    // Jeśli to jest ReviewController, ustawiamy parametr
+                    ((ReviewController) controller).setProductId((Long) param);
+                } else if (controller instanceof UserProductController) {
+                    ((UserProductController) controller).refreshData();
+                } else if (controller instanceof CartController) {
+                    ((CartController) controller).refreshData();
+                } else if (controller instanceof AdminProductController) {
+                    ((AdminProductController) controller).refreshData();
+                } else if (controller instanceof AccountController) {
+                    ((AccountController) controller).refreshData();
+                } else if (controller instanceof SummaryController) {
+                    ((SummaryController) controller).refreshData();
+                }
+            }
+        } else {
+            System.err.println("Screen not found: " + name);
+        }
+    }
+
 }
