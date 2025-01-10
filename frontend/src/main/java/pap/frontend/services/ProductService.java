@@ -111,4 +111,28 @@ public class ProductService {
         }
     }
 
+    public void updateProductQuantity(long productId, int newQuantity) {
+        try {
+            String url = BASE_API_URL + "/product/update/" + productId;
+
+            String body = String.format("quantity=%d", newQuantity);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .PUT(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/x-www-form-urlencoded") // Nag≈***REMOVED***√≥wek dla danych form-urlencoded
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("ERROR UPDATING PRODUCT QUANTITY: " + response.body());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("ERROR UPDATING PRODUCT QUANTITY: " + e.getMessage(), e);
+        }
+    }
+
+
 }
