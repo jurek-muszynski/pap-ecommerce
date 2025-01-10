@@ -34,6 +34,21 @@
     -fx-text-fill: #666666;
 }
 
+.quantity-box {
+    alignment: center;
+}
+
+.decrease-button, .increase-button {
+    min-width: 30px;
+    min-height: 30px;
+}
+
+.quantity-label {
+    min-width: 40px;
+    text-align: center;
+    font-weight: bold;
+}
+
 /* Styl przycisk√≥w "Remove" */
 .remove-button {
     -fx-background-color: #ff6666 !important; /* Czerwone t≈***REMOVED***o */

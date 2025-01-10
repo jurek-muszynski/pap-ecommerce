@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pap.frontend.controllers.ScreenController;
 
+
 public class MainApplication extends Application {
 
     @Override
@@ -25,6 +26,7 @@ public class MainApplication extends Application {
         screenController.addScreen("summaryView", "/pap/frontend/summary.fxml");
         screenController.addScreen("reviewView", "/pap/frontend/reviewView.fxml");
 
+        screenController.addScreen("about", "/pap/frontend/about.fxml");
         // Activate initial screen
         screenController.activate("registration");
 
