@@ -4,12 +4,17 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import pap.frontend.models.CartItem;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CartService {
 
@@ -115,4 +120,38 @@ public class CartService {
             throw new RuntimeException("ERROR REMOVING CART ITEM: " + e.getMessage());
         }
     }
+
+    public void updateCartItem(Long cartItemId, Integer quantity) {
+        String url = BASE_API_URL + "/cartItem/update/" + cartItemId;
+        try {
+            String token = authService.getToken();
+
+            if (token == null) {
+                throw new RuntimeException("No token found. User might not be authenticated.");
+            }
+
+            // Przygotowanie JSON
+            Map<String, Object> bodyMap = new HashMap<>();
+            if (quantity != null) {
+                bodyMap.put("quantity", quantity);
+            }
+            String requestBody = gson.toJson(bodyMap);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + token)
+                    .header("Content-Type", "application/json") // Ustaw nagłówek JSON
+                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException(response.body());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("ERROR WHILE UPDATING CART ITEM: " + e.getMessage());
+        }
+    }
+
 }

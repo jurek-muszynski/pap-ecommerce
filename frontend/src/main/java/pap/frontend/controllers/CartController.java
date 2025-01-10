@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import pap.frontend.models.CartItem;
 import pap.frontend.models.Product;
@@ -11,6 +12,8 @@ import pap.frontend.services.AuthService;
 import pap.frontend.services.CartService;
 import pap.frontend.services.ProductService;
 
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class CartController extends AuthenticatedController {
@@ -68,18 +71,48 @@ public class CartController extends AuthenticatedController {
             Label productName = new Label("Product: " + product.getName());
             productName.getStyleClass().add("product-name");
 
-            Label productPrice = new Label("Price: $" + product.getPrice());
+            double price = product.getPrice() * cartItem.getQuantity();
+
+            Label productPrice = new Label("Price: $" + new DecimalFormat("#.##").format(price));
             productPrice.getStyleClass().add("product-price");
+
+            // Add quantity controls
+            HBox quantityBox = new HBox(5); // Horizontal box for quantity controls
+            quantityBox.getStyleClass().add("quantity-box");
+
+            Button decreaseButton = new Button("-");
+            decreaseButton.getStyleClass().add("quantity-button");
+            decreaseButton.setOnAction(event -> {
+                if (cartItem.getQuantity() > 1) {
+                    cartItem.setQuantity(cartItem.getQuantity() - 1);
+                    updateCartItem(cartItem);
+                    updateCartView(cartItems);
+                }
+            });
+
+            Label quantityLabel = new Label(String.valueOf(cartItem.getQuantity()));
+            quantityLabel.getStyleClass().add("quantity-label");
+
+            Button increaseButton = new Button("+");
+            increaseButton.getStyleClass().add("quantity-button");
+            increaseButton.setOnAction(event -> {
+                cartItem.setQuantity(cartItem.getQuantity() + 1);
+                updateCartItem(cartItem);
+                updateCartView(cartItems);
+            });
+
+            quantityBox.getChildren().addAll(decreaseButton, quantityLabel, increaseButton);
 
             // Add a remove button for each cart item
             Button removeButton = new Button("Remove");
             removeButton.getStyleClass().add("remove-button");
             removeButton.setOnAction(event -> removeCartItem(cartItem.getId()));
 
-            cartItemBox.getChildren().addAll(productName, productPrice, removeButton);
+            cartItemBox.getChildren().addAll(productName, productPrice, quantityBox, removeButton);
             cartPane.getChildren().add(cartItemBox);
         }
     }
+
 
     private void removeCartItem(Long cartItemId) {
         try {
@@ -89,6 +122,16 @@ public class CartController extends AuthenticatedController {
         } catch (Exception e) {
             showAlert("Error", "Failed to remove cart item: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    private void updateCartItem(CartItem cartItem) {
+        try {
+            cartService.updateCartItem(cartItem.getId(), cartItem.getQuantity());
+            loadCartItems(); // Refresh the cart view
+        } catch (Exception e) {
+            showAlert("Error", "Failed to update cart item: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+
     }
 
     @FXML

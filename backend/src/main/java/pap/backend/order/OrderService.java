@@ -99,8 +99,11 @@ public class OrderService {
                     .append("<td style=\"padding: 10px; font-size: 16px; color: #333;\">$")
                     .append(String.format("%.2f", product.getPrice()))
                     .append("</td>")
+                    .append("<td style=\"padding: 10px; font-size: 16px; color: #333;\">")
+                    .append(String.format("%d", cartItem.getQuantity()))
+                    .append("</td>")
                     .append("</tr>");
-            totalPrice += product.getPrice();
+            totalPrice += (product.getPrice() * cartItem.getQuantity());
         }
 
         // Create the HTML message body
@@ -119,6 +122,7 @@ public class OrderService {
                 + "<th style=\"text-align: left; padding: 10px;\">Image</th>"
                 + "<th style=\"text-align: left; padding: 10px;\">Product</th>"
                 + "<th style=\"text-align: left; padding: 10px;\">Price</th>"
+                + "<th style=\"text-align: left; padding: 10px;\">Quantity</th>"
                 + "</tr>"
                 + "</thead>"
                 + "<tbody>"

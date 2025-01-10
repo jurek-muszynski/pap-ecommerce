@@ -303,6 +303,7 @@ public class UserProductController extends AuthenticatedController {
             CartItem cartItem = new CartItem();
             cartItem.setProductId(product.getId());
             cartItem.setCartId(cartService.getCartByUserId(userId));
+            cartItem.setQuantity(1);
 
             cartService.addCartItem(cartItem);
 
