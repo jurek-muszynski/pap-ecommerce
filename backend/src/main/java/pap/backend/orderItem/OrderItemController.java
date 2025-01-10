@@ -40,6 +40,11 @@ public class OrderItemController {
         return new ResponseEntity<List<OrderItem>>(orderItemService.getOrderItemsByProductId(productId), HttpStatus.OK);
     }
 
+    @GetMapping("/allWithUserId/{userId}")
+    public ResponseEntity<List<OrderItem>> getOrderItemsByUserId(@PathVariable("userId") Long userId) {
+        return new ResponseEntity<List<OrderItem>>(orderItemService.getOrderItemsByUserId(userId), HttpStatus.OK);
+    }
+
     @PostMapping("/add") // W ciele żądania podajemy tylko id produktu i zamówienia, reszta zostanie pobrana z encji Product i Order
     public ResponseEntity<String> addNewOrderItem(@RequestBody OrderItem orderItem) {
         try {

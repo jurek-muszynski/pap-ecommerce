@@ -1,0 +1,85 @@
+/* Ogólne ustawienia */
+#cartRoot {
+    -fx-padding: 20;
+    -fx-background-color: #f5f5f5;
+}
+
+#cartHeader {
+    -fx-padding: 10;
+    -fx-spacing: 20;
+    -fx-background-color: #e0e0e0;
+    -fx-border-color: #c0c0c0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.cart-item {
+    -fx-padding: 10;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.product-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.product-price {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+}
+
+.quantity-box {
+    alignment: center;
+}
+
+.decrease-button, .increase-button {
+    min-width: 30px;
+    min-height: 30px;
+}
+
+.quantity-label {
+    min-width: 40px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Styl przycisków "Remove" */
+.remove-button {
+    -fx-background-color: #ff6666 !important; /* Czerwone tło */
+    -fx-text-fill: white !important; /* Biały tekst */
+    -fx-font-weight: bold !important;
+    -fx-border-color: #cc0000 !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 3px !important;
+    -fx-background-radius: 3px !important;
+}
+
+.remove-button:hover {
+    -fx-background-color: #cc0000 !important; /* Ciemniejsze czerwone tło */
+}
+
+/* Styl dla pozostałych przycisków */
+.button {
+    -fx-background-color: #87CEEB; /* Niebieskie tło */
+    -fx-text-fill: white; /* Biały tekst */
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 30px; /* Większe wewnętrzne odstępy */
+    -fx-font-size: 16px; /* Większa czcionka */
+    -fx-cursor: hand; /* Wskaźnik ręki */
+}
+
+.button:hover {
+    -fx-background-color: #00BFFF; /* Intensywniejszy niebieski przy najechaniu */
+}
+
+.button:pressed {
+    -fx-background-color: #1E90FF; /* Jeszcze ciemniejszy kolor przy wciśnięciu */
+}

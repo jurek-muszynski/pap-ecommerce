@@ -1,6 +1,8 @@
 package pap.backend.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +34,7 @@ public class UserService {
         if (userOptional.isPresent()) {
             throw new IllegalStateException("email taken");
         }
-        if(!user.getRole().equals("ADMIN") && !user.getRole().equals("CUSTOMER")){
-            throw new IllegalStateException("role must be either ADMIN or CUSTOMER");
-        }
+
         userRepository.save(user);
     }
 
@@ -46,33 +46,33 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    @Transactional
-    public void updateUser(Long userId, String email, String password, String role,
-                           String firstName, String lastName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException(
-                        "user with id " + userId + " does not exist"
-                ));
+    public User getMe() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // The principal (email/username)
 
-        if (email != null && !email.isEmpty() && !user.getEmail().equals(email)) {
-            user.setEmail(email);
-        }
-
-        if (password != null && !password.isEmpty() && !user.getPassword().equals(password)) {
-            user.setPassword(password);
-        }
-
-        if (role != null && (role.equals("ADMIN") || role.equals("CUSTOMER")) && !user.getRole().equals(role)) {
-            user.setRole(role);
-        }
-
-        if (firstName != null && !firstName.isEmpty() && !user.getFirstName().equals(firstName)) {
-            user.setFirstName(firstName);
-        }
-
-        if (lastName != null && !lastName.isEmpty() && !user.getLastName().equals(lastName)) {
-            user.setLastName(lastName);
-        }
-
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+//    @Transactional
+//    public void updateUser(Long userId, String email, String password, UserRole role,
+//                           String firstName, String lastName) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new NoSuchElementException(
+//                        "user with id " + userId + " does not exist"
+//                ));
+//
+//        if (email != null && !email.isEmpty() && !user.getEmail().equals(email)) {
+//            user.setEmail(email);
+//        }
+//
+//        if (password != null && !password.isEmpty() && !user.getPassword().equals(password)) {
+//            user.setPassword(password);
+//        }
+//
+//        if (role != null && (role.equals("ADMIN") || role.equals("CUSTOMER")) && !user.getRole().equals(role)) {
+//            user.setRole(role);
+//        }
+//
+//    }
 }

@@ -22,7 +22,7 @@ import pap.frontend.services.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductController {
+public class AdminProductController extends AuthenticatedController{
 
     @FXML
     private TilePane productTilePane;
@@ -36,6 +36,14 @@ public class ProductController {
     private final ProductService productService = new ProductService();
     private final CategoryService categoryService = new CategoryService();
 
+
+
+    public AdminProductController() {
+        super(AuthService.getInstance());
+    }
+
+    private ScreenController screenController;
+
     @FXML
     public void initialize() {
         // Apply CSS style classes
@@ -43,13 +51,33 @@ public class ProductController {
         searchField.getStyleClass().add("text-field");
         categoryComboBox.getStyleClass().add("combo-box");
 
-        loadCategories();
-        loadProducts();
+        refreshData();
 
         // Enable live search
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterSuggestions(newValue);
         });
+    }
+
+    public void refreshData() {
+        checkAuthentication();
+
+        if (authService.isAuthenticated()) {
+            loadCategories();
+            loadProducts();
+        }
+    }
+
+    @Override
+    public void setScreenController(ScreenController screenController) {
+        this.screenController = screenController;
+    }
+
+    @FXML
+    private void openAccountManagement() {
+        if (screenController != null) {
+            screenController.activate("accountManagement");
+        }
     }
 
     private void loadProducts() {
@@ -60,6 +88,13 @@ public class ProductController {
     private void loadCategories() {
         List<Category> categories = categoryService.getCategories();
         categoryComboBox.setItems(FXCollections.observableArrayList(categories));
+    }
+
+    @FXML
+    private void goBackToRoleSelection() {
+        if (screenController != null) {
+            screenController.activate("roleSelection");
+        }
     }
 
     @FXML

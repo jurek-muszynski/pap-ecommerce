@@ -42,14 +42,14 @@ public class OrderController {
     }
 
     @PostMapping("/add") //w ciele Usera podajemy tylko jego ID, reszta zostanie zignorowana, a dane zostana pobrane z tabeli users
-    public ResponseEntity<String> addNewOrder(@RequestBody Order order) {
+    public ResponseEntity<String> placeOrder(@RequestBody PlaceOrderRequest orderRequest) {
         try {
-            orderService.addNewOrder(order);
+            orderService.placeOrder(orderRequest);
             return new ResponseEntity<String>("Order added", HttpStatus.CREATED);
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<String>("Error adding order", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

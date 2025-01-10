@@ -35,8 +35,8 @@ public class CartController {
     }
 
     @GetMapping("/byUser/{userId}")
-    public ResponseEntity<Cart> getCartByUserId(@PathVariable Long userId) {
-        return new ResponseEntity<Cart>(cartService.getCartByUserId(userId), HttpStatus.OK);
+    public ResponseEntity<Long> getCartIdByUserId(@PathVariable Long userId) {
+        return new ResponseEntity<Long>(cartService.getCartIdByUserId(userId), HttpStatus.OK);
     }
 
     @PostMapping("/add") // W ciele Usera podajemy tylko jego ID
