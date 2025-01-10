@@ -34,4 +34,14 @@
             </TilePane>
         </ScrollPane>
     </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER" styleClass="hbox">
+            <Button fx:id="decreaseButton" text="-" onAction="#decreaseQuantity" visible="false" />
+            <Label fx:id="quantityLabel" text="Quantity: " visible="false" />
+            <Button fx:id="increaseButton" text="+" onAction="#increaseQuantity" visible="false" />
+            <Button fx:id="saveButton" text="Save" onAction="#saveQuantity" visible="false" />
+        </HBox>
+    </bottom>
+
 </BorderPane>
