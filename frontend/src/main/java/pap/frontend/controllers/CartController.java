@@ -13,6 +13,7 @@ import pap.frontend.services.CartService;
 import pap.frontend.services.ProductService;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class CartController extends AuthenticatedController {
@@ -70,7 +71,9 @@ public class CartController extends AuthenticatedController {
             Label productName = new Label("Product: " + product.getName());
             productName.getStyleClass().add("product-name");
 
-            Label productPrice = new Label("Price: $" + (product.getPrice() * cartItem.getQuantity()));
+            double price = product.getPrice() * cartItem.getQuantity();
+
+            Label productPrice = new Label("Price: $" + new DecimalFormat("#.##").format(price));
             productPrice.getStyleClass().add("product-price");
 
             // Add quantity controls
@@ -124,7 +127,6 @@ public class CartController extends AuthenticatedController {
     private void updateCartItem(CartItem cartItem) {
         try {
             cartService.updateCartItem(cartItem.getId(), cartItem.getQuantity());
-            showAlert("Success", "Quantity changed successfully.", Alert.AlertType.INFORMATION);
             loadCartItems(); // Refresh the cart view
         } catch (Exception e) {
             showAlert("Error", "Failed to update cart item: " + e.getMessage(), Alert.AlertType.ERROR);
