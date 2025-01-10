@@ -36,6 +36,19 @@ public class AdminProductController extends AuthenticatedController{
     private final ProductService productService = new ProductService();
     private final CategoryService categoryService = new CategoryService();
 
+    @FXML
+    private Button decreaseButton;
+
+    @FXML
+    private Button increaseButton;
+
+    @FXML
+    private Label quantityLabel;
+
+    private Product selectedProduct;
+
+    @FXML
+    private Button saveButton;
 
 
     public AdminProductController() {
@@ -57,6 +70,7 @@ public class AdminProductController extends AuthenticatedController{
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterSuggestions(newValue);
         });
+        hideQuantityControls();
     }
 
     public void refreshData() {
@@ -67,6 +81,54 @@ public class AdminProductController extends AuthenticatedController{
             loadProducts();
         }
     }
+
+    private void hideQuantityControls() {
+        decreaseButton.setVisible(false);
+        increaseButton.setVisible(false);
+        quantityLabel.setVisible(false);
+        saveButton.setVisible(false);
+    }
+
+    private void showQuantityControls() {
+        decreaseButton.setVisible(true);
+        increaseButton.setVisible(true);
+        quantityLabel.setVisible(true);
+        saveButton.setVisible(true);
+    }
+
+
+    @FXML
+    private void decreaseQuantity() {
+        if (selectedProduct != null && selectedProduct.getQuantity() > 0) {
+            selectedProduct.setQuantity(selectedProduct.getQuantity() - 1);
+            quantityLabel.setText("Quantity: " + selectedProduct.getQuantity());
+            productService.updateProductQuantity(selectedProduct.getId(), selectedProduct.getQuantity());
+        }
+    }
+
+    @FXML
+    private void increaseQuantity() {
+        if (selectedProduct != null) {
+            selectedProduct.setQuantity(selectedProduct.getQuantity() + 1);
+            quantityLabel.setText("Quantity: " + selectedProduct.getQuantity());
+            productService.updateProductQuantity(selectedProduct.getId(), selectedProduct.getQuantity());
+        }
+    }
+
+    @FXML
+    private void saveQuantity() {
+        if (selectedProduct != null) {
+            try {
+                productService.updateProductQuantity(selectedProduct.getId(), selectedProduct.getQuantity());
+                showAlert("Success", "Product quantity updated successfully.", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                showAlert("Error", "Failed to update product quantity: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+        hideQuantityControls();
+    }
+
+
 
     @Override
     public void setScreenController(ScreenController screenController) {
@@ -236,6 +298,11 @@ public class AdminProductController extends AuthenticatedController{
     }
 
     private void showProductDetails(Product product) {
+
+        selectedProduct = product;
+        quantityLabel.setText("Quantity: " + product.getQuantity());
+        showQuantityControls();
+
         Stage detailsStage = new Stage();
         detailsStage.setTitle("Szczegóły Produktu");
 
