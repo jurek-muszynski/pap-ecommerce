@@ -1,25 +1,36 @@
 package pap.frontend;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import pap.frontend.controllers.ScreenController;
 
 
-// TODO:
-// 1. Add a note in the app explaining that Search and Filter work independently.
-// 2. Fix searching two-part words in search by name
 public class MainApplication extends Application {
+
     @Override
     public void start(Stage primaryStage) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pap/frontend/product_list.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Scene mainScene = new Scene(new Pane(), 800, 600);
+
+        // Initialize ScreenController
+        ScreenController screenController = new ScreenController(mainScene);
+
+        // Add screens
+        screenController.addScreen("registration", "/pap/frontend/registration.fxml");
+        screenController.addScreen("login", "/pap/frontend/login.fxml");
+        screenController.addScreen("adminView", "/pap/frontend/admin_view.fxml");
+        screenController.addScreen("userView", "/pap/frontend/user_view.fxml");
+        screenController.addScreen("accountManagement", "/pap/frontend/account_management.fxml");
+        screenController.addScreen("cartView", "/pap/frontend/cart.fxml");
+        screenController.addScreen("summaryView", "/pap/frontend/summary.fxml");
+        screenController.addScreen("about", "/pap/frontend/about.fxml");
+        // Activate initial screen
+        screenController.activate("registration");
+
+        primaryStage.setScene(mainScene);
+        primaryStage.setTitle("Product Catalog");
+        primaryStage.show();
     }
 
     public static void main(String[] args) {

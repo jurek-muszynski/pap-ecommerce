@@ -4,7 +4,7 @@
 <?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="pap.frontend.controllers.ProductController"
+            fx:controller="pap.frontend.controllers.AdminProductController"
             fx:id="rootLayout" stylesheets="@style_product_list.css">
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER" styleClass="hbox">
@@ -24,6 +24,7 @@
                     <Insets right="5" />
                 </HBox.margin>
             </Button>
+            <Button text="Manage Account" onAction="#openAccountManagement" />
         </HBox>
     </top>
 

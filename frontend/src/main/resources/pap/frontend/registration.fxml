@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+    <VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pap.frontend.controllers.RegistrationController">
+        <Label text="Register" style="-fx-font-size: 24; -fx-font-weight: bold;" />
+        <TextField fx:id="usernameField" promptText="Username" styleClass="text-field"/>
+        <TextField fx:id="emailField" promptText="Email" styleClass="text-field"/>
+        <PasswordField fx:id="passwordField" promptText="Password" styleClass="text-field"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" styleClass="text-field"/>
+        <Label fx:id="errorLabel" style="-fx-text-fill: red;" />
+        <HBox spacing="10">
+            <Button text="Register" onAction="#handleRegister" styleClass="button" />
+            <Button text="Already have an account? Login" onAction="#redirectToLogin" styleClass="button" />
+            <Button text="O NAS" onAction="#redirectToAbout" styleClass="button" />
+        </HBox>
+    </VBox>

@@ -8,6 +8,7 @@ import pap.backend.cart.CartRepository;
 import pap.backend.product.Product;
 import pap.backend.product.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -48,6 +49,13 @@ public class CartItemService {
             throw new IllegalStateException("Product with id " + cartItem.getProduct().getId() + " does not exist");
         }
 
+        List<CartItem> cartItems = cartItemRepository.findCartItemsByCartId(cartItem.getCart().getId());
+        for (CartItem item : cartItems) {
+            if (item.getProduct().getId().equals(cartItem.getProduct().getId())) {
+                throw new IllegalStateException("Product with id " + cartItem.getProduct().getId() + " is already in the cart");
+            }
+        }
+
         cartItem.setCart(cartOptional.get());
         cartItem.setProduct(productOptional.get());
 
@@ -84,7 +92,7 @@ public class CartItemService {
 
 
     @Transactional
-    public void updateCartItem(Long cartItemId, Long productId, Long cartId) {
+    public void updateCartItem(Long cartItemId, Long productId, Integer quantity, Long cartId) {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new NoSuchElementException(
                         "CartItem with id " + cartItemId + " does not exist"
@@ -101,6 +109,10 @@ public class CartItemService {
                     .orElseThrow(() -> new IllegalStateException("Cart with id " + cartId + " does not exist"));
             cartItem.setCart(cart);
         }
+
+        if (quantity != null) {
+            cartItem.setQuantity(quantity);
+        }
     }
 
     public List<CartItem> getCartItemsByCartId(Long cartId) {
@@ -115,5 +127,22 @@ public class CartItemService {
                 .orElseThrow(() -> new IllegalStateException("Product with id " + productId + " does not exist"));
 
         return cartItemRepository.findCartItemsByProductId(productId);
+    }
+
+    public List<Product> getProductsByCartId(Long cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new IllegalStateException("Cart with id " + cartId + " does not exist"));
+
+        List<CartItem> cartItems = cartItemRepository.findCartItemsByCartId(cartId);
+
+        // Mapujemy listę CartItem na listę produktów
+        return cartItems.***REMOVED***()
+                .map(CartItem::getProduct)
+                .toList();
+    }
+
+
+    public List<CartItem> getCartItemsByUserId(Long userId) {
+        return cartItemRepository.findCartItemsByUserId(userId);
     }
 }
