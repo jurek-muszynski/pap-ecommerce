@@ -71,7 +71,13 @@ public class ReviewService {
 
     public void deleteReview(Long reviewId) {
         try {
+            String token = authService.getToken();
+            if (token == null) {
+                throw new RuntimeException("No token found. User might not be authenticated.");
+            }
+
             HttpRequest request = HttpRequest.newBuilder()
+                    .header("Authorization", "Bearer " + token)
                     .uri(URI.create(BASE_API_URL + "/review/delete/" + reviewId))
                     .DELETE()
                     .build();

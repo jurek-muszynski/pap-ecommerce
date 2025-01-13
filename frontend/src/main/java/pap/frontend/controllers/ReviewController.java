@@ -116,7 +116,19 @@ public class ReviewController extends AuthenticatedController {
                 newReview.setUser(user);
 
                 try {
-                    System.out.println(newReview.toString());
+                    // Sprawdzamy, czy użytkownik już dodał opinię
+                    List<Review> existingReviews = reviewService.getReviewsByProductId(productId);
+                    Review existingReview = existingReviews.stream()
+                            .filter(r -> r.getUser().getId().equals(user.getId()))
+                            .findFirst()
+                            .orElse(null);
+
+                    // Jeśli użytkownik ma już opinię, usuwamy ją
+                    if (existingReview != null) {
+                        reviewService.deleteReview(existingReview.getId());
+                    }
+
+                    // Dodajemy nową opinię
                     reviewService.addReview(newReview);
                     refreshData();
                     showAlert("Success", "Review added successfully!", Alert.AlertType.INFORMATION);
