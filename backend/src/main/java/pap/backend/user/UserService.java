@@ -6,6 +6,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pap.backend.cart.Cart;
+import pap.backend.cart.CartService;
 
 
 import java.util.List;
@@ -16,11 +18,13 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CartService cartService;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {this.userRepository = userRepository;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, CartService cartService) {this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.cartService = cartService;
     }
 
 
@@ -77,6 +81,16 @@ public class UserService {
         }
 
         if (updatedUser.getRole() != null && (updatedUser.getRole() == UserRole.ADMIN || updatedUser.getRole() == UserRole.USER)) {
+            if (updatedUser.getRole() == UserRole.ADMIN) {
+                // If a user is granted admin role, their cart is deleted
+                Long cartId = cartService.getCartIdByUserId(userId);
+                cartService.deleteCart(cartId);
+            } else {
+                // If a user is granted user role, a new cart is created
+                Cart cart = new Cart();
+                cart.setUser(existingUser);
+                cartService.addNewCart(cart);
+            }
             existingUser.setRole(updatedUser.getRole());
         } else if (updatedUser.getRole() == null) {
             throw new IllegalStateException("Role cannot be null");

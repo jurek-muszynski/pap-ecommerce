@@ -48,9 +48,13 @@ public class AuthService {
 
         try {
             User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()), UserRole.USER);
+            if (!user.getEmail().contains("@")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email address");
+            }
             repository.save(user);
             String token = jwtService.generateToken(user);
             var response = new AuthResponse(token);
+
 
           // <- CART CREATION -> //
             Cart cart = new Cart();
