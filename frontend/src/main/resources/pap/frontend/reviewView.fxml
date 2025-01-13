@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="pap.frontend.controllers.ReviewController"
+      spacing="10" alignment="TOP_CENTER" fx:id="reviewRoot">
+    <HBox spacing="10" alignment="CENTER_LEFT" fx:id="reviewHeader">
+        <Button text="Back to Catalog" onAction="#goBackToCatalog" styleClass="button"/>
+        <Label text="Product Reviews" />
+    </HBox>
+    <HBox spacing="10" alignment="CENTER" fx:id="buttonPane">
+        <Button fx:id="addReviewButton" text="Add Review" />
+        <Button fx:id="refreshButton" text="Refresh" />
+    </HBox>
+    <ScrollPane fitToWidth="true">
+        <VBox fx:id="reviewPane" spacing="10"></VBox>
+    </ScrollPane>
+</VBox>

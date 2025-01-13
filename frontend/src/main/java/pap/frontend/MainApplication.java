@@ -24,6 +24,8 @@ public class MainApplication extends Application {
         screenController.addScreen("accountManagement", "/pap/frontend/account_management.fxml");
         screenController.addScreen("cartView", "/pap/frontend/cart.fxml");
         screenController.addScreen("summaryView", "/pap/frontend/summary.fxml");
+        screenController.addScreen("reviewView", "/pap/frontend/reviewView.fxml");
+
         screenController.addScreen("about", "/pap/frontend/about.fxml");
         // Activate initial screen
         screenController.activate("registration");
