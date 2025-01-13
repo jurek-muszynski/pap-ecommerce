@@ -6,6 +6,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pap.backend.cart.Cart;
+import pap.backend.cart.CartService;
 
 
 import java.util.List;
@@ -16,11 +18,13 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CartService cartService;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {this.userRepository = userRepository;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, CartService cartService) {this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.cartService = cartService;
     }
 
 
