@@ -45,8 +45,14 @@ public class ReviewService {
 
     public void addReview(Review review) {
         try {
+            String token = authService.getToken();
+            if (token == null) {
+                throw new RuntimeException("No token found. User might not be authenticated.");
+            }
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_API_URL + "/review/add"))
+                    .header("Authorization", "Bearer " + token)
                     .POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(review)))
                     .header("Content-Type", "application/json")
                     .build();
@@ -54,6 +60,7 @@ public class ReviewService {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != HttpURLConnection.HTTP_OK && response.statusCode() != HttpURLConnection.HTTP_CREATED) {
+
                 throw new RuntimeException(response.body());
             }
 
