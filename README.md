@@ -32,10 +32,16 @@ cd pap2024z-z22
 
 ```bash
 #.env
-JWT_SECRET_KEY=<YOUR-SECRET-KEY>
+SPRING_DATASOURCE_USERNAME=<DATABASE-USERNAME>
+SPRING_DATASOURCE_PASSWORD=<DATABASE-PASSWORD>
 
-SUPPORT_EMAIL=<YOUR-GMAIL-ACCOUNT>
-APP_PASSWORD=<YOUR-GMAIL-APP-PASSWORD>
+JWT_SECRET_KEY=<SECRET-KEY>
+JWT_EXPIRATION_TIME=<JWT-EXPIRATION-TIME>
+
+SUPPORT_EMAIL=<MAIL-ADDRESS>
+APP_PASSWORD=<MAIL-APP-PASSWORD>
+MAIL_HOST=<MAIL-HOST>
+MAIL_PORT=<MAIL-PORT>
 ```
 
 Instalacje oraz uruchomienie programu obsługuje skrypt `run-ecommerce.sh`, który jest odpowiedzialny za pobranie oraz skonfigurowanie wszystkich koniecznych zależności do uruchomienia aplikacji na kontenerze dockerowym (część backendowa) oraz maszynie lokalnej (frontend). Poszczególne etapy są krótko opisane w samym skrypcie. Aplikacje należy uruchomić w następujący sposób

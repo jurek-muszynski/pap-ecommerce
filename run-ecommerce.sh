@@ -56,6 +56,7 @@ install_javafx(){
 # cleanup function, stopping all docker containers after exiting from the application
 cleanup() {
     echo "Stopping Docker containers..."
+    rm -f /pap2024z-z22/backend/.env
     docker-compose down
 }
 trap cleanup EXIT
@@ -78,8 +79,8 @@ if [ $(dpkg -l | grep openjfx | wc -l) -eq 0 ]; then
     install_javafx
 fi 
 
-# set the environment variable for the docker-compose secret
-
+# move the .env file to the backend directory
+cp .env ./backend
 
 # run docker-compose
 docker-compose up --build -d --always-recreate-deps
