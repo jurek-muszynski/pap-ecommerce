@@ -19,8 +19,8 @@
         <VBox spacing="20" styleClass="vbox">
             <Button text="Your data" onAction="#yourData" styleClass="button_account_management"/>
             <Button text="Change username" onAction="#changeUsername" styleClass="button_account_management"/>
-            <Button text="Change email" styleClass="button_account_management"/>
-            <Button text="Change password" styleClass="button_account_management"/>
+            <Button text="Change email" onAction="#changeEmail" styleClass="button_account_management"/>
+            <Button text="Change password" onAction="#changePassword" styleClass="button_account_management"/>
             <Button text="Logout" onAction="#logout" styleClass="logout_button_account_management"/>
         </VBox>
     </left>

@@ -9,9 +9,11 @@ import pap.frontend.models.UserRole;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 
 public class AuthService {
 
@@ -144,24 +146,26 @@ public class AuthService {
         return getCurrentUser().getEmail();
     }
 
-    public void updateUser(String newUsername) {
-        String url = "http://localhost:8080/api/v1/user/update-username/" + newUsername;
-
-        JsonObject requestBody = new JsonObject();
-        requestBody.addProperty("newUsername", newUsername);
+    public void updateUserField(String field, String value) {
         try {
+            String url = "http://localhost:8080/api/v1/user/update?field=" + URLEncoder.encode(field, StandardCharsets.UTF_8) +
+                    "&value=" + URLEncoder.encode(value, StandardCharsets.UTF_8);
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Authorization", "Bearer " + getToken()) // Attach token
-                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                    .header("Authorization", "Bearer " + getToken())
+                    .PUT(HttpRequest.BodyPublishers.noBody())
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("Failed to update username. Status: " + response.statusCode() +
-                        ", Message: " + response.body());            }
+                throw new RuntimeException("Failed to update " + field + ". Status: " + response.statusCode() +
+                        ", Message: " + response.body());
+            }
+
+            System.out.println(field + " updated successfully to: " + value);
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Error updating username: " + e.getMessage());
+            throw new RuntimeException("Error updating " + field + ": " + e.getMessage());
         }
     }
 

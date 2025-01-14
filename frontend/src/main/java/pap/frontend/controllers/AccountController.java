@@ -7,13 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import pap.frontend.controllers.ControlledScreen;
-import pap.frontend.controllers.ScreenController;
-import pap.frontend.models.Review;
 import pap.frontend.models.User;
 import pap.frontend.services.AuthService;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class AccountController extends AuthenticatedController {
 
@@ -33,9 +30,7 @@ public class AccountController extends AuthenticatedController {
 
     @FXML
     public void initialize() {
-
         refreshData();
-
     }
     private void loadUser() {
         try {
@@ -85,56 +80,85 @@ public class AccountController extends AuthenticatedController {
     }
 
     @FXML
-    private void changeUsername() {
-        // Tworzymy okno dialogowe z polem tekstowym
+    private void changeUserField(String fieldLabel, String placeholder,
+                                 int minLength, int maxLength,
+                                 Consumer<String> updateAction) {
         VBox dialogBox = new VBox(10);
         dialogBox.setStyle("-fx-padding: 20; -fx-alignment: center;");
 
-        Label promptLabel = new Label("Enter new username:");
+        Label promptLabel = new Label("Enter new " + fieldLabel + ":");
         promptLabel.setStyle("-fx-font-size: 14px;");
 
-        TextField usernameField = new TextField();
-        usernameField.setPromptText("New username");
-        usernameField.setPrefWidth(250);
+        TextField inputField = new TextField();
+        inputField.setPromptText(placeholder);
+        inputField.setPrefWidth(250);
 
         Button submitButton = new Button("Submit");
         submitButton.setStyle("-fx-padding: 10 20; -fx-background-color: #4CAF50; -fx-text-fill: white;");
 
-        Label feedbackLabel = new Label(); // Informacja zwrotna
+        Label feedbackLabel = new Label();
         feedbackLabel.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
 
         submitButton.setOnAction(event -> {
-            String newUsername = usernameField.getText().trim();
-            if (newUsername.isEmpty()) {
-                feedbackLabel.setText("Username cannot be empty.");
+            String input = inputField.getText().trim();
+
+            if (input.isEmpty()) {
+                feedbackLabel.setText(fieldLabel + " cannot be empty.");
+                return;
+            }
+            if (input.length() < minLength || input.length() > maxLength) {
+                feedbackLabel.setText(fieldLabel + " must be between " + minLength + " and " + maxLength + " characters.");
                 return;
             }
 
-            if (newUsername.length() < 1 || newUsername.length() > 50) {
-                feedbackLabel.setText("Username must be between 1 and 50 characters.");
-                return;
-            }
-
-            // Wywołujemy serwis do zmiany nazwy użytkownika
             try {
-                authService.updateUser(newUsername);
+                updateAction.accept(input);
                 refreshData();
-                feedbackLabel.setText("Username updated successfully to: " + currentUser.getName());
+                feedbackLabel.setText(fieldLabel + " updated successfully!");
                 feedbackLabel.setStyle("-fx-text-fill: green;");
             } catch (Exception e) {
-                feedbackLabel.setText("Error updating username: " + e.getMessage());
+                feedbackLabel.setText("Error updating " + fieldLabel + ": " + e.getMessage());
             }
         });
 
-        dialogBox.getChildren().addAll(promptLabel, usernameField, submitButton, feedbackLabel);
+        dialogBox.getChildren().addAll(promptLabel, inputField, submitButton, feedbackLabel);
 
-        // Czyścimy istniejącą zawartość i dodajemy dialog
         contentPane.getChildren().clear();
         contentPane.getChildren().add(dialogBox);
     }
 
+    @FXML
+    private void changeUsername() {
+        changeUserField(
+                "username",
+                "New username",
+                1,
+                50,
+                newUsername -> authService.updateUserField("username", newUsername)
+        );
+    }
 
+    @FXML
+    private void changeEmail() {
+        changeUserField(
+                "email",
+                "New email",
+                1,
+                50,
+                newEmail -> authService.updateUserField("email", newEmail)
+        );
+    }
 
+    @FXML
+    private void changePassword() {
+        changeUserField(
+                "password",
+                "New password",
+                1,
+                50,
+                newPassword -> authService.updateUserField("password", newPassword)
+        );
+    }
 
     @FXML
     private void logout() {
