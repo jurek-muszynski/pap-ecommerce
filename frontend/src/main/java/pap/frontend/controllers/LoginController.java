@@ -15,7 +15,7 @@ public class LoginController implements ControlledScreen {
     private Label errorLabel;
 
     private ScreenController screenController;
-    private final AuthService authService = AuthService.getInstance(); // Service to handle authentication
+    private final AuthService authService = AuthService.getInstance();
 
     @Override
     public void setScreenController(ScreenController screenController) {
@@ -28,8 +28,8 @@ public class LoginController implements ControlledScreen {
         String password = passwordField.getText();
 
         try {
-            String token = authService.login(email, password); // Login and retrieve JWT token
-            authService.saveToken(token); // Save the token for future requests
+            String token = authService.login(email, password);
+            authService.saveToken(token);
 
             UserRole role = authService.getUserRole();
             if (role == null) {
@@ -37,9 +37,9 @@ public class LoginController implements ControlledScreen {
             }
 
             if (role == UserRole.USER) {
-                screenController.activate("userView"); // Navigate to the user view
+                screenController.activate("userView");
             } else if (role == UserRole.ADMIN) {
-                screenController.activate("adminView"); // Navigate to the admin view
+                screenController.activate("adminView");
             } else {
                 throw new RuntimeException("Unknown user role: " + role);
             }
@@ -50,6 +50,6 @@ public class LoginController implements ControlledScreen {
     }
 
     public void redirectToRegistration(ActionEvent actionEvent) {
-        screenController.activate("registration"); // Redirect to registration screen
+        screenController.activate("registration");
     }
 }

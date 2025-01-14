@@ -8,7 +8,7 @@ public abstract class AuthenticatedController implements ControlledScreen {
     protected ScreenController screenController;
 
     public AuthenticatedController(AuthService authService) {
-        this.authService = authService; // Assuming a singleton or shared instance of AuthService
+        this.authService = authService;
     }
 
     @Override

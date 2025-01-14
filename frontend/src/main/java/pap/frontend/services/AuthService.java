@@ -91,7 +91,7 @@ public class AuthService {
     }
 
     public void logout() {
-        this.token = null; // Clear the token on logout
+        this.token = null;
     }
 
     public User getCurrentUser() {
@@ -99,7 +99,7 @@ public class AuthService {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Authorization", "Bearer " + getToken()) // Attach token
+                    .header("Authorization", "Bearer " + getToken())
                     .GET()
                     .build();
 
@@ -124,9 +124,8 @@ public class AuthService {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == HttpURLConnection.HTTP_OK) {
-                // Assuming the response contains a JSON object with a "role" field
                 User user = gson.fromJson(response.body(), User.class);
-                return user.getRole(); // Assuming User class has a `getRole()` method
+                return user.getRole();
             } else {
                 throw new RuntimeException("Failed to fetch user role. Status code: " + response.statusCode());
             }

@@ -29,7 +29,6 @@ public class AccountController extends AuthenticatedController {
 
     @FXML
     public void initialize() {
-        // Example: Set the username dynamically (this should be replaced with actual logic)
 
         refreshData();
 
@@ -39,7 +38,6 @@ public class AccountController extends AuthenticatedController {
         checkAuthentication();
 
         if (authService.isAuthenticated()) {
-//            loadUserData();
             String username = authService.getCurrentUserEmail();
             usernameLabel.setText(username);
         }

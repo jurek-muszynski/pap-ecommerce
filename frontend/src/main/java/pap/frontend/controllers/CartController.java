@@ -36,10 +36,8 @@ public class CartController extends AuthenticatedController {
 
     @FXML
     public void initialize() {
-        // Load cart items initially
         refreshData();
 
-        // Apply CSS style once the scene is set
         cartPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.getStylesheets().add(getClass().getResource("/pap/frontend/cartStyles.css").toExternalForm());
@@ -58,16 +56,15 @@ public class CartController extends AuthenticatedController {
     }
 
     private void updateCartView(List<CartItem> cartItems) {
-        cartPane.getChildren().clear(); // Clear the current cart view
+        cartPane.getChildren().clear();
 
         for (CartItem cartItem : cartItems) {
             VBox cartItemBox = new VBox(10);
             cartItemBox.getStyleClass().add("cart-item");
 
-            // Fetch product details
+
             Product product = productService.getProductById(cartItem.getProductId());
 
-            // Display product information
             Label productName = new Label("Product: " + product.getName());
             productName.getStyleClass().add("product-name");
 
@@ -76,8 +73,7 @@ public class CartController extends AuthenticatedController {
             Label productPrice = new Label("Price: $" + new DecimalFormat("#.##").format(price));
             productPrice.getStyleClass().add("product-price");
 
-            // Add quantity controls
-            HBox quantityBox = new HBox(5); // Horizontal box for quantity controls
+            HBox quantityBox = new HBox(5);
             quantityBox.getStyleClass().add("quantity-box");
 
             Button decreaseButton = new Button("-");
@@ -103,7 +99,6 @@ public class CartController extends AuthenticatedController {
 
             quantityBox.getChildren().addAll(decreaseButton, quantityLabel, increaseButton);
 
-            // Add a remove button for each cart item
             Button removeButton = new Button("Remove");
             removeButton.getStyleClass().add("remove-button");
             removeButton.setOnAction(event -> removeCartItem(cartItem.getId()));
@@ -118,7 +113,7 @@ public class CartController extends AuthenticatedController {
         try {
             cartService.removeCartItem(cartItemId);
             showAlert("Success", "Item removed from cart.", Alert.AlertType.INFORMATION);
-            loadCartItems(); // Refresh the cart view
+            loadCartItems();
         } catch (Exception e) {
             showAlert("Error", "Failed to remove cart item: " + e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -127,7 +122,7 @@ public class CartController extends AuthenticatedController {
     private void updateCartItem(CartItem cartItem) {
         try {
             cartService.updateCartItem(cartItem.getId(), cartItem.getQuantity());
-            loadCartItems(); // Refresh the cart view
+            loadCartItems();
         } catch (Exception e) {
             showAlert("Error", "Failed to update cart item: " + e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -152,7 +147,7 @@ public class CartController extends AuthenticatedController {
     @FXML
     private void goToSummary() {
         if (screenController != null) {
-            screenController.activate("summaryView"); // Przekierowanie do widoku podsumowania
+            screenController.activate("summaryView");
         }
     }
 
