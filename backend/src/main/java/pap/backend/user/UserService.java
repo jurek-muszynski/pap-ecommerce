@@ -104,6 +104,10 @@ public class UserService {
         }
 
         if (updatedUser.getName() != null && !updatedUser.getName().equals(existingUser.getName())) {
+            Optional<User> userOptional = userRepository.findUserByUsername(updatedUser.getName());
+            if (userOptional.isPresent() && !userOptional.get().getId().equals(userId)) {
+                throw new IllegalStateException("username taken");
+            }
             existingUser.setUsername(updatedUser.getName());
         } else if (updatedUser.getName() == null) {
             throw new IllegalStateException("Username cannot be null");
