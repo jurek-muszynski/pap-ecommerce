@@ -12,7 +12,6 @@ import pap.frontend.services.AuthService;
 import pap.frontend.services.CartService;
 import pap.frontend.services.ProductService;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class CartController extends AuthenticatedController {
 
         cartPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene != null) {
-                newScene.getStylesheets().add(getClass().getResource("/pap/frontend/cartStyles.css").toExternalForm());
+                newScene.getStylesheets().add(getClass().getResource("/pap/frontend/styles/cartStyles.css").toExternalForm());
             }
         });
     }
