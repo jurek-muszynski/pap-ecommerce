@@ -1,10 +1,12 @@
 package pap.backend.user;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -49,9 +51,35 @@ public class UserService {
     public User getMe() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName(); // The principal (email/username)
-
+        System.out.println("w getMe email: " + email);
+        System.out.println("w getMe user: " + userRepository.findUserByEmail(email));
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Transactional
+    public void updateUsername(String newUsername) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // The principal (email/username)
+        System.out.println("w updateUsername email: " + email);
+        System.out.println("w updateUsername newUsername: " + userRepository.findUserByEmail(email));
+        // Znalezienie użytkownika po ID
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Walidacja nowej nazwy użytkownika
+        if (newUsername == null || newUsername.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
+        if (newUsername.length() > 50) {
+            throw new IllegalArgumentException("Username cannot exceed 50 characters");
+        }
+
+        // Aktualizacja nazwy użytkownika
+        user.setUsername(newUsername);
+
+        // Zapisanie zmian w bazie danych
+        userRepository.save(user);
     }
 
 //    @Transactional

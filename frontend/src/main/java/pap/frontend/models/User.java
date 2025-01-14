@@ -2,19 +2,16 @@ package pap.frontend.models;
 
 public class User {
     private Long id;
+    private String username;
     private String email;
-    private String firstName;
-    private String lastName;
+    private String password;
     private UserRole role; // Role can be "CUSTOMER" or "ADMIN"
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getUsername() { return username; }
+
+    public void setUsername(String username) { this.username = username; }
 
     public String getEmail() {
         return email;
@@ -24,21 +21,9 @@ public class User {
         this.email = email;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    public String getPassword() { return password; }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    public void setPassword(String password) { this.password = password; }
 
     public UserRole getRole() {
         return role;
@@ -52,10 +37,10 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", role='" + role + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
                 '}';
     }
 }
