@@ -72,13 +72,17 @@ public class OrderService {
         order.setUser(user);
         order.setDate(LocalDate.now());
 
-        orderRepository.save(order);
-
         List<CartItem> cartItems = cartItemRepository.findCartItemsByUserId(user.getId());
+        if (cartItems.isEmpty()) {
+            throw new IllegalStateException("Cart is empty");
+        }
+
+        orderRepository.save(order);
         for (CartItem cartItem : cartItems) {
             OrderItem orderItem = new OrderItem(cartItem.getProduct(), order);
             orderItemRepository.save(orderItem);
         }
+
 
         sendConfirmationEmail(orderRequest);
         sendRecommendationEmail(orderRequest);
