@@ -23,11 +23,30 @@ Głównym celem tego projektu jest stworzenie aplikacji w stylu sklepu-online, k
 
 ---
 
-Instalacje oraz uruchomienie programu obsługuje skrypt `run-ecommerce.sh`, który jest odpowiedzialny za pobranie oraz skonfigurowanie wszystkich koniecznych zależności do uruchomienia aplikacji na kontenerze dockerowym (część backendowa) oraz maszynie lokalnej (frontend). Poszczególne etapy są krótko opisane w samym skrypcie. Aplikacje należy uruchomić w następujący sposób
+__Pierwszym__ krokiem który należy wykonać jest sklonowanie repozytorium oraz stworzenie pliku o nazwie `.env` w głównym katalogu projektu. Plik ten odpowiedzialny jest za konfigurację klucza szyfrującego tokeny JWT oraz innych koniecznych zależności jak login i hasło do aplikacji mailowej wysyłającej powiadomienia
 
-```
+```bash
 git clone https://gitlab-stud.elka.pw.edu.pl/pap2024z-z22/pap2024z-z22.git
 cd pap2024z-z22
+```
+
+```bash
+#.env
+SPRING_DATASOURCE_USERNAME=<DATABASE-USERNAME>
+SPRING_DATASOURCE_PASSWORD=<DATABASE-PASSWORD>
+
+JWT_SECRET_KEY=<SECRET-KEY>
+JWT_EXPIRATION_TIME=<JWT-EXPIRATION-TIME>
+
+SUPPORT_EMAIL=<MAIL-ADDRESS>
+APP_PASSWORD=<MAIL-APP-PASSWORD>
+MAIL_HOST=<MAIL-HOST>
+MAIL_PORT=<MAIL-PORT>
+```
+
+Instalacje oraz uruchomienie programu obsługuje skrypt `run-ecommerce.sh`, który jest odpowiedzialny za pobranie oraz skonfigurowanie wszystkich koniecznych zależności do uruchomienia aplikacji na kontenerze dockerowym (część backendowa) oraz maszynie lokalnej (frontend). Poszczególne etapy są krótko opisane w samym skrypcie. Aplikacje należy uruchomić w następujący sposób
+
+```bash
 sh run-ecommerce.sh
 ```
 

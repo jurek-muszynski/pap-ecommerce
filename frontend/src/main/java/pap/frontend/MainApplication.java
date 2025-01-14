@@ -15,14 +15,18 @@ public class MainApplication extends Application {
 
         ScreenController screenController = new ScreenController(mainScene);
 
-        screenController.addScreen("registration", "/pap/frontend/registration.fxml");
-        screenController.addScreen("login", "/pap/frontend/login.fxml");
-        screenController.addScreen("adminView", "/pap/frontend/admin_view.fxml");
-        screenController.addScreen("userView", "/pap/frontend/user_view.fxml");
-        screenController.addScreen("accountManagement", "/pap/frontend/account_management.fxml");
-        screenController.addScreen("cartView", "/pap/frontend/cart.fxml");
-        screenController.addScreen("summaryView", "/pap/frontend/summary.fxml");
-        screenController.addScreen("about", "/pap/frontend/about.fxml");
+        // Add screens
+        screenController.addScreen("registration", "/pap/frontend/views/registration.fxml");
+        screenController.addScreen("login", "/pap/frontend/views/login.fxml");
+        screenController.addScreen("adminView", "/pap/frontend/views/admin_view.fxml");
+        screenController.addScreen("userView", "/pap/frontend/views/user_view.fxml");
+        screenController.addScreen("accountManagement", "/pap/frontend/views/account_management.fxml");
+        screenController.addScreen("cartView", "/pap/frontend/views/cart.fxml");
+        screenController.addScreen("summaryView", "/pap/frontend/views/summary.fxml");
+        screenController.addScreen("reviewView", "/pap/frontend/views/reviewView.fxml");
+
+        screenController.addScreen("about", "/pap/frontend/views/about.fxml");
+        // Activate initial screen
         screenController.activate("registration");
 
         primaryStage.setScene(mainScene);

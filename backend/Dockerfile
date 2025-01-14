@@ -16,7 +16,7 @@ RUN chmod +655 ./mvnw
 RUN chown -R spring:spring /app
 
 # Build the application
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package
 
 # Set the jar file path
 ARG JAR_FILE=target/backend-0.0.1.jar
