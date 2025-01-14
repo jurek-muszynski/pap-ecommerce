@@ -63,6 +63,13 @@ public class SummaryController extends AuthenticatedController {
         emailField.textProperty().addListener((observable, oldValue, newValue) -> checkForm());
     }
 
+    @FXML
+    private void goBackToCart() {
+        if (screenController != null) {
+            screenController.activate("cartView"); // Navigate to the cart view
+        }
+    }
+
     public void refreshData() {
         checkAuthentication();
 
@@ -105,7 +112,8 @@ public class SummaryController extends AuthenticatedController {
     }
 
     private void checkForm() {
-        boolean isFormValid = !deliveryAddressField.getText().isEmpty() && !emailField.getText().isEmpty();
+        boolean areProductsInCart = !summaryPane.getChildren().isEmpty();
+        boolean isFormValid = !deliveryAddressField.getText().isEmpty() && !emailField.getText().isEmpty() && areProductsInCart;
         placeOrderButton.setDisable(!isFormValid);
     }
 
