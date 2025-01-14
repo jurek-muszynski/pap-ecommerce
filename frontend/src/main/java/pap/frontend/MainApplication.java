@@ -13,7 +13,6 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) {
         Scene mainScene = new Scene(new Pane(), 800, 600);
 
-        // Initialize ScreenController
         ScreenController screenController = new ScreenController(mainScene);
 
         // Add screens

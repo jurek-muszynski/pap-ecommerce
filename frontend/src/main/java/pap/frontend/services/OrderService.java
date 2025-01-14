@@ -27,16 +27,13 @@ public class OrderService {
     public boolean placeOrder(Long userId, String email, String deliveryAddress) {
         String url = BASE_API_URL + "/order/add";
 
-        // Create OrderRequest object
         OrderRequest placeOrderRequest = new OrderRequest(userId, email, deliveryAddress);
 
         String token = authService.getToken();
 
         try {
-            // Serialize the OrderRequest to JSON
             String requestBody = gson.toJson(placeOrderRequest);
 
-            // Create the HTTP POST request
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Content-Type", "application/json")
@@ -44,10 +41,8 @@ public class OrderService {
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
-            // Send the request
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // Check response status
             if (response.statusCode() == HttpURLConnection.HTTP_OK || response.statusCode() == HttpURLConnection.HTTP_CREATED) {
                 System.out.println("Order placed successfully.");
                 return true;

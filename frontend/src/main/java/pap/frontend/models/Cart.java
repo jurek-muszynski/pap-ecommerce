@@ -3,11 +3,10 @@ package pap.frontend.models;
 import java.time.LocalDate;
 
 public class Cart {
-    private Long id; // Unique identifier for the cart
-    private User user; // Associated user
-    private LocalDate lastUpdate; // Last update date for the cart
+    private Long id;
+    private User user;
+    private LocalDate lastUpdate;
 
-    // Getters and setters
     public Long getId() {
         return id;
     }

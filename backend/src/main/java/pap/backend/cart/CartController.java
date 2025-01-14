@@ -39,7 +39,7 @@ public class CartController {
         return new ResponseEntity<Long>(cartService.getCartIdByUserId(userId), HttpStatus.OK);
     }
 
-    @PostMapping("/add") // W ciele Usera podajemy tylko jego ID
+    @PostMapping("/add")
     public ResponseEntity<String> addNewCart(@RequestBody Cart cart) {
         try {
             cartService.addNewCart(cart);

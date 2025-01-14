@@ -55,7 +55,7 @@ public class ProductService {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Authorization", "Bearer " + token) // Add Authorization header
+                    .header("Authorization", "Bearer " + token)
                     .GET()
                     .build();
 
@@ -110,5 +110,29 @@ public class ProductService {
             throw new RuntimeException("ERROR ADDING PRODUCT: " + e.getMessage());
         }
     }
+
+    public void updateProductQuantity(long productId, int newQuantity) {
+        try {
+            String url = BASE_API_URL + "/product/update/" + productId;
+
+            String body = String.format("quantity=%d", newQuantity);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .PUT(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("ERROR UPDATING PRODUCT QUANTITY: " + response.body());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("ERROR UPDATING PRODUCT QUANTITY: " + e.getMessage(), e);
+        }
+    }
+
 
 }

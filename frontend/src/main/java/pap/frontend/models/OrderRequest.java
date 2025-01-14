@@ -11,7 +11,6 @@ public class OrderRequest {
         this.deliveryAddress = deliveryAddress;
     }
 
-    // Getters and setters
     public String getEmail() {
         return email;
     }

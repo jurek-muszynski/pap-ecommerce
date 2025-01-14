@@ -72,21 +72,17 @@ public class CartItemService {
 
     @Transactional
     public void deleteAllCartItemsByCartId(Long cartId) {
-        // Sprawdzenie, czy Cart o podanym ID istnieje
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalStateException("Cart with id " + cartId + " does not exist"));
 
-        // Usunięcie wszystkich CartItem powiązanych z Cart
         cartItemRepository.deleteCartItemsByCartId(cartId);
     }
 
     @Transactional
     public void deleteAllCartItemsByProductId(Long productId) {
-        // Sprawdzenie, czy Produkt o podanym ID istnieje
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalStateException("Product with id " + productId + " does not exist"));
 
-        // Usunięcie wszystkich CartItem powiązanych z Produktem
         cartItemRepository.deleteCartItemsByProductId(productId);
     }
 
@@ -135,7 +131,6 @@ public class CartItemService {
 
         List<CartItem> cartItems = cartItemRepository.findCartItemsByCartId(cartId);
 
-        // Mapujemy listę CartItem na listę produktów
         return cartItems.***REMOVED***()
                 .map(CartItem::getProduct)
                 .toList();

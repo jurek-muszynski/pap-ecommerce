@@ -45,7 +45,7 @@ public class OrderItemController {
         return new ResponseEntity<List<OrderItem>>(orderItemService.getOrderItemsByUserId(userId), HttpStatus.OK);
     }
 
-    @PostMapping("/add") // W ciele żądania podajemy tylko id produktu i zamówienia, reszta zostanie pobrana z encji Product i Order
+    @PostMapping("/add")
     public ResponseEntity<String> addNewOrderItem(@RequestBody OrderItem orderItem) {
         try {
             orderItemService.addNewOrderItem(orderItem);

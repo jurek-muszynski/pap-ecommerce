@@ -9,7 +9,6 @@ import java.util.Optional;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
-    // Znajdź koszyk na podstawie ID użytkownika
     @Query("SELECT c.id FROM Cart c WHERE c.user.id = :userId")
     Optional<Long> findCartIdByUserId(Long userId);
 
