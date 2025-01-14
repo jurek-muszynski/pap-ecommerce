@@ -1,5 +1,6 @@
 package pap.frontend.controllers;
 
+import com.sun.mail.smtp.SMTPOutputStream;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -15,10 +16,7 @@ import pap.frontend.models.Cart;
 import pap.frontend.models.CartItem;
 import pap.frontend.models.Category;
 import pap.frontend.models.Product;
-import pap.frontend.services.AuthService;
-import pap.frontend.services.CartService;
-import pap.frontend.services.CategoryService;
-import pap.frontend.services.ProductService;
+import pap.frontend.services.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +39,7 @@ public class UserProductController extends AuthenticatedController {
     private final ProductService productService = new ProductService();
     private final CategoryService categoryService = new CategoryService();
     private final CartService cartService = new CartService();
+    private final ReviewService reviewService = new ReviewService();
 
     private ScreenController screenController;
 
@@ -168,7 +167,12 @@ public class UserProductController extends AuthenticatedController {
         addToCartButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
         addToCartButton.setOnAction(event -> addToCart(product));
 
-        VBox productCard = new VBox(10, imageView, nameText, descriptionText, priceText, showDetailsButton, addToCartButton);
+        Button showRewiewsButton = new Button("Show Reviews");
+        showRewiewsButton.setStyle("-fx-background-color: #FFD700; -fx-text-fill: white;");
+        showRewiewsButton.setOnAction(event -> showReviews(product));
+
+        // Product Card
+        VBox productCard = new VBox(10, imageView, nameText, descriptionText, priceText, showDetailsButton, addToCartButton, showRewiewsButton);
         productCard.getStyleClass().add("product-card");
         productCard.setPrefWidth(200);
 
@@ -309,4 +313,14 @@ public class UserProductController extends AuthenticatedController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    private void showReviews(Product product) {
+
+        Long productId = product.getId();
+
+        // Aktywacja nowego widoku z opiniami
+        screenController.activateWithParam("reviewView", productId);
+    }
+
+
 }

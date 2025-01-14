@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="pap.frontend.controllers.AccountController" stylesheets="@../styles/style_product_list.css">
+    <top>
+        <HBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER" styleClass="hbox">
+            <Button text="Back to Products" onAction="#goBackToProducts" styleClass="button" style="-fx-pref-width: 200;"/>
+            <Region fx:id="leftSpacer" HBox.hgrow="ALWAYS"/>
+            <Label text="Manage Account" alignment="CENTER" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Region fx:id="centerSpacer" HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+    <left>
+        <VBox spacing="20" styleClass="vbox">
+            <Button text="Your data" onAction="#yourData" styleClass="button_account_management"/>
+            <Button text="Change username" onAction="#changeUsername" styleClass="button_account_management"/>
+            <Button text="Change email" onAction="#changeEmail" styleClass="button_account_management"/>
+            <Button text="Change password" onAction="#changePassword" styleClass="button_account_management"/>
+            <Button text="Logout" onAction="#logout" styleClass="logout_button_account_management"/>
+        </VBox>
+    </left>
+    <center>
+        <StackPane fx:id="contentPane" />
+    </center>
+    </BorderPane>
+

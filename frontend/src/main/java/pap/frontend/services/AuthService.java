@@ -9,9 +9,11 @@ import pap.frontend.models.UserRole;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 
 public class AuthService {
 
@@ -138,7 +140,32 @@ public class AuthService {
         return getCurrentUser().getId();
     }
 
-    public String getCurrentUserEmail() {
-        return getCurrentUser().getEmail();
+    public void updateUser(Long id, String email, String password, UserRole role, String username) {
+        try {
+            String url = "http://localhost:8080/api/v1/user/update/" + id;
+
+            JsonObject requestBody = new JsonObject();
+            requestBody.addProperty("email", email);
+            requestBody.addProperty("password", password);
+            requestBody.addProperty("role", role.toString());
+            requestBody.addProperty("username", username);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + getToken())
+                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("Status code: " + response.statusCode() +
+                        ", Message: " + response.body());
+            }
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("Error updating user: " + e.getMessage());
+        }
     }
+
 }

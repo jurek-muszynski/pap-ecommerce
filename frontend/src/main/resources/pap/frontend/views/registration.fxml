@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 
-    <VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pap.frontend.controllers.RegistrationController">
+    <VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pap.frontend.controllers.RegistrationController" fx:id="RegistrationPane">
         <Label text="Register" style="-fx-font-size: 24; -fx-font-weight: bold;" />
         <TextField fx:id="usernameField" promptText="Username" styleClass="text-field"/>
         <TextField fx:id="emailField" promptText="Email" styleClass="text-field"/>
@@ -14,6 +14,6 @@
         <HBox spacing="10">
             <Button text="Register" onAction="#handleRegister" styleClass="button" />
             <Button text="Already have an account? Login" onAction="#redirectToLogin" styleClass="button" />
-            <Button text="O NAS" onAction="#redirectToAbout" styleClass="button" />
+            <Button text="ABOUT US" onAction="#redirectToAbout" styleClass="button" />
         </HBox>
     </VBox>

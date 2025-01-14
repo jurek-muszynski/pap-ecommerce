@@ -2,10 +2,14 @@ package pap.frontend.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import pap.frontend.models.RegisterRequest;
 import pap.frontend.services.AuthService;
 
 public class RegistrationController implements ControlledScreen {
+    @FXML
+    private VBox RegistrationPane;
+
     @FXML
     private TextField usernameField;
     @FXML
@@ -23,6 +27,16 @@ public class RegistrationController implements ControlledScreen {
     @Override
     public void setScreenController(ScreenController screenController) {
         this.screenController = screenController;
+    }
+
+    @FXML
+    public void initialize() {
+        // Apply CSS style once the scene is set
+        RegistrationPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.getStylesheets().add(getClass().getResource("/pap/frontend/styles/cartStyles.css").toExternalForm());
+            }
+        });
     }
 
     @FXML
