@@ -32,11 +32,9 @@ public class UserService {
     }
 
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
+    public List<User> getUsers(){ return userRepository.findAll();}
 
-    public User getUser(Long userId) {
+    public User getUser(Long userId){
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException(
                         "user with id " + userId + " does not exist"
@@ -63,6 +61,7 @@ public class UserService {
     public User getMe() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName(); // The principal (email/username)
+
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }

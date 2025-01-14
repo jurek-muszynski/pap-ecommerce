@@ -51,6 +51,10 @@ public class User implements UserDetails {
         return email;
     }
 
+    public String getName(){
+        return username;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -111,7 +115,5 @@ public class User implements UserDetails {
     public String getEmail() {
         return email;
     }
-
-    public String getName() { return username; }
 
 }
