@@ -5,7 +5,6 @@ public class PlaceOrderRequest {
     private String email;
     private String deliveryAddress;
 
-    // Getters and setters
     public String getEmail() {
         return email;
     }

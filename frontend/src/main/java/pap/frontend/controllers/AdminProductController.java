@@ -36,6 +36,19 @@ public class AdminProductController extends AuthenticatedController{
     private final ProductService productService = new ProductService();
     private final CategoryService categoryService = new CategoryService();
 
+    @FXML
+    private Button decreaseButton;
+
+    @FXML
+    private Button increaseButton;
+
+    @FXML
+    private Label quantityLabel;
+
+    private Product selectedProduct;
+
+    @FXML
+    private Button saveButton;
 
 
     public AdminProductController() {
@@ -46,17 +59,16 @@ public class AdminProductController extends AuthenticatedController{
 
     @FXML
     public void initialize() {
-        // Apply CSS style classes
         productTilePane.getStyleClass().add("tile-pane");
         searchField.getStyleClass().add("text-field");
         categoryComboBox.getStyleClass().add("combo-box");
 
         refreshData();
 
-        // Enable live search
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterSuggestions(newValue);
         });
+        hideQuantityControls();
     }
 
     public void refreshData() {
@@ -67,6 +79,54 @@ public class AdminProductController extends AuthenticatedController{
             loadProducts();
         }
     }
+
+    private void hideQuantityControls() {
+        decreaseButton.setVisible(false);
+        increaseButton.setVisible(false);
+        quantityLabel.setVisible(false);
+        saveButton.setVisible(false);
+    }
+
+    private void showQuantityControls() {
+        decreaseButton.setVisible(true);
+        increaseButton.setVisible(true);
+        quantityLabel.setVisible(true);
+        saveButton.setVisible(true);
+    }
+
+
+    @FXML
+    private void decreaseQuantity() {
+        if (selectedProduct != null && selectedProduct.getQuantity() > 0) {
+            selectedProduct.setQuantity(selectedProduct.getQuantity() - 1);
+            quantityLabel.setText("Quantity: " + selectedProduct.getQuantity());
+            productService.updateProductQuantity(selectedProduct.getId(), selectedProduct.getQuantity());
+        }
+    }
+
+    @FXML
+    private void increaseQuantity() {
+        if (selectedProduct != null) {
+            selectedProduct.setQuantity(selectedProduct.getQuantity() + 1);
+            quantityLabel.setText("Quantity: " + selectedProduct.getQuantity());
+            productService.updateProductQuantity(selectedProduct.getId(), selectedProduct.getQuantity());
+        }
+    }
+
+    @FXML
+    private void saveQuantity() {
+        if (selectedProduct != null) {
+            try {
+                productService.updateProductQuantity(selectedProduct.getId(), selectedProduct.getQuantity());
+                showAlert("Success", "Product quantity updated successfully.", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                showAlert("Error", "Failed to update product quantity: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+        hideQuantityControls();
+    }
+
+
 
     @Override
     public void setScreenController(ScreenController screenController) {
@@ -121,7 +181,7 @@ public class AdminProductController extends AuthenticatedController{
 
     @FXML
     private void updateProductTiles(List<Product> products) {
-        productTilePane.getChildren().clear(); // Clear previous products
+        productTilePane.getChildren().clear();
         for (Product product : products) {
             VBox productCard = createProductCard(product);
             productTilePane.getChildren().add(productCard);
@@ -143,7 +203,6 @@ public class AdminProductController extends AuthenticatedController{
         imageView.setPreserveRatio(true);
         imageView.getStyleClass().add("image-view");
 
-        // Text elements
         Text nameText = new Text(product.getName());
         nameText.getStyleClass().add("name-text");
 
@@ -154,7 +213,6 @@ public class AdminProductController extends AuthenticatedController{
         Text priceText = new Text(String.format("$%.2f", product.getPrice()));
         priceText.getStyleClass().add("price-text");
 
-        // Buttons
         Button showDetailsButton = new Button("Show Details");
         showDetailsButton.setStyle("-fx-background-color: #87CEEB; -fx-text-fill: white;");
         showDetailsButton.setOnAction(event -> showProductDetails(product));
@@ -165,7 +223,6 @@ public class AdminProductController extends AuthenticatedController{
             showDeleteProductConfirmationDialog(product);
         });
 
-        // Product Card
         VBox productCard = new VBox(10, imageView, nameText, descriptionText, priceText, showDetailsButton, deleteButton);
         productCard.getStyleClass().add("product-card");
         productCard.setPrefWidth(200);
@@ -174,33 +231,26 @@ public class AdminProductController extends AuthenticatedController{
     }
 
     private void showDeleteProductConfirmationDialog(Product product) {
-        // Tworzymy okno dialogowe
         Stage dialogStage = new Stage();
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         dialogStage.setTitle("Confirm Deletion");
 
-        // Układ okna
         VBox dialogVBox = new VBox(10);
         dialogVBox.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
 
-        // Dodaj tekst z potwierdzeniem
         Label confirmationLabel = new Label("Are you sure you want to delete the product: " + product.getName() + "?");
 
-        // Przyciski potwierdzenia
         Button yesButton = new Button("Yes");
         yesButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
         yesButton.setOnAction(event -> {
             try {
-                // Usuń produkt
+
                 productService.deleteProduct(product.getId());
 
-                // Odśwież listę produktów
                 loadProducts();
 
-                // Wyświetl komunikat o sukcesie
                 showAlert("Success", "Product deleted successfully.", Alert.AlertType.INFORMATION);
 
-                // Zamknij okno dialogowe
                 dialogStage.close();
             } catch (Exception e) {
                 showAlert("Error", "Failed to delete product: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -211,13 +261,11 @@ public class AdminProductController extends AuthenticatedController{
         noButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
         noButton.setOnAction(event -> dialogStage.close());
 
-        // Układ przycisków
         HBox buttonLayout = new HBox(10, yesButton, noButton);
         buttonLayout.setAlignment(Pos.CENTER);
 
         dialogVBox.getChildren().addAll(confirmationLabel, buttonLayout);
 
-        // Ustawienie sceny i pokazanie okna
         Scene scene = new Scene(dialogVBox, 400, 150);
         dialogStage.setScene(scene);
         dialogStage.show();
@@ -236,14 +284,17 @@ public class AdminProductController extends AuthenticatedController{
     }
 
     private void showProductDetails(Product product) {
+
+        selectedProduct = product;
+        quantityLabel.setText("Quantity: " + product.getQuantity());
+        showQuantityControls();
+
         Stage detailsStage = new Stage();
         detailsStage.setTitle("Szczegóły Produktu");
 
-        // Tytuł produktu
         Label titleLabel = new Label(product.getName());
         titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;");
 
-        // Powiększony obraz produktu
         ImageView imageView = new ImageView();
         try {
             Image image = new Image(product.getImageUrl());
@@ -255,23 +306,18 @@ public class AdminProductController extends AuthenticatedController{
         imageView.setFitHeight(300);
         imageView.setPreserveRatio(true);
 
-        // Opis produktu
         Label descriptionLabel = new Label("Description: " + product.getDescription());
         descriptionLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
 
-        // Cena produktu
         Label priceLabel = new Label(String.format("Price: $%.2f", product.getPrice()));
         priceLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #008000;");
 
-        // Kategoria produktu
         Label categoryLabel = new Label("Category: " + (product.getCategory() != null ? product.getCategory().getName() : "N/A"));
         categoryLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
 
-        // Dostępna ilość
         Label quantityLabel = new Label("Quantity available: " + product.getQuantity());
         quantityLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
 
-        // Okrągły przycisk zamykania
         Button closeButton = new Button("X");
         closeButton.setStyle(
                 "-fx-background-color: transparent; " +
@@ -318,14 +364,11 @@ public class AdminProductController extends AuthenticatedController{
 
         closeButton.setOnAction(event -> detailsStage.close());
 
-        // Główny układ
         VBox detailsLayout = new VBox(20);
         detailsLayout.setStyle("-fx-padding: 30; -fx-alignment: center; -fx-spacing: 20; -fx-background-color: #f9f9f9;");
 
-        // Dodanie elementów do głównego układu
         detailsLayout.getChildren().addAll(titleLabel, imageView, descriptionLabel, priceLabel, categoryLabel, quantityLabel, closeButton);
 
-        // Ustawienie marginesu przycisku
         VBox.setMargin(closeButton, new Insets(20, 0, 30, 0));
 
         Scene scene = new Scene(detailsLayout, 450, 650);
@@ -336,12 +379,10 @@ public class AdminProductController extends AuthenticatedController{
 
     @FXML
     private void openAddProductForm() {
-        // Tworzenie nowego okna
         Stage stage = new Stage();
         VBox formLayout = new VBox(10);
         formLayout.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
 
-        // Pola formularza
         TextField nameField = new TextField();
         nameField.setPromptText("Name");
 
@@ -360,17 +401,14 @@ public class AdminProductController extends AuthenticatedController{
         ComboBox<Category> categoryComboBox = new ComboBox<>(FXCollections.observableArrayList(productService.getCategories()));
         categoryComboBox.setPromptText("Select Category");
 
-        // Przyciski
         Button submitButton = new Button("Submit");
         submitButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
 
         Button cancelButton = new Button("Cancel");
         cancelButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
 
-        // Obsługa przycisku "Submit"
         submitButton.setOnAction(event -> {
             try {
-                // Pobieranie danych z formularza
                 String name = nameField.getText();
                 String description = descriptionField.getText();
                 String imageUrl = imageUrlField.getText();
@@ -382,7 +420,6 @@ public class AdminProductController extends AuthenticatedController{
                     throw new IllegalArgumentException("Category must be selected.");
                 }
 
-                // Tworzenie nowego produktu
                 Product newProduct = new Product();
                 newProduct.setName(name);
                 newProduct.setDescription(description);
@@ -391,16 +428,12 @@ public class AdminProductController extends AuthenticatedController{
                 newProduct.setQuantity(quantity);
                 newProduct.setCategory(category);
 
-                // Wysyłanie produktu do backendu
                 productService.addProduct(newProduct);
 
-                // Informacja o sukcesie
                 showAlert("Success", "Product added successfully.", Alert.AlertType.INFORMATION);
 
-                // Zamknięcie okna
                 stage.close();
 
-                // Odświeżenie katalogu
                 loadProducts();
             } catch (NumberFormatException e) {
                 showAlert("Error", "Invalid number format in price or quantity fields.", Alert.AlertType.ERROR);
@@ -412,10 +445,8 @@ public class AdminProductController extends AuthenticatedController{
             }
         });
 
-        // Obsługa przycisku "Cancel"
         cancelButton.setOnAction(event -> stage.close());
 
-        // Układ formularza
         formLayout.getChildren().addAll(
                 new Label("Add New Product"),
                 nameField,
@@ -427,7 +458,6 @@ public class AdminProductController extends AuthenticatedController{
                 new HBox(10, submitButton, cancelButton)
         );
 
-        // Konfiguracja okna
         Scene scene = new Scene(formLayout, 400, 400);
         stage.setScene(scene);
         stage.setTitle("Add Product");
@@ -436,35 +466,29 @@ public class AdminProductController extends AuthenticatedController{
 
     @FXML
     private void openManageCategoriesForm() {
-        // Tworzenie nowego okna
         Stage stage = new Stage();
         VBox mainLayout = new VBox(10); // Główny układ
         mainLayout.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
 
-        // Przyciski: dodawanie kategorii
         Button addCategoryButton = new Button("Add Category");
         addCategoryButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
 
-        // Lista kategorii
         VBox categoriesListLayout = new VBox(10); // Układ dla listy kategorii
         categoriesListLayout.setStyle("-fx-padding: 10; -fx-border-color: #ddd; -fx-border-width: 1;");
 
-        // Obsługa przycisku "Add Category"
         addCategoryButton.setOnAction(event -> {
             openAddCategoryForm(() -> loadCategoriesList(categoriesListLayout)); // Wywołanie formularza dodawania z callbackiem
         });
 
-        // Załadowanie listy kategorii do układu
+
         loadCategoriesList(categoriesListLayout);
 
-        // Dodanie elementów do głównego układu
         mainLayout.getChildren().addAll(
                 new Label("Manage Categories"),
                 addCategoryButton,
                 categoriesListLayout
         );
 
-        // Konfiguracja sceny i okna
         Scene scene = new Scene(mainLayout, 500, 600);
         stage.setScene(scene);
         stage.setTitle("Manage Categories");
@@ -472,10 +496,9 @@ public class AdminProductController extends AuthenticatedController{
     }
 
     private void loadCategoriesList(VBox categoriesListLayout) {
-        categoriesListLayout.getChildren().clear(); // Czyść istniejące elementy
+        categoriesListLayout.getChildren().clear();
 
         try {
-            // Pobierz listę kategorii z backendu
             List<Category> categories = productService.getCategories();
 
             for (Category category : categories) {
@@ -505,40 +528,31 @@ public class AdminProductController extends AuthenticatedController{
     }
 
     private void showDeleteConfirmationDialog(Category category, VBox categoriesListLayout) {
-        // Pobierz produkty przypisane do tej kategorii
         List<Product> productsInCategory = productService.getProductsByCategoryId(category.getId());
 
-        // Tworzenie okna dialogowego
         Stage dialogStage = new Stage();
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         dialogStage.setTitle("Confirm Deletion");
 
-        // Układ okna
         VBox dialogVBox = new VBox(10);
         dialogVBox.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
 
-        // Dostosowanie komunikatu w zależności czy do kategorii są przypisane produkty czy nie
         if (productsInCategory.isEmpty()){
             Label confirmationLabel = new Label("Are you sure you want to delete the category: " + category.getName() + "?");
 
-            // Przyciski potwierdzenia
             Button yesButton = new Button("Yes");
             yesButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
             yesButton.setOnAction(event -> {
                 try {
 
-                    // Teraz usuń kategorię
                     categoryService.deleteCategory(category.getId());
 
-                    // Informacja o sukcesie
                     showAlert("Success", "Category deleted successfully.", Alert.AlertType.INFORMATION);
 
-                    // Zamknij okno
                     dialogStage.close();
 
-                    // Odśwież listę kategorii
                     loadCategoriesList(categoriesListLayout);
-                    loadCategories(); // Odświeżenie listy kategorii w Product Catalog
+                    loadCategories();
                     loadProducts();
                 } catch (Exception e) {
                     showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
@@ -549,12 +563,10 @@ public class AdminProductController extends AuthenticatedController{
             noButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
             noButton.setOnAction(event -> dialogStage.close());
 
-            // Układ przycisków
             HBox buttonLayout = new HBox(10, yesButton, noButton);
 
             dialogVBox.getChildren().addAll(confirmationLabel, buttonLayout);
 
-            // Ustawienie sceny i pokazanie okna
             Scene scene = new Scene(dialogVBox);
             dialogStage.setScene(scene);
             dialogStage.sizeToScene();
@@ -563,24 +575,20 @@ public class AdminProductController extends AuthenticatedController{
         } else {
             Label confirmationLabel = new Label("If you want to delete the category " + category.getName() + " the following products have to be deleted first: ");
 
-            // Lista produktów, które zostaną usunięte
             VBox productListLayout = new VBox(5);
             for (Product product : productsInCategory) {
                 Label productLabel = new Label(product.getName());
                 productListLayout.getChildren().add(productLabel);
             }
 
-            // Przycisk zamknięcia okna
             Button closeButton = new Button("Close");
             closeButton.setStyle("-fx-background-color: #808080; -fx-text-fill: white;");
             closeButton.setOnAction(event -> dialogStage.close());
 
-            // Układ przycisku
             HBox buttonLayout = new HBox(10, closeButton);
 
             dialogVBox.getChildren().addAll(confirmationLabel, productListLayout, buttonLayout);
 
-            // Ustawienie sceny i pokazanie okna
             Scene scene = new Scene(dialogVBox);
             dialogStage.setScene(scene);
             dialogStage.sizeToScene();
@@ -589,43 +597,35 @@ public class AdminProductController extends AuthenticatedController{
     }
 
     private void openAddCategoryForm(Runnable onCategoryAdded) {
-        // Tworzenie nowego okna
+
         Stage stage = new Stage();
         VBox formLayout = new VBox(10);
         formLayout.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
 
-        // Pola formularza
         TextField nameField = new TextField();
         nameField.setPromptText("Name");
 
-        // Przyciski
         Button submitButton = new Button("Submit");
         submitButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
 
         Button cancelButton = new Button("Cancel");
         cancelButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
 
-        // Obsługa przycisku "Submit"
         submitButton.setOnAction(event -> {
             try {
-                // Pobieranie danych z formularza
                 String name = nameField.getText();
 
-                // Tworzenie nowej kategorii
+
                 Category newCategory = new Category();
                 newCategory.setName(name);
 
-                // Wysyłanie produktu do backendu
                 categoryService.addCategory(newCategory);
-                loadCategories(); // Odświeżenie listy kategorii w Product Catalog
+                loadCategories();
 
-                // Informacja o sukcesie
                 showAlert("Success", "Category added successfully.", Alert.AlertType.INFORMATION);
 
-                // Zamknięcie okna
                 stage.close();
 
-                // Wywołanie callbacka
                 if (onCategoryAdded != null) {
                     onCategoryAdded.run();
                 }
@@ -636,17 +636,14 @@ public class AdminProductController extends AuthenticatedController{
             }
         });
 
-        // Obsługa przycisku "Cancel"
         cancelButton.setOnAction(event -> stage.close());
 
-        // Układ formularza
         formLayout.getChildren().addAll(
                 new Label("Add New Category"),
                 nameField,
                 new HBox(10, submitButton, cancelButton)
         );
 
-        // Konfiguracja okna
         Scene scene = new Scene(formLayout, 400, 400);
         stage.setScene(scene);
         stage.setTitle("Add Category");
@@ -654,7 +651,6 @@ public class AdminProductController extends AuthenticatedController{
     }
 
     private void editCategory(Category category, VBox categoriesListLayout) {
-        // Tworzenie okna do edycji
         Stage editStage = new Stage();
         VBox editLayout = new VBox(10);
         editLayout.setStyle("-fx-padding: 20; -fx-background-color: #f9f9f9;");
@@ -674,8 +670,8 @@ public class AdminProductController extends AuthenticatedController{
                 categoryService.updateCategory(category.getId(), updatedName);
 
                 showAlert("Success", "Category updated successfully.", Alert.AlertType.INFORMATION);
-                loadCategoriesList(categoriesListLayout); // Odświeżenie listy
-                loadCategories(); // Odświeżenie listy kategorii w Product Catalog
+                loadCategoriesList(categoriesListLayout);
+                loadCategories();
                 editStage.close();
             } catch (Exception e) {
                 showAlert("Error", "Failed to update category: " + e.getMessage(), Alert.AlertType.ERROR);
