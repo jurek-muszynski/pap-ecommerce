@@ -51,8 +51,6 @@ public class UserService {
     public User getMe() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName(); // The principal (email/username)
-        System.out.println("w getMe email: " + email);
-        System.out.println("w getMe user: " + userRepository.findUserByEmail(email));
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -61,8 +59,6 @@ public class UserService {
     public void updateUsername(String newUsername) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName(); // The principal (email/username)
-        System.out.println("w updateUsername email: " + email);
-        System.out.println("w updateUsername newUsername: " + userRepository.findUserByEmail(email));
         // Znalezienie użytkownika po ID
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));

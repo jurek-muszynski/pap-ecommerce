@@ -100,7 +100,7 @@ public class AuthService {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-//                    .header("Authorization", "Bearer " + getToken()) // Attach token
+                    .header("Authorization", "Bearer " + getToken()) // Attach token
                     .GET()
                     .build();
 
