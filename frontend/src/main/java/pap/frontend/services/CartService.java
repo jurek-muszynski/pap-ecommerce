@@ -130,7 +130,6 @@ public class CartService {
                 throw new RuntimeException("No token found. User might not be authenticated.");
             }
 
-            // Przygotowanie JSON
             Map<String, Object> bodyMap = new HashMap<>();
             if (quantity != null) {
                 bodyMap.put("quantity", quantity);
@@ -140,7 +139,7 @@ public class CartService {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Authorization", "Bearer " + token)
-                    .header("Content-Type", "application/json") // Ustaw nag≈***REMOVED***√≥wek JSON
+                    .header("Content-Type", "application/json")
                     .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 

@@ -45,7 +45,7 @@ public class CartService {
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
         cart.setUser(user);
-        cart.setLastUpdate(LocalDate.now()); // Ustawiamy aktualną datę jako domyślną wartość lastUpdate
+        cart.setLastUpdate(LocalDate.now());
         cartRepository.save(cart);
     }
 

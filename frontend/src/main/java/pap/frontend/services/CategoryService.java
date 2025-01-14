@@ -72,23 +72,18 @@ public class CategoryService {
 
     public void updateCategory(Long categoryId, String name) {
         try {
-            // Tworzenie URL-a endpointu z ID kategorii
             String url = BASE_API_URL + "/category/update/" + categoryId;
 
-            // Tworzenie treści żądania (parametry w formacie form-urlencoded)
             String requestBody = name != null ? "name=" + URLEncoder.encode(name, StandardCharsets.UTF_8) : "";
 
-            // Tworzenie żądania PUT
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody)) // PUT wymaga treści
-                    .header("Content-Type", "application/x-www-form-urlencoded") // Zgodnie z backendem
+                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
                     .build();
 
-            // Wysy�***REMOVED***anie żądania i odbieranie odpowiedzi
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // Sprawdzanie kodu odpowiedzi
             if (response.statusCode() != HttpURLConnection.HTTP_OK) {
                 throw new RuntimeException(response.body());
             }

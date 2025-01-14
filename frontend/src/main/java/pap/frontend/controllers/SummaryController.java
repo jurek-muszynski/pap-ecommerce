@@ -55,10 +55,8 @@ public class SummaryController extends AuthenticatedController {
 
         refreshData();
 
-        // Disable Place Order button by default
         placeOrderButton.setDisable(true);
 
-        // Add listeners to enable the button only when fields are filled
         deliveryAddressField.textProperty().addListener((observable, oldValue, newValue) -> checkForm());
         emailField.textProperty().addListener((observable, oldValue, newValue) -> checkForm());
     }
@@ -90,7 +88,6 @@ public class SummaryController extends AuthenticatedController {
 
             Product product = productService.getProductById(cartItem.getProductId());
 
-            // Price for each product including quantity
 
             Label productName = new Label("Product: " + product.getName());
             Label productPrice = new Label("Price: $" + product.getPrice());

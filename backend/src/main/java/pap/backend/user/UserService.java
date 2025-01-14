@@ -53,26 +53,4 @@ public class UserService {
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
-
-//    @Transactional
-//    public void updateUser(Long userId, String email, String password, UserRole role,
-//                           String firstName, String lastName) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new NoSuchElementException(
-//                        "user with id " + userId + " does not exist"
-//                ));
-//
-//        if (email != null && !email.isEmpty() && !user.getEmail().equals(email)) {
-//            user.setEmail(email);
-//        }
-//
-//        if (password != null && !password.isEmpty() && !user.getPassword().equals(password)) {
-//            user.setPassword(password);
-//        }
-//
-//        if (role != null && (role.equals("ADMIN") || role.equals("CUSTOMER")) && !user.getRole().equals(role)) {
-//            user.setRole(role);
-//        }
-//
-//    }
 }

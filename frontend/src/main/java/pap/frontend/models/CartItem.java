@@ -10,7 +10,6 @@ public class CartItem {
         return id;
     }
 
-    // Getters and setters
     public Long getProductId() {
         return productId;
     }
@@ -30,7 +29,6 @@ public class CartItem {
     public Integer getQuantity() { return quantity; }
 
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
-    // toString
     @Override
     public String toString() {
         return "CartItem{" +

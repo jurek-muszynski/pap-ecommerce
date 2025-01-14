@@ -6,7 +6,6 @@ public class CartItemDTO {
     private Long cartId;
     private Integer quantity;
 
-    // Constructor
     public CartItemDTO(Long id, Long productId, Long cartId, Integer quantity) {
         this.id = id;
         this.productId = productId;
@@ -14,7 +13,6 @@ public class CartItemDTO {
         this.quantity = quantity;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }

@@ -13,10 +13,8 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) {
         Scene mainScene = new Scene(new Pane(), 800, 600);
 
-        // Initialize ScreenController
         ScreenController screenController = new ScreenController(mainScene);
 
-        // Add screens
         screenController.addScreen("registration", "/pap/frontend/registration.fxml");
         screenController.addScreen("login", "/pap/frontend/login.fxml");
         screenController.addScreen("adminView", "/pap/frontend/admin_view.fxml");
@@ -25,7 +23,6 @@ public class MainApplication extends Application {
         screenController.addScreen("cartView", "/pap/frontend/cart.fxml");
         screenController.addScreen("summaryView", "/pap/frontend/summary.fxml");
         screenController.addScreen("about", "/pap/frontend/about.fxml");
-        // Activate initial screen
         screenController.activate("registration");
 
         primaryStage.setScene(mainScene);

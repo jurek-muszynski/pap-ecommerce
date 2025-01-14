@@ -5,9 +5,8 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
-    private UserRole role; // Role can be "CUSTOMER" or "ADMIN"
+    private UserRole role;
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
