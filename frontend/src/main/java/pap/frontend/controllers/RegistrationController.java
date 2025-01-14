@@ -34,7 +34,7 @@ public class RegistrationController implements ControlledScreen {
         // Apply CSS style once the scene is set
         RegistrationPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene != null) {
-                newScene.getStylesheets().add(getClass().getResource("/pap/frontend/cartStyles.css").toExternalForm());
+                newScene.getStylesheets().add(getClass().getResource("/pap/frontend/styles/cartStyles.css").toExternalForm());
             }
         });
     }
