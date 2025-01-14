@@ -38,8 +38,10 @@ public class LoginController implements ControlledScreen {
 
             if (role == UserRole.USER) {
                 screenController.activate("userView"); // Navigate to the user view
+                errorLabel.setText(""); // Clear any previous error messages
             } else if (role == UserRole.ADMIN) {
                 screenController.activate("adminView"); // Navigate to the admin view
+                errorLabel.setText(""); // Clear any previous error messages
             } else {
                 throw new RuntimeException("Unknown user role: " + role);
             }
