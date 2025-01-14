@@ -3,11 +3,12 @@ package pap.backend.user;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import pap.backend.auth.AuthService;
+import pap.backend.cart.Cart;
+import pap.backend.cart.CartService;
 
 
 import java.util.List;
@@ -18,17 +19,24 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CartService cartService;
+    private final AuthService authService;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {this.userRepository = userRepository;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, CartService cartService, AuthService authService) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.cartService = cartService;
+        this.authService = authService;
     }
 
 
-    public List<User> getUsers(){ return userRepository.findAll();}
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
 
-    public User getUser(Long userId){
+    public User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException(
                         "user with id " + userId + " does not exist"
@@ -60,64 +68,48 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserField(String field, String value) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
+    public void updateUser(Long userId, User updatedUser) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        User user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        switch (field.toLowerCase()) {
-            case "username":
-                if (value == null || value.trim().isEmpty()) {
-                    throw new IllegalArgumentException("Username cannot be empty");
-                }
-                if (value.length() > 50) {
-                    throw new IllegalArgumentException("Username cannot exceed 50 characters");
-                }
-                user.setUsername(value);
-                break;
-
-            case "email":
-                if (value == null || value.trim().isEmpty()) {
-                    throw new IllegalArgumentException("Email cannot be empty");
-                }
-                user.setEmail(value);
-                break;
-
-            case "password":
-                if (value == null || value.trim().isEmpty()) {
-                    throw new IllegalArgumentException("Password cannot be empty");
-                }
-                user.setPassword(passwordEncoder.encode(value));
-                break;
-
-            default:
-                throw new IllegalArgumentException("Unsupported field: " + field);
+        if (updatedUser.getEmail() != null && !updatedUser.getEmail().equals(existingUser.getEmail())) {
+            Optional<User> userOptional = userRepository.findUserByEmail(updatedUser.getEmail());
+            if (userOptional.isPresent() && !userOptional.get().getId().equals(userId)) {
+                throw new IllegalStateException("email taken");
+            }
+            existingUser.setEmail(updatedUser.getEmail());
+        } else if (updatedUser.getEmail() == null) {
+            throw new IllegalStateException("Email cannot be null");
         }
 
-        userRepository.save(user);
-    }
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().equals(existingUser.getPassword())) {
+            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        } else if (updatedUser.getPassword() == null) {
+            throw new IllegalStateException("Password cannot be null");
+        }
 
-//    @Transactional
-//    public void updateUser(Long userId, String email, String password, UserRole role,
-//                           String firstName, String lastName) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new NoSuchElementException(
-//                        "user with id " + userId + " does not exist"
-//                ));
-//
-//        if (email != null && !email.isEmpty() && !user.getEmail().equals(email)) {
-//            user.setEmail(email);
-//        }
-//
-//        if (password != null && !password.isEmpty() && !user.getPassword().equals(password)) {
-//            user.setPassword(password);
-//        }
-//
-//        if (role != null && (role.equals("ADMIN") || role.equals("CUSTOMER")) && !user.getRole().equals(role)) {
-//            user.setRole(role);
-//        }
-//
-//    }
+        if (updatedUser.getRole() != null && (updatedUser.getRole() == UserRole.ADMIN || updatedUser.getRole() == UserRole.USER)) {
+            if (updatedUser.getRole() == UserRole.ADMIN && existingUser.getRole() == UserRole.USER) {
+                // If a user is granted admin role, their cart is deleted
+                Long cartId = cartService.getCartIdByUserId(userId);
+                cartService.deleteCart(cartId);
+            } else if (updatedUser.getRole() == UserRole.USER && existingUser.getRole() == UserRole.ADMIN) {
+                // If a user is granted user role, a new cart is created
+                Cart cart = new Cart();
+                cart.setUser(existingUser);
+                cartService.addNewCart(cart);
+            }
+            existingUser.setRole(updatedUser.getRole());
+        } else if (updatedUser.getRole() == null) {
+            throw new IllegalStateException("Role cannot be null");
+        }
+
+        if (updatedUser.getName() != null && !updatedUser.getName().equals(existingUser.getName())) {
+            existingUser.setUsername(updatedUser.getName());
+        } else if (updatedUser.getName() == null) {
+            throw new IllegalStateException("Username cannot be null");
+        }
+
+        userRepository.save(existingUser);
+    }
 }

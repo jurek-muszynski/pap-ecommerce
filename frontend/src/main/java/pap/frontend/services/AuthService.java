@@ -98,7 +98,6 @@ public class AuthService {
 
     public User getCurrentUser() {
         String url = "http://localhost:8080/api/v1/user/me";
-        System.out.println(getToken());
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
@@ -108,7 +107,6 @@ public class AuthService {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == HttpURLConnection.HTTP_OK) {
-                System.out.println(response.body());
                 return gson.fromJson(response.body(), User.class);
             } else {
                 throw new RuntimeException("Failed to fetch current user. Status: " + response.statusCode());
@@ -143,30 +141,31 @@ public class AuthService {
         return getCurrentUser().getId();
     }
 
-    public String getCurrentUserEmail() {
-        return getCurrentUser().getEmail();
-    }
-
-    public void updateUserField(String field, String value) {
+    public void updateUser(Long id, String email, String password, UserRole role, String username) {
         try {
-            String url = "http://localhost:8080/api/v1/user/update?field=" + URLEncoder.encode(field, StandardCharsets.UTF_8) +
-                    "&value=" + URLEncoder.encode(value, StandardCharsets.UTF_8);
+            String url = "http://localhost:8080/api/v1/user/update/" + id;
+
+            JsonObject requestBody = new JsonObject();
+            requestBody.addProperty("email", email);
+            requestBody.addProperty("password", password);
+            requestBody.addProperty("role", role.toString());
+            requestBody.addProperty("username", username);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Authorization", "Bearer " + getToken())
-                    .PUT(HttpRequest.BodyPublishers.noBody())
+                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                    .header("Content-Type", "application/json")
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("Failed to update " + field + ". Status: " + response.statusCode() +
+                throw new RuntimeException("Status code: " + response.statusCode() +
                         ", Message: " + response.body());
             }
 
-            System.out.println(field + " updated successfully to: " + value);
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Error updating " + field + ": " + e.getMessage());
+            throw new RuntimeException("Error updating user: " + e.getMessage());
         }
     }
 

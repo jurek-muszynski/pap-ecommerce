@@ -59,39 +59,20 @@ public class UserController {
         }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateUserField(
-            @RequestParam String field,
-            @RequestParam String value) {
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<String> updateUser(
+            @PathVariable("userId") Long userId,
+            @RequestBody User updatedUser) {
+
         try {
-            userService.updateUserField(field, value);
-            return ResponseEntity.ok("Field updated successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            userService.updateUser(userId, updatedUser);
+            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-//    @PutMapping("/update/{userId}")
-//    public ResponseEntity<String> updateUser(
-//            @PathVariable("userId") Long userId,
-//            @RequestParam(required = false) String email,
-//            @RequestParam(required = false) String password,
-//            @RequestParam(required = false) String role,
-//            @RequestParam(required = false) String firstName,
-//            @RequestParam(required = false) String lastName) {
-//
-//        try {
-//            userService.updateUser(userId, email, password, role, firstName, lastName);
-//            return new ResponseEntity<String>("User updated successfully", HttpStatus.OK);
-//        } catch (NoSuchElementException e) {
-//            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        } catch (IllegalStateException e) {
-//            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        } catch (Exception e) {
-//            return new ResponseEntity<String>("Error updating user", HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 }
