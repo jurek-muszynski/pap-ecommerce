@@ -84,6 +84,11 @@ fi
 # run docker-compose
 docker-compose up --build -d --always-recreate-deps
 
+if [ $? -ne 0 ]; then
+    echo "Failed to start the application"
+    exit 1
+fi
+
 # dummy timeout to wait for the database to start
 sleep 5
 
