@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import pap.frontend.models.User;
+import pap.frontend.models.UserRole;
 import pap.frontend.services.AuthService;
 
 import java.util.function.Consumer;
@@ -52,7 +53,11 @@ public class AccountController extends AuthenticatedController {
     @FXML
     private void goBackToProducts() {
         if (screenController != null) {
-            screenController.activate("userView");
+            if (authService.getCurrentUser().getRole() == UserRole.ADMIN) {
+                screenController.activate("adminView");
+            } else if (authService.getCurrentUser().getRole() == UserRole.USER) {
+                screenController.activate("userView");
+            }
         }
     }
 
