@@ -42,7 +42,7 @@ public class AccountController extends AuthenticatedController {
             System.out.println(authService.getCurrentUser());
             currentUser = authService.getCurrentUser();
             if (currentUser != null) {
-                System.out.println("User loaded: " + currentUser.getUsername());
+                System.out.println("User loaded: " + currentUser.getName());
             } else {
                 System.out.println("User is null");
             }
@@ -72,7 +72,7 @@ public class AccountController extends AuthenticatedController {
         VBox userDataBox = new VBox(10);
         userDataBox.setStyle("-fx-padding: 20;");
 
-        Label usernameLabel = new Label("Username: " + currentUser.getUsername());
+        Label usernameLabel = new Label("Username: " + currentUser.getName());
         Label emailLabel = new Label("Email: " + currentUser.getEmail());
 
         usernameLabel.setStyle("-fx-font-size: 14px;");
@@ -119,7 +119,7 @@ public class AccountController extends AuthenticatedController {
             try {
                 authService.updateUser(newUsername);
                 refreshData();
-                feedbackLabel.setText("Username updated successfully to: " + currentUser.getUsername());
+                feedbackLabel.setText("Username updated successfully to: " + currentUser.getName());
                 feedbackLabel.setStyle("-fx-text-fill: green;");
             } catch (Exception e) {
                 feedbackLabel.setText("Error updating username: " + e.getMessage());

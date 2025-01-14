@@ -12,9 +12,15 @@ public class User {
         return id;
     }
 
-    public String getUsername() { return username; }
+    public String getUsername() { return email; }
+
+    public String getName() { return name; }
 
     public void setUsername(String username) { this.username = username; }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getEmail() {
         return email;
@@ -43,7 +49,8 @@ public class User {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", role=" + role +
+                ", role=" + role + '\'' +
+                ", name=" + name + '\'' +
                 '}';
     }
 }
