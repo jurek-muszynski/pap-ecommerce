@@ -14,5 +14,6 @@
         <TextField fx:id="deliveryAddressField" promptText="Delivery Address"/>
         <TextField fx:id="emailField" promptText="Email Address"/>
         <Button fx:id="placeOrderButton" text="Place Order" disable="true" onAction="#placeOrder"/>
+        <Button text="Go Back"  onAction="#goBackToCart"/>
     </VBox>
 </VBox>
