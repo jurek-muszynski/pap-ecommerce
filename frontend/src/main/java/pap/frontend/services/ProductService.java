@@ -55,7 +55,7 @@ public class ProductService {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Authorization", "Bearer " + token) // Add Authorization header
+                    .header("Authorization", "Bearer " + token)
                     .GET()
                     .build();
 
@@ -120,7 +120,7 @@ public class ProductService {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .PUT(HttpRequest.BodyPublishers.ofString(body))
-                    .header("Content-Type", "application/x-www-form-urlencoded") // Nagłówek dla danych form-urlencoded
+                    .header("Content-Type", "application/x-www-form-urlencoded")
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

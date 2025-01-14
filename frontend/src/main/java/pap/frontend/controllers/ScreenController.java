@@ -27,7 +27,7 @@ public class ScreenController {
             if (controller instanceof ControlledScreen) {
                 ControlledScreen controlledScreen = (ControlledScreen) controller;
                 controlledScreen.setScreenController(this);
-                controllerMap.put(name, controlledScreen); // Map the controller to the screen name
+                controllerMap.put(name, controlledScreen);
             }
         } catch (IOException e) {
             System.err.println("Failed to load FXML: " + resourcePath);
@@ -43,10 +43,9 @@ public class ScreenController {
     public void activate(String name) {
         Pane screen = screenMap.get(name);
         if (screen != null) {
-            // Set the screen in the root scene
+
             mainScene.setRoot(screen);
 
-            // Notify the controller to refresh data if it implements ControlledScreen
             ControlledScreen controller = controllerMap.get(name);
             if (controller != null) {
                 if (controller instanceof UserProductController) {
@@ -61,7 +60,7 @@ public class ScreenController {
                     System.out.println("Refreshing SummaryController");
                     ((SummaryController) controller).refreshData();
                 }
-                // Add similar checks for other controllers that need refreshing
+
             }
         } else {
             System.err.println("Screen not found: " + name);

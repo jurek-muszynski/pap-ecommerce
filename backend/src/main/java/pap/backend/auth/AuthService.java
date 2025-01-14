@@ -48,11 +48,9 @@ public class AuthService {
             String token = jwtService.generateToken(user);
             var response = new AuthResponse(token);
 
-          // <- CART CREATION -> //
             Cart cart = new Cart();
             cart.setUser(user);
             cartService.addNewCart(cart);
-          // <- CART CREATION -> //
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {

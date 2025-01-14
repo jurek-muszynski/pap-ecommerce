@@ -129,7 +129,7 @@ public class UserProductController extends AuthenticatedController {
 
     @FXML
     private void updateProductTiles(List<Product> products) {
-        productTilePane.getChildren().clear(); // Clear previous products
+        productTilePane.getChildren().clear();
         for (Product product : products) {
             VBox productCard = createProductCard(product);
             productTilePane.getChildren().add(productCard);
@@ -137,7 +137,6 @@ public class UserProductController extends AuthenticatedController {
     }
 
     private VBox createProductCard(Product product) {
-        // Image
         ImageView imageView = new ImageView();
         try {
             String imageUrl = product.getImageUrl();
@@ -151,7 +150,6 @@ public class UserProductController extends AuthenticatedController {
         imageView.setPreserveRatio(true);
         imageView.getStyleClass().add("image-view");
 
-        // Text elements
         Text nameText = new Text(product.getName());
         nameText.getStyleClass().add("name-text");
 
@@ -162,7 +160,6 @@ public class UserProductController extends AuthenticatedController {
         Text priceText = new Text(String.format("$%.2f", product.getPrice()));
         priceText.getStyleClass().add("price-text");
 
-        // Buttons
         Button showDetailsButton = new Button("Show Details");
         showDetailsButton.setStyle("-fx-background-color: #87CEEB; -fx-text-fill: white;");
         showDetailsButton.setOnAction(event -> showProductDetails(product));
@@ -171,7 +168,6 @@ public class UserProductController extends AuthenticatedController {
         addToCartButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
         addToCartButton.setOnAction(event -> addToCart(product));
 
-        // Product Card
         VBox productCard = new VBox(10, imageView, nameText, descriptionText, priceText, showDetailsButton, addToCartButton);
         productCard.getStyleClass().add("product-card");
         productCard.setPrefWidth(200);
@@ -194,11 +190,9 @@ public class UserProductController extends AuthenticatedController {
         Stage detailsStage = new Stage();
         detailsStage.setTitle("Szczegóły Produktu");
 
-        // Tytuł produktu
         Label titleLabel = new Label(product.getName());
         titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;");
 
-        // Powiększony obraz produktu
         ImageView imageView = new ImageView();
         try {
             Image image = new Image(product.getImageUrl());
@@ -210,23 +204,18 @@ public class UserProductController extends AuthenticatedController {
         imageView.setFitHeight(300);
         imageView.setPreserveRatio(true);
 
-        // Opis produktu
         Label descriptionLabel = new Label("Description: " + product.getDescription());
         descriptionLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
 
-        // Cena produktu
         Label priceLabel = new Label(String.format("Price: $%.2f", product.getPrice()));
         priceLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #008000;");
 
-        // Kategoria produktu
         Label categoryLabel = new Label("Category: " + (product.getCategory() != null ? product.getCategory().getName() : "N/A"));
         categoryLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
 
-        // Dostępna ilość
         Label quantityLabel = new Label("Quantity available: " + product.getQuantity());
         quantityLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
 
-        // Okrągły przycisk zamykania
         Button closeButton = new Button("X");
         closeButton.setStyle(
                 "-fx-background-color: transparent; " +
@@ -273,14 +262,11 @@ public class UserProductController extends AuthenticatedController {
 
         closeButton.setOnAction(event -> detailsStage.close());
 
-        // Główny układ
         VBox detailsLayout = new VBox(20);
         detailsLayout.setStyle("-fx-padding: 30; -fx-alignment: center; -fx-spacing: 20; -fx-background-color: #f9f9f9;");
 
-        // Dodanie elementów do głównego układu
         detailsLayout.getChildren().addAll(titleLabel, imageView, descriptionLabel, priceLabel, categoryLabel, quantityLabel, closeButton);
 
-        // Ustawienie marginesu przycisku
         VBox.setMargin(closeButton, new Insets(20, 0, 30, 0));
 
         Scene scene = new Scene(detailsLayout, 450, 650);
@@ -290,7 +276,6 @@ public class UserProductController extends AuthenticatedController {
 
     private void addToCart(Product product) {
         try {
-            // Create a CartItem object
             Long userId = authService.getCurrentUserId();
             if (userId == null) {
                 throw new RuntimeException("User not authenticated. Cannot add items to the cart.");
@@ -307,7 +292,6 @@ public class UserProductController extends AuthenticatedController {
             showAlert("Success", "Product added to cart successfully.", Alert.AlertType.INFORMATION);
 
         } catch (Exception e) {
-            // Show error alert
             showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
         }
     }

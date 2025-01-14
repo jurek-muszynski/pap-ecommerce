@@ -18,7 +18,7 @@ public class RegistrationController implements ControlledScreen {
     private Label errorLabel;
 
     private ScreenController screenController;
-    private final AuthService authService = AuthService.getInstance(); // Service to handle authentication
+    private final AuthService authService = AuthService.getInstance();
 
     @Override
     public void setScreenController(ScreenController screenController) {
@@ -47,7 +47,7 @@ public class RegistrationController implements ControlledScreen {
 
     @FXML
     private void redirectToLogin() {
-        screenController.activate("login"); // Redirect to login screen
+        screenController.activate("login");
     }
 
     @FXML

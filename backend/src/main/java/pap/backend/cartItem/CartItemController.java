@@ -76,11 +76,9 @@ public class CartItemController {
     @PostMapping("/add")
     public ResponseEntity<String> addNewCartItem(@RequestBody CartItemDTO cartItemDTO) {
         try {
-            // Retrieve the product and cart from their respective services/repositories
             Product product = productService.getProduct(cartItemDTO.getProductId());
             Cart cart = cartService.getCart(cartItemDTO.getCartId());
 
-            // Create and save a new CartItem entity, default quantity=1
             CartItem cartItem = new CartItem(product, cart, 1);
             cartItemService.addNewCartItem(cartItem);
 
