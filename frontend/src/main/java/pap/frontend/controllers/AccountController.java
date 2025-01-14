@@ -34,13 +34,7 @@ public class AccountController extends AuthenticatedController {
     }
     private void loadUser() {
         try {
-            System.out.println(authService.getCurrentUser());
             currentUser = authService.getCurrentUser();
-            if (currentUser != null) {
-                System.out.println("User loaded: " + currentUser.getName());
-            } else {
-                System.out.println("User is null");
-            }
         }catch (Exception e) {
             showAlert("Error", "Failed to load users: " + e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -111,13 +105,26 @@ public class AccountController extends AuthenticatedController {
                 return;
             }
 
-            try {
-                updateAction.accept(input);
-                refreshData();
-                feedbackLabel.setText(fieldLabel + " updated successfully!");
-                feedbackLabel.setStyle("-fx-text-fill: green;");
-            } catch (Exception e) {
-                feedbackLabel.setText("Error updating " + fieldLabel + ": " + e.getMessage());
+            if (fieldLabel.equals("email")) {
+                try {
+                    updateAction.accept(input);
+                    feedbackLabel.setText(fieldLabel + " updated successfully!");
+                    feedbackLabel.setStyle("-fx-text-fill: green;");
+                    showAlert("Success", "Email updated successfully. Please log in again.", Alert.AlertType.INFORMATION);
+                    contentPane.getChildren().clear();
+                    logout();
+                } catch (Exception e) {
+                    feedbackLabel.setText("Error updating " + fieldLabel + ": " + e.getMessage());
+                }
+            } else {
+                try {
+                    updateAction.accept(input);
+                    refreshData();
+                    feedbackLabel.setText(fieldLabel + " updated successfully!");
+                    feedbackLabel.setStyle("-fx-text-fill: green;");
+                } catch (Exception e) {
+                    feedbackLabel.setText("Error updating " + fieldLabel + ": " + e.getMessage());
+                }
             }
         });
 
@@ -134,7 +141,10 @@ public class AccountController extends AuthenticatedController {
                 "New username",
                 1,
                 50,
-                newUsername -> authService.updateUserField("username", newUsername)
+                newUsername -> {
+                    User user = authService.getCurrentUser();
+                    authService.updateUser(user.getId(), user.getEmail(), user.getPassword(), user.getRole(), newUsername);
+                }
         );
     }
 
@@ -145,7 +155,10 @@ public class AccountController extends AuthenticatedController {
                 "New email",
                 1,
                 50,
-                newEmail -> authService.updateUserField("email", newEmail)
+                newEmail -> {
+                    User user = authService.getCurrentUser();
+                    authService.updateUser(user.getId(), newEmail, user.getPassword(), user.getRole(), user.getName());
+                }
         );
     }
 
@@ -156,7 +169,10 @@ public class AccountController extends AuthenticatedController {
                 "New password",
                 1,
                 50,
-                newPassword -> authService.updateUserField("password", newPassword)
+                newPassword ->{
+                    User user = authService.getCurrentUser();
+                    authService.updateUser(user.getId(), user.getEmail(), newPassword, user.getRole(), user.getName());
+                }
         );
     }
 

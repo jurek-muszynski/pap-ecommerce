@@ -3,7 +3,6 @@ package pap.backend.user;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,9 +30,11 @@ public class UserService {
     }
 
 
-    public List<User> getUsers(){ return userRepository.findAll();}
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
 
-    public User getUser(Long userId){
+    public User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException(
                         "user with id " + userId + " does not exist"
