@@ -1,11 +1,12 @@
 package pap.backend.user;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import pap.backend.auth.AuthService;
 import pap.backend.cart.Cart;
 import pap.backend.cart.CartService;
 
@@ -19,12 +20,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final CartService cartService;
+    private final AuthService authService;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, CartService cartService) {this.userRepository = userRepository;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, CartService cartService, AuthService authService) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.cartService = cartService;
+        this.authService = authService;
     }
 
 
@@ -67,8 +71,11 @@ public class UserService {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-
         if (updatedUser.getEmail() != null && !updatedUser.getEmail().equals(existingUser.getEmail())) {
+            Optional<User> userOptional = userRepository.findUserByEmail(updatedUser.getEmail());
+            if (userOptional.isPresent() && !userOptional.get().getId().equals(userId)) {
+                throw new IllegalStateException("email taken");
+            }
             existingUser.setEmail(updatedUser.getEmail());
         } else if (updatedUser.getEmail() == null) {
             throw new IllegalStateException("Email cannot be null");
@@ -81,11 +88,11 @@ public class UserService {
         }
 
         if (updatedUser.getRole() != null && (updatedUser.getRole() == UserRole.ADMIN || updatedUser.getRole() == UserRole.USER)) {
-            if (updatedUser.getRole() == UserRole.ADMIN) {
+            if (updatedUser.getRole() == UserRole.ADMIN && existingUser.getRole() == UserRole.USER) {
                 // If a user is granted admin role, their cart is deleted
                 Long cartId = cartService.getCartIdByUserId(userId);
                 cartService.deleteCart(cartId);
-            } else {
+            } else if (updatedUser.getRole() == UserRole.USER && existingUser.getRole() == UserRole.ADMIN) {
                 // If a user is granted user role, a new cart is created
                 Cart cart = new Cart();
                 cart.setUser(existingUser);
@@ -96,13 +103,12 @@ public class UserService {
             throw new IllegalStateException("Role cannot be null");
         }
 
-        if (updatedUser.getUsername() != null && !updatedUser.getUsername().equals(existingUser.getUsername())) {
-            existingUser.setUsername(updatedUser.getUsername());
-        } else if (updatedUser.getUsername() == null) {
+        if (updatedUser.getName() != null && !updatedUser.getName().equals(existingUser.getName())) {
+            existingUser.setUsername(updatedUser.getName());
+        } else if (updatedUser.getName() == null) {
             throw new IllegalStateException("Username cannot be null");
         }
 
         userRepository.save(existingUser);
     }
-
 }
