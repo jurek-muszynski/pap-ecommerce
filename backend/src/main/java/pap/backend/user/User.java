@@ -104,5 +104,6 @@ public class User implements UserDetails {
         return email;
     }
 
+    public String getName() { return username; }
 
 }
