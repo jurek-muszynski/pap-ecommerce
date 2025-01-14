@@ -1,18 +1,9 @@
 package pap.backend.user;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import pap.backend.order.Order;
-import pap.backend.order.OrderService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 
 
 import java.util.List;
@@ -68,18 +59,18 @@ public class UserController {
         }
     }
 
-    @PutMapping("/update-username/{newUsername}")
-    public ResponseEntity<String> updateUsername(
-            @PathVariable("newUsername") String newUsername) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUserField(
+            @RequestParam String field,
+            @RequestParam String value) {
         try {
-            userService.updateUsername(newUsername);
-            return new ResponseEntity<String>("Username updated successfully", HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            userService.updateUserField(field, value);
+            return ResponseEntity.ok("Field updated successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return new ResponseEntity<String>("Error updating username", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
-
     }
 
 

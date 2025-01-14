@@ -1,5 +1,6 @@
 package pap.backend.user;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,13 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public UserService(UserRepository userRepository) {this.userRepository = userRepository;}
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     public List<User> getUsers(){ return userRepository.findAll();}
@@ -56,25 +60,42 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUsername(String newUsername) {
+    public void updateUserField(String field, String value) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName(); // The principal (email/username)
-        // Znalezienie użytkownika po ID
+        String email = authentication.getName();
+
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Walidacja nowej nazwy użytkownika
-        if (newUsername == null || newUsername.trim().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be empty");
-        }
-        if (newUsername.length() > 50) {
-            throw new IllegalArgumentException("Username cannot exceed 50 characters");
+        switch (field.toLowerCase()) {
+            case "username":
+                if (value == null || value.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Username cannot be empty");
+                }
+                if (value.length() > 50) {
+                    throw new IllegalArgumentException("Username cannot exceed 50 characters");
+                }
+                user.setUsername(value);
+                break;
+
+            case "email":
+                if (value == null || value.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Email cannot be empty");
+                }
+                user.setEmail(value);
+                break;
+
+            case "password":
+                if (value == null || value.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Password cannot be empty");
+                }
+                user.setPassword(passwordEncoder.encode(value));
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unsupported field: " + field);
         }
 
-        // Aktualizacja nazwy użytkownika
-        user.setUsername(newUsername);
-
-        // Zapisanie zmian w bazie danych
         userRepository.save(user);
     }
 
