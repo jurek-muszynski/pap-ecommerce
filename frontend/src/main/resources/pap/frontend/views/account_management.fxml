@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="pap.frontend.controllers.AccountController" stylesheets="@style_product_list.css">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="pap.frontend.controllers.AccountController" stylesheets="@../styles/style_product_list.css">
     <top>
         <HBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER" styleClass="hbox">
             <Button text="Back to Products" onAction="#goBackToProducts" styleClass="button" style="-fx-pref-width: 200;"/>
