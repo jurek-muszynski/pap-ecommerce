@@ -9,6 +9,9 @@ RUN addgroup --system spring && adduser --system spring --ingroup spring
 # Copy the source code to the working directory
 COPY . .
 
+# Copy the .env file from the parent directory into the container
+COPY ../.env ./
+
 # Change the mvn wrapper file into an executable
 RUN chmod +655 ./mvnw
 
